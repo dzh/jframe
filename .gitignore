@@ -1,6 +1,11 @@
 *.class
 
 # Package Files #
-*.jar
-*.war
-*.ear
+#*.jar
+#*.war
+#*.ear
+.settings/
+target/
+jframe-release/jframe/log
+jframe-release/jframe/temp
+jframe-release/jframe/update

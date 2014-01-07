@@ -1,0 +1,12 @@
+#! /bin/sh
+
+APP_HOME=`dirname $(cd "$(dirname "$0")"; pwd)`
+
+echo Starting from ${APP_HOME}
+
+nohup java -Dapp.home=${APP_HOME} \
+ -Dlogback.configurationFile=${APP_HOME}/conf/logback-daemon.xml \
+ -cp ${APP_HOME}/lib/*:$PATH \
+ jframe.launcher.Main >/dev/null 2>&1 &
+
+#echo Starting Successfully.

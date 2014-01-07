@@ -1,0 +1,19 @@
+#! /bin/sh
+
+APP_HOME=`dirname $(cd "$(dirname "$0")"; pwd)`
+
+PID_PATH=${APP_HOME}/temp/app.pid
+if [ -f "${PID_PATH}" ]; then
+	PID=`cat ${PID_PATH}`
+	kill -TERM ${PID}
+	echo "Application process shutdown finished!"
+else
+	echo "Not found app.pid file!"
+fi
+
+PID_PATH=${APP_HOME}/temp/daemon.pid
+if [ -f "${PID_PATH}" ]; then
+	PID=`cat ${PID_PATH}`
+	kill -TERM ${PID}
+	echo "Daemon process shutdown finished!"
+fi

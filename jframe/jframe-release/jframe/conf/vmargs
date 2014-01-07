@@ -1,0 +1,25 @@
+#assert
+-dsa 
+-ea:jframe...
+
+#log configuration
+-Dlogback.configurationFile=${app.home}/conf/logback.xml
+
+# classpath
+-cp ${app.home}/lib/*:$PATH
+
+#jvm
+-server
+-Xms512M
+-Xmx1024M 
+-XX:PermSize=64M
+-XX:MaxPermSize=256M
+#-XX:ThreadStackSize=256K
+#-XX:+UseConcMarkSweepGC
+#-XX:+DisableExplicitGC
+
+#debug
+-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=6000,server=y,suspend=n
+
+#default dll path
+-Djava.library.path=${app.home}/lib

@@ -1,0 +1,100 @@
+00:02:34.618 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:02:34.626 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:02:34.626 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:02:34.626 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:02:34.635 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:04:02.500 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:04:02.509 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:04:02.509 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:04:02.509 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:04:02.517 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:04:44.151 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:04:44.160 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:04:44.161 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:04:44.161 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:04:44.169 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:06:14.303 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:06:14.311 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:06:14.311 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:06:14.311 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:06:14.319 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:07:34.859 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:07:34.867 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:07:34.867 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:07:34.867 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:07:34.875 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:08:38.179 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:08:38.191 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:08:38.192 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:08:38.192 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:08:38.200 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:09:52.037 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:09:52.045 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:09:52.045 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:09:52.045 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:09:52.053 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:11:00.998 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:11:01.007 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:11:01.007 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:11:01.007 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:11:01.015 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:12:08.137 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:12:08.150 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:12:08.150 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:12:08.150 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:12:08.166 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:13:12.682 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:13:12.691 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:13:12.691 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:13:12.691 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:13:12.700 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:14:06.563 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:14:06.571 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:14:06.571 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:14:06.571 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:14:06.580 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:17:02.773 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:17:02.781 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:17:02.781 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:17:02.781 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:17:02.790 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:19:33.338 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:19:33.346 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:19:33.347 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:19:33.347 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:19:33.355 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:20:40.146 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:20:40.154 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:20:40.154 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:20:40.154 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:20:40.162 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+00:46:58.997 [main] INFO  jframe.launcher.Main - Main is Starting!
+00:46:59.005 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+00:46:59.005 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+00:46:59.005 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+00:46:59.013 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+11:17:28.168 [main] INFO  jframe.launcher.Main - Main is Starting!
+11:17:28.199 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+11:17:28.199 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+11:17:28.199 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+11:17:28.295 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+11:40:26.679 [main] INFO  jframe.launcher.Main - Main is Starting!
+11:40:26.687 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+11:40:26.688 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+11:40:26.688 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+11:40:26.696 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+11:44:17.214 [main] INFO  jframe.launcher.Main - Main is Starting!
+11:44:17.222 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+11:44:17.222 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+11:44:17.222 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+11:44:17.230 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+12:24:06.938 [main] INFO  jframe.launcher.Main - Main is Starting!
+12:24:06.946 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+12:24:06.946 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+12:24:06.946 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+12:24:06.954 [main] INFO  jframe.launcher.Main - Startup application process successfully!
+12:31:14.446 [main] INFO  jframe.launcher.Main - Main is Starting!
+12:31:14.454 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+12:31:14.455 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+12:31:14.455 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+12:31:14.463 [main] INFO  jframe.launcher.Main - Startup application process successfully!
