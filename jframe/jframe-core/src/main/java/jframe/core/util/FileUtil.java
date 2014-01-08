@@ -38,7 +38,7 @@ public class FileUtil {
 	 * @return
 	 */
 	public static final String getName(String path) {
-		int loc = path.lastIndexOf(File.separator);
+		int loc = path.lastIndexOf("/");
 		if (loc == -1)
 			return path;
 		if (loc < path.length() - 1) {
