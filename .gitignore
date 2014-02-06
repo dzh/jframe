@@ -4,10 +4,11 @@
 #*.jar
 #*.war
 #*.ear
+*~
 .settings/
 target/
-jframe-release/jframe/log
-jframe-release/jframe/temp
-jframe-release/jframe/update
-jframe-release/jframe/lib
-jframe-release/jframe/plugin
+jframe-release/jframe/log/
+jframe-release/jframe/temp/
+jframe-release/jframe/update/
+jframe-release/jframe/lib/
+jframe-release/jframe/plugin/
