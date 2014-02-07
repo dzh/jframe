@@ -84,7 +84,7 @@ public class PluginUnit extends AbstractUnit {
 			p = iter.next();
 			try {
 				_context.regPlugin(p);
-			} catch (Exception e) {
+			} catch (Exception e) { //TODO 
 				LOG.error("When invoke pluginUnit.regPlugin(), plugin name is "
 						+ p.getName() + " " + e.getMessage());
 				_context.unregPlugin(p);

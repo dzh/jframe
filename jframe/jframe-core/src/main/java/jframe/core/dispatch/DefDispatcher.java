@@ -30,8 +30,8 @@ public class DefDispatcher implements Dispatcher {
 
 	private final List<DispatchTarget> _dtList = new CopyOnWriteArrayList<DispatchTarget>();
 
-	//TODO size
-	private final BlockingQueue<Msg<?>> _queue = new LinkedBlockingQueue<Msg<?>>(); 
+	// TODO size
+	private final BlockingQueue<Msg<?>> _queue = new LinkedBlockingQueue<Msg<?>>();
 
 	private volatile boolean stop;
 
@@ -41,7 +41,7 @@ public class DefDispatcher implements Dispatcher {
 		this._ID = id;
 	}
 
-	protected static final Dispatcher newDelegate(String id) {
+	protected static final Dispatcher newDispatcher(String id) {
 		return new DefDispatcher(id);
 	}
 

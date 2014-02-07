@@ -27,6 +27,7 @@ stop()
     if [ -f "${PID_PATH}" ]; then
 	    PID=`cat ${PID_PATH}`
 	    kill -TERM ${PID}
+	    rm -rf ${PID_PATH}
 	    echo "Application shutdown finished!"
     else
 	    echo "Not found app.pid file!"
@@ -36,6 +37,7 @@ stop()
     if [ -f "${PID_PATH}" ]; then
 	    PID=`cat ${PID_PATH}`
 	    kill -TERM ${PID}
+	    rm -rf ${PID_PATH}
 	    echo "Daemon process shutdown finished!"
     fi
 }

@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -120,6 +122,7 @@ public class Main {
 		list.add(launcher);
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.command(list);
+		// pb.redirectErrorStream(true);
 
 		Process p = null;
 		try {
@@ -155,7 +158,7 @@ public class Main {
 				}
 				if (line == null)
 					break;
-				if (line.startsWith("#") || line.equals(""))
+				if (line.trim().startsWith("#") || line.equals(""))
 					continue;
 				args = line.split("\\s");
 				for (String a : args) {
@@ -204,13 +207,63 @@ public class Main {
 		int exit = 0;
 		do {
 			Process subp = launch(config);//
+			Thread errT = redirectStream(subp.getErrorStream());
+			Thread stdT = redirectStream(subp.getInputStream());
 			LOG.info("Startup application process successfully!");
 			try {
 				exit = subp.waitFor();
 			} catch (InterruptedException e) {
-				LOG.warn(e.getLocalizedMessage()); // TODO
+				LOG.warn(e.getMessage());
+				break;
+			} finally {
+				try {
+					errT.join();
+					stdT.join();
+				} catch (InterruptedException e) {
+				}
 			}
 		} while (exit != 0 && exit != 143);
+	}
+
+	/**
+	 * @param inputStream
+	 */
+	private static Thread redirectStream(final InputStream inputStream) {
+		Thread t = new Thread("redirectStream") {
+			public void run() {
+				BufferedReader br = null;
+				try {
+					br = new BufferedReader(new InputStreamReader(inputStream));
+					// char[] buf = new char[32];
+					// int len = 0;
+					String line = null;
+					while (true) {
+						try {
+							line = br.readLine();
+						} catch (IOException e) {
+							LOG.error(e.getMessage());
+							return;
+						}
+						if (line == null || Thread.interrupted())
+							return;
+						// LOG.error(new String(buf, 0, len));
+						LOG.info(line);
+						System.out.println(line);
+					}
+				} catch (Exception e) {
+					LOG.error(e.getMessage());
+				} finally {
+					if (br != null)
+						try {
+							br.close();
+						} catch (Exception e) {
+						}
+				}
+			}
+		};
+		// t.setDaemon(true);
+		t.start();
+		return t;
 	}
 
 	private static final void stopLog() {

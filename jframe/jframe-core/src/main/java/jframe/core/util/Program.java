@@ -47,6 +47,7 @@ public class Program {
 		try {
 			fw = new FileWriter(pid_file);
 			fw.write(pid);
+			fw.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {

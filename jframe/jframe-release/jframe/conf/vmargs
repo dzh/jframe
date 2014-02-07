@@ -11,7 +11,7 @@
 #jvm
 -server
 -Xms512M
--Xmx1024M 
+-Xmx1024M
 -XX:PermSize=64M
 -XX:MaxPermSize=256M
 #-XX:ThreadStackSize=256K

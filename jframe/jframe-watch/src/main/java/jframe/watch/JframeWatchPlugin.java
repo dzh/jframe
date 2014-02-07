@@ -76,20 +76,20 @@ public class JframeWatchPlugin extends PluginSender {
 				for (;;) {
 					try {
 						key = _watcher.take();
-					} catch (InterruptedException e) {
+
+						for (WatchEvent<?> event : key.pollEvents()) {
+							WatchEvent.Kind<?> kind = event.kind();
+
+							if (kind == StandardWatchEventKind.OVERFLOW)
+								continue;
+							@SuppressWarnings("unchecked")
+							WatchEvent<Path> ev = (WatchEvent<Path>) event;
+							handleWatchEvent(ev);
+						}
+						key.reset();
+					} catch (Exception e) {
 						break;
 					}
-
-					for (WatchEvent<?> event : key.pollEvents()) {
-						WatchEvent.Kind<?> kind = event.kind();
-
-						if (kind == StandardWatchEventKind.OVERFLOW)
-							continue;
-						@SuppressWarnings("unchecked")
-						WatchEvent<Path> ev = (WatchEvent<Path>) event;
-						handleWatchEvent(ev);
-					}
-					key.reset();
 				}
 			}
 

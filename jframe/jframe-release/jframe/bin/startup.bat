@@ -19,8 +19,9 @@ if exist %PID_PATH% (
 	set CLASSPATH=%APP_HOME%/lib/*;%CLASSPATH%
 	rem -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=127.0.0.1:6000,suspend=y
 	start /min java -Dapp.home=%APP_HOME% -Dlogback.configurationFile=%APP_HOME%/conf/logback-daemon.xml ^
-	-cp %CLASSPATH% jframe.launcher.Main
+	-cp "%CLASSPATH%" jframe.launcher.Main
 )
+
 
 
 

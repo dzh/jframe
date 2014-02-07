@@ -41,7 +41,7 @@ public class DefDispatchFactory implements DispatchFactory {
 	}
 
 	public Dispatcher createDispatcher(String dispatcherID) {
-		Dispatcher d = DefDispatcher.newDelegate(dispatcherID);
+		Dispatcher d = DefDispatcher.newDispatcher(dispatcherID);
 		d.start();
 		synchronized (_lock) {
 			_dList.add(d);
