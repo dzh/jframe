@@ -6,13 +6,13 @@
 *.ear
 *~
 .settings/
-*/.settings/
 .svn/
-#target/
-#*/target/
+target/
 #jframe/jframe-release/lib/
 jframe/jframe-release/log/
 #jframe/jframe-release/plugin/
 jframe/jframe-release/temp/
 #jframe-plugins/release/lib/
 #jframe-plugins/release/plugin/
+#jframe-plugins/jframe-jpm/target/
+

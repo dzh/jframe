@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Built-By: dzh
-Plugin-Class: jframe.example.plugin.ExamplePlugin
-Build-Jdk: 1.8.0
-Created-By: Maven Integration for Eclipse
-
