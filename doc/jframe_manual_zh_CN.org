@@ -1,0 +1,56 @@
+#+STARTUP: showall
+
+#+TITLE: Jframe Manual
+#+AUTHOR: 戴忠
+#+EMAIL: archer.dzh@gmail.com
+
+* 框架简介
+
+* 工程目录
+** 下载地址
+git clone https://github.com/dzh/jframe.git
+** 项目说明
+
+* 安装/使用
+** 运行环境
+- oracle jdk1.5以上
+- 支持linux、windows
+- Eclipse+Maven插件
+** 构建启动
+-  
+
+* 框架配置
+** 启动脚本
+** 框架日志
+** config.properties
+** vmargs[-win]
+
+* 编写Plugin
+** 插件示例
+** 开发插件
+** 插件使用技巧
+*** 插件间互相调用
+*** 获取配置更新
+
+* 调试/性能
+** 远程调试
+*** 调试守护进程(Main)
+*** 调试框架进程(FrameMain)
+** 本地调试
+** 使用jvisualvm
+- 性能监控配置
+-  
+
+* 核心插件
+** jframe-watch
+*** 功能
+*** 配置
+** jframe-upg
+** jframe-rcp
+
+* 源码分析
+** 启动/关闭
+** 加载插件
+** 消息分发
+
+
