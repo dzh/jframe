@@ -26,7 +26,7 @@ public class MsgPoolDispatcher<V> extends DefDispatcher {
 	 */
 	protected MsgPoolDispatcher(String id) {
 		super(id);
-		msgPool = new MsgPool<V>();
+		//msgPool = new MsgPool<V>();
 	}
 
 	public boolean dispatch(Msg<?> msg) {

@@ -23,7 +23,8 @@ public class ResuableMsg<V> extends PluginMsg<V> implements Reusable {
 	}
 
 	public ResuableMsg createMsg() {
-		return _pool.getMsg();
+		// return _pool.getMsg();
+		return null;
 	}
 
 	/*
