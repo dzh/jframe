@@ -1,6 +1,6 @@
 jframe
 =====
-Java Distributed Plugin Framework
+Java Plug-in Framework
 
 消息分发的效率低，
 订阅的效率高，把收到的消息只給感興趣的（編譯時、運行時綁定的問題），訂閱都動態性如何解決
