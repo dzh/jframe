@@ -1,0 +1,24 @@
+10:00:00.605 [main] INFO  jframe.launcher.FrameMain - FrameMain is starting!
+10:00:00.613 [main] INFO  jframe.launcher.FrameMain - Loading config.properties successfully!
+10:00:00.614 [main] INFO  jframe.launcher.FrameMain - write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+10:00:00.634 [DefFrameStartThread] INFO  jframe.core.dispatch.DefDispatcher - Delegate: PluginContextDispatcher Starting!
+10:00:00.637 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Start cleaning cache directory
+10:00:00.664 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Finish clean!
+10:00:00.693 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.example.plugin.ExamplePlugin
+10:00:00.700 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.watch.JframeWatchPlugin
+10:00:00.852 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.example.plugin.ExamplePlugin starting.
+10:00:00.856 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.watch.JframeWatchPlugin starting.
+10:00:02.860 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 3, MsgValue: Mon Nov 25 10:00:02 CST 2013
+10:00:04.857 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Mon Nov 25 10:00:04 CST 2013
+10:00:06.858 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 3, MsgValue: Mon Nov 25 10:00:06 CST 2013
+10:00:08.858 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 3, MsgValue: Mon Nov 25 10:00:08 CST 2013
+10:00:10.858 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 3, MsgValue: Mon Nov 25 10:00:10 CST 2013
+10:00:12.859 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Mon Nov 25 10:00:12 CST 2013
+10:00:14.859 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 3, MsgValue: Mon Nov 25 10:00:14 CST 2013
+10:00:16.860 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 3, MsgValue: Mon Nov 25 10:00:16 CST 2013
+10:00:18.860 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Mon Nov 25 10:00:18 CST 2013
+10:00:20.860 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Mon Nov 25 10:00:20 CST 2013
+10:00:22.861 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Mon Nov 25 10:00:22 CST 2013
+10:00:23.270 [Thread-0] INFO  jframe.launcher.FrameMain - FrameMain delete pid:/home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+10:00:23.272 [DefFrameStopThread] INFO  jframe.core.DefFrame - DefFrame stopped successfully!
+10:00:23.273 [main] INFO  jframe.launcher.FrameMain - Application Stopped Successfully!

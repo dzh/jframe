@@ -55,6 +55,7 @@ import ch.qos.logback.classic.LoggerContext;
 public class Main {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+	static final String ENCODING = "utf-8";
 
 	/**
 	 * @param args
@@ -233,22 +234,15 @@ public class Main {
 			public void run() {
 				BufferedReader br = null;
 				try {
-					br = new BufferedReader(new InputStreamReader(inputStream));
-					// char[] buf = new char[32];
-					// int len = 0;
-					String line = null;
-					while (true) {
+					br = new BufferedReader(new InputStreamReader(inputStream,
+							ENCODING));
+					while (!Thread.interrupted()) {
 						try {
-							line = br.readLine();
+							LOG.info(br.readLine());
 						} catch (IOException e) {
 							LOG.error(e.getMessage());
-							return;
+							break;
 						}
-						if (line == null || Thread.interrupted())
-							return;
-						// LOG.error(new String(buf, 0, len));
-						LOG.info(line);
-						System.out.println(line);
 					}
 				} catch (Exception e) {
 					LOG.error(e.getMessage());
@@ -261,7 +255,7 @@ public class Main {
 				}
 			}
 		};
-		// t.setDaemon(true);
+		t.setDaemon(true);
 		t.start();
 		return t;
 	}

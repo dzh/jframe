@@ -17,6 +17,7 @@ start()
     nohup java -Dapp.home=${APP_HOME} \
         -Dlogback.configurationFile=${APP_HOME}/conf/logback-daemon.xml \
         -cp ${APP_HOME}/lib/*:$PATH \
+        -Xmx16M -Xms16M -Xmn8M -XX:MaxPermSize=20M -XX:+HeapDumpOnOutOfMemoryError \
         jframe.launcher.Main >/dev/null 2>&1 &
     echo "Application start finished!"
 }

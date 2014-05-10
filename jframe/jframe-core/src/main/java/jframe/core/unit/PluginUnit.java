@@ -5,19 +5,14 @@ package jframe.core.unit;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
 
 import jframe.core.Frame;
 import jframe.core.conf.Config;
 import jframe.core.plugin.DefPluginContext;
 import jframe.core.plugin.Plugin;
 import jframe.core.plugin.PluginContext;
-import jframe.core.plugin.PluginRef;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginCreator;
 import jframe.core.signal.Signal;
@@ -62,54 +57,7 @@ public class PluginUnit extends AbstractUnit {
 		// clean cache
 		cleanCache();
 		// load then register plug-in
-		regPlugin(loadPlugin());
-	}
-
-	/**
-	 * 
-	 */
-	private void regPlugin(Collection<Plugin> plugins) {
-		if (plugins == null || plugins.size() == 0)
-			return;
-
-		TreeSet<Plugin> set = new TreeSet<Plugin>(new PluginComparator(
-				PluginComparator.TYPE.START));
-		for (Plugin p : plugins) {
-			if (!set.add(p))
-				LOG.warn("Found repeated plugin: " + p.getName());
-		}
-		Iterator<Plugin> iter = set.iterator();
-		Plugin p = null;
-		while (iter.hasNext()) {
-			p = iter.next();
-			try {
-				_context.regPlugin(p);
-			} catch (Exception e) { //TODO 
-				LOG.error("When invoke pluginUnit.regPlugin(), plugin name is "
-						+ p.getName() + " " + e.getMessage());
-				_context.unregPlugin(p);
-			}
-			iter.remove();
-		}
-	}
-
-	/**
-	 * @param plugins
-	 */
-	private void unregPlugin(Collection<PluginRef> plugins) {
-		if (plugins.size() == 0)
-			return;
-
-		TreeSet<Plugin> set = new TreeSet<Plugin>(new PluginComparator(
-				PluginComparator.TYPE.STOP));
-		for (PluginRef ref : plugins) {
-			if (ref.getPlugin() != null && !set.add(ref.getPlugin()))
-				LOG.warn("Found repeated plugin: " + ref.getPlugin().getName());
-		}
-		Iterator<Plugin> iter = set.iterator();
-		while (iter.hasNext()) {
-			_context.unregPlugin(iter.next());
-		}
+		_context.regPlugins(loadPlugin(), null);
 	}
 
 	/**
@@ -165,11 +113,10 @@ public class PluginUnit extends AbstractUnit {
 	 * @see jframe.core.unit.Unit#stop()
 	 */
 	public void stop() throws UnitException {
-		// stop plugins
-		unregPlugin(_context.getPlugins());
-
-		if (_context != null)
+		if (_context != null) {
+			// stop plugins
 			_context.dispose();
+		}
 	}
 
 	/*
@@ -179,64 +126,6 @@ public class PluginUnit extends AbstractUnit {
 	 */
 	public void recvSig(Signal sig) {
 		// TODO
-	}
-
-	public static class PluginComparator implements Comparator<Plugin> {
-
-		public static enum TYPE {
-			START, STOP
-		}
-
-		private TYPE type;
-
-		public PluginComparator(TYPE type) {
-			this.type = type;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 */
-		public int compare(Plugin o1, Plugin o2) {
-			int v = 0;
-			jframe.core.plugin.annotation.Plugin ap1 = o1.getClass()
-					.getAnnotation(jframe.core.plugin.annotation.Plugin.class);
-			jframe.core.plugin.annotation.Plugin ap2 = o2.getClass()
-					.getAnnotation(jframe.core.plugin.annotation.Plugin.class);
-			switch (type) {
-			case START: {
-				v = minus(ap1.startOrder(), ap2.startOrder());
-				break;
-			}
-			case STOP: {
-				v = minus(ap1.stopOrder(), ap2.stopOrder());
-				break;
-			}
-			}
-
-			if (v == 0) {
-				v = o1.getName().compareTo(o2.getName());
-			}
-			return v;
-		}
-
-		/**
-		 * 负数作为最大整数
-		 * 
-		 * @param minuend
-		 * @param subtrahend
-		 * @return
-		 */
-		int minus(int minuend, int subtrahend) {
-			if (minuend < 0) {
-				minuend = Integer.MAX_VALUE;
-			}
-			if (subtrahend < 0) {
-				subtrahend = Integer.MAX_VALUE;
-			}
-			return minuend - subtrahend;
-		}
 	}
 
 }

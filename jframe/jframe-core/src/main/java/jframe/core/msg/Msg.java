@@ -18,6 +18,8 @@ public interface Msg<V> extends Cloneable {
 
 	String getMeta(String key);
 
+	String removeMeta(String key);
+
 	Msg<V> setValue(V msg); // 内容
 
 	V getValue();
@@ -25,4 +27,9 @@ public interface Msg<V> extends Cloneable {
 	void accept(MsgVisitor<V> visitor); // 遍历
 
 	void clear();
+
+	/**
+	 * delete all meta content
+	 */
+	void clearMeta();
 }

@@ -19,6 +19,6 @@ public interface DispatchFactory {
 
 	Dispatcher findDispatcher(String dispatcherID);
 
-	void removeDispacher(String dispatcherID);
+	void removeDispatcher(String dispatcherID);
 
 }

@@ -10,6 +10,7 @@ package jframe.core.conf;
  */
 public interface ConfigConstants {
 
+	/********************** Frame ***********************/
 	String REGEX_VAR = "\\$\\{(.+?)\\}";
 	String APP_HOME = "app.home"; // application root directory
 	String APP_CONF = "app.conf"; // application configuration directory
@@ -25,12 +26,23 @@ public interface ConfigConstants {
 	String FILE_CONFIG = "config.properties"; // configuration file name
 	String PID_DAEMON = "daemon.pid"; //
 	String APP_NAME = "app.name";
+	String APP_FRAME = "app.frame";
+	/*****************************************************/
 
+	/********************** launcher ***********************/
 	String LAUNCH_MODE = "launch.mode"; //
 	String LAUNCH_MODE_DAEMON = "daemon";
 	String LAUNCHER = "launcher";
 	// String LAUNCH_MODE_NORMAL = "normal";
+	/*****************************************************/
 
-	String APP_FRAME = "app.frame";
+	/********************** PluginContext ***********************/
+	String CONTEXT = "context";
+	String CONTEXT_DISPATCHER = "context.dispatcher";
+	String CONTEXT_DISPATCHER_ID = "context.dispatcher.id";
+	/*****************************************************/
+
+	/********************** Plugin ***********************/
 	String PLUGIN_FORBID = "plugin.forbid"; // plug-ins not be used(start|reg)
+	/*****************************************************/
 }

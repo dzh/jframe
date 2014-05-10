@@ -1,5 +1,7 @@
 package jframe.core.dispatch;
 
+import java.util.Collection;
+
 import jframe.core.msg.Msg;
 
 /**
@@ -46,6 +48,10 @@ public interface Dispatcher {
 	void addDispatchTarget(DispatchTarget target);
 
 	void removeDispatchTarget(DispatchTarget target);
+
+	Collection<DispatchSource> getDispatchSource();
+
+	Collection<DispatchTarget> getDispatchTarget();
 
 	/**
 	 * @Title: close

@@ -1,0 +1,5 @@
+10:00:00.025 [main] INFO  jframe.launcher.Main - Main is Starting!
+10:00:00.033 [main] INFO  jframe.launcher.Main - Loading config.properties successfully!
+10:00:00.033 [main] INFO  jframe.launcher.Main - Launching daemon mode!
+10:00:00.033 [main] INFO  jframe.launcher.Main - Write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/daemon.pid
+10:00:00.072 [main] INFO  jframe.launcher.Main - Startup application process successfully!

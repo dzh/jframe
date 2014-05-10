@@ -3,6 +3,8 @@
  */
 package jframe.core.dispatch;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,28 +32,20 @@ public class DefDispatcher implements Dispatcher {
 
 	private final List<DispatchTarget> _dtList = new CopyOnWriteArrayList<DispatchTarget>();
 
-	// TODO size
-	private final BlockingQueue<Msg<?>> _queue = new LinkedBlockingQueue<Msg<?>>();
+	private BlockingQueue<Msg<?>> _queue;
 
 	private volatile boolean stop;
 
 	private final CountDownLatch latch = new CountDownLatch(1);
 
-	private DefDispatcher(String id) {
+	public DefDispatcher(String id) {
 		this._ID = id;
 	}
 
-	protected static final Dispatcher newDispatcher(String id) {
+	public static final Dispatcher newDispatcher(String id) {
 		return new DefDispatcher(id);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.weather.datam.delegate.IDelegate#delegate(com.weather.datam.message
-	 * .Message)
-	 */
 	public boolean dispatch(Msg<?> msg) {
 		if (msg != null) {
 			List<DispatchTarget> dtList = _dtList;
@@ -64,22 +58,10 @@ public class DefDispatcher implements Dispatcher {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.weather.datam.delegate.Delegate#getID()
-	 */
 	public String getID() {
 		return _ID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.weather.datam.delegate.Delegate#addDelegateSource(com.weather.datam
-	 * .delegate.DelegateSource)
-	 */
 	public void addDispatchSource(DispatchSource source) {
 		if (source == null || _dsList.contains(source))
 			return;
@@ -88,13 +70,6 @@ public class DefDispatcher implements Dispatcher {
 		_dsList.add(source);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.weather.datam.delegate.Delegate#removeDelegateSource(com.weather.
-	 * datam.delegate.DelegateSource)
-	 */
 	public void removeDispatchSource(DispatchSource source) {
 		if (source == null)
 			return;
@@ -102,96 +77,109 @@ public class DefDispatcher implements Dispatcher {
 		_dsList.remove(source);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.weather.datam.delegate.Delegate#addDelegateTarget(com.weather.datam
-	 * .delegate.DelegateTarget)
-	 */
 	public void addDispatchTarget(DispatchTarget target) {
 		if (target == null || _dtList.contains(target))
 			return;
 		_dtList.add(target);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.weather.datam.delegate.Delegate#removeDelegateTarget(com.weather.
-	 * datam.delegate.DelegateTarget)
-	 */
 	public void removeDispatchTarget(DispatchTarget target) {
 		if (target == null)
 			return;
 		_dtList.remove(target);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.weather.datam.delegate.Delegate#start()
-	 */
-	public void start() {
-		LOG.info("Delegate: " + _ID + " Starting!");
-		stop = false;
-		final BlockingQueue<Msg<?>> queue = _queue;
-		new Thread("Dispacher") { // 分发线程
-			public void run() {
-				while (true) {
-					if (queue.isEmpty() && stop) {
-						latch.countDown();
-						break;
-					}
+	private Thread disptchThread;
 
-					Msg<?> msg = null;
+	public void start() {
+		LOG.info("Dispatcher: " + _ID + " Starting!");
+		stop = false;
+		_queue = createDispatchQueue();
+		initDispatchQueue(_queue);
+		disptchThread = new Thread("DispatchThread") { // 分发线程
+			public void run() {
+				final BlockingQueue<Msg<?>> queue = _queue;
+				while (true) {
 					try {
-						msg = queue.poll(2000, TimeUnit.MILLISECONDS);
-					} catch (InterruptedException e) {
+						if (queue.isEmpty() && stop)
+							break;
+						dispatch(queue.take());
+					} catch (Exception e) {
 						LOG.warn(e.getMessage());
 					}
-
-					dispatch(msg);
 				}
+				latch.countDown();
 			}
-		}.start();
+		};
+		disptchThread.start();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 启动时，初始化分发队列
 	 * 
-	 * @see
-	 * com.weather.datam.delegate.Delegate#receive(com.weather.datam.message
-	 * .Msg)
+	 * @param queue
 	 */
+	void initDispatchQueue(BlockingQueue<Msg<?>> queue) {
+
+	}
+
+	/**
+	 * 关闭时，保存队列数据
+	 * 
+	 * @param _queue
+	 */
+	void saveDispatchQueue(BlockingQueue<Msg<?>> queue) {
+
+	}
+
+	/**
+	 * 创建分发队列
+	 * 
+	 * @return
+	 */
+	BlockingQueue<Msg<?>> createDispatchQueue() {
+		return new LinkedBlockingQueue<Msg<?>>();
+	}
+
 	public void receive(Msg<?> msg) {
-		if (msg == null)
+		if (msg == null || stop)
 			return;
-		_queue.offer(msg);
+		try {
+			_queue.offer(msg, 60, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			LOG.error(e.getMessage());
+			// TODO 数据丢失问题
+		}
 		// LOG.debug("DefDispatcher receive msg " + msg.toString());
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.weather.datam.delegate.Delegate#close()
 	 */
 	public void close() {
 		if (stop)
 			return;
 		LOG.info("Dispacher: " + _ID + " Stopping!");
+		closeDispatch();
+		dispose();
+		saveDispatchQueue(_queue);
+	}
+
+	/**
+	 * close DispatchThread
+	 */
+	void closeDispatch() {
 		stop = true;
+		disptchThread.interrupt();
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
 			LOG.error(e.getMessage());
 		}
-		dispose();
 	}
 
 	/**
-	 * 内部方法清理对象
+	 * cleanup DispatchSource and DispatchTarget
 	 */
 	private void dispose() {
 		List<DispatchSource> dslist = _dsList;
@@ -199,6 +187,24 @@ public class DefDispatcher implements Dispatcher {
 			ds.removeDispatch(this);
 		}
 		_dtList.clear();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see jframe.core.dispatch.Dispatcher#getDispatchSource()
+	 */
+	public Collection<DispatchSource> getDispatchSource() {
+		return Collections.unmodifiableList(_dsList);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see jframe.core.dispatch.Dispatcher#getDispatchTarget()
+	 */
+	public Collection<DispatchTarget> getDispatchTarget() {
+		return Collections.unmodifiableList(_dtList);
 	}
 
 }

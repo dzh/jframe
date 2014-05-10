@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * delegate管理管理工厂
+ * dispatch管理管理工厂
  * 
  * @author dzh
  * @date Jun 20, 2013 9:47:12 AM
@@ -52,7 +52,7 @@ public class DefDispatchFactory implements DispatchFactory {
 	/**
 	 * if dispatcherID==Null, close all delegates
 	 */
-	public void removeDispacher(String dispatcherID) {
+	public void removeDispatcher(String dispatcherID) {
 		List<Dispatcher> list = _dList;
 		if (dispatcherID == null) {
 			synchronized (_lock) {

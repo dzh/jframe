@@ -5,8 +5,12 @@ package loader;
 
 import java.net.URL;
 
+import jframe.core.dispatch.DefDispatcher;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginClassLoader;
+import junit.framework.Assert;
+
+import org.junit.Test;
 
 /**
  * @author dzh
@@ -39,6 +43,14 @@ public class TestPluginClassLoader {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void testClazzName() {
+		Assert.assertEquals("jframe.core.dispatch.DefDispatcher",
+				DefDispatcher.class.getName());
+		System.out.println(DefDispatcher.class.getName());
+		System.out.println(DefDispatcher.class.getSimpleName());
 	}
 
 }

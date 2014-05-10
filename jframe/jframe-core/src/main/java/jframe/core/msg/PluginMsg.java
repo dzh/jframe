@@ -53,11 +53,29 @@ public class PluginMsg<V> implements Msg<V> {
 	}
 
 	public void clear() {
-		_meta.clear();
+		clearMeta();
 		msg = null;
 	}
 
 	public String toString() {
 		return "MsgType: " + getType() + ", MsgValue: " + getValue();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see jframe.core.msg.Msg#clearMeta()
+	 */
+	public void clearMeta() {
+		_meta.clear();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see jframe.core.msg.Msg#removeMeta(java.lang.String)
+	 */
+	public String removeMeta(String key) {
+		return _meta.remove(key);
 	}
 }

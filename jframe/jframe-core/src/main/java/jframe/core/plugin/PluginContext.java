@@ -4,6 +4,7 @@
 package jframe.core.plugin;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 import jframe.core.conf.Config;
 
@@ -30,7 +31,22 @@ public interface PluginContext {
 
 	PluginRef regPlugin(Plugin plugin);
 
+	void regPlugins(Collection<Plugin> plugins,
+			Comparator<? super Plugin> comparator);
+
+	void unregPlugins(Collection<PluginRef> refs,
+			Comparator<? super Plugin> comparator);
+
+	/**
+	 * use unregPlugin(PluginRef)
+	 * 
+	 * @param plugin
+	 * @return
+	 */
+	@Deprecated
 	PluginRef unregPlugin(Plugin plugin);
+
+	void unregPlugin(PluginRef ref);
 
 	Config getConfig();
 

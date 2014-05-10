@@ -18,7 +18,8 @@ if exist %PID_PATH% (
 ) else (
 	set CLASSPATH=%APP_HOME%/lib/*;%CLASSPATH%
 	rem -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=127.0.0.1:6000,suspend=y
-	start /min java -Dapp.home=%APP_HOME% -Dlogback.configurationFile=%APP_HOME%/conf/logback-daemon.xml ^
+	start javaw -Dapp.home=%APP_HOME% -Dlogback.configurationFile=%APP_HOME%/conf/logback-daemon.xml ^
+	-Xmx16M -Xms16M -Xmn8M -XX:MaxPermSize=20M -XX:+HeapDumpOnOutOfMemoryError ^
 	-cp "%CLASSPATH%" jframe.launcher.Main
 )
 

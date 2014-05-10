@@ -1,0 +1,73 @@
+09:46:21.914 [main] INFO  jframe.launcher.FrameMain - FrameMain is starting!
+09:46:21.922 [main] INFO  jframe.launcher.FrameMain - Loading config.properties successfully!
+09:46:21.922 [main] INFO  jframe.launcher.FrameMain - write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+09:46:21.944 [DefFrameStartThread] INFO  jframe.core.dispatch.DefDispatcher - Delegate: PluginContextDispatcher Starting!
+09:46:21.946 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Start cleaning cache directory
+09:46:22.027 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Finish clean!
+09:46:22.059 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Forbid plugin: jframe.example.plugin.ExamplePlugin
+09:46:22.069 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.swt.SwtPlugin
+09:46:22.093 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.watch.JframeWatchPlugin
+09:46:22.262 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Forbid plugin: jframe.example.plugin.ExamplePlugin
+09:46:22.307 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.swt.SwtPlugin starting.
+09:46:22.382 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.watch.JframeWatchPlugin starting.
+09:46:39.768 [Thread-0] INFO  jframe.launcher.FrameMain - FrameMain delete pid:/home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+09:46:39.772 [DefFrameStopThread] INFO  jframe.core.DefFrame - DefFrame stopped successfully!
+09:46:39.773 [main] INFO  jframe.launcher.FrameMain - Application Stopped Successfully!
+15:28:15.271 [main] INFO  jframe.launcher.FrameMain - FrameMain is starting!
+15:28:15.279 [main] INFO  jframe.launcher.FrameMain - Loading config.properties successfully!
+15:28:15.279 [main] INFO  jframe.launcher.FrameMain - write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+15:28:15.302 [DefFrameStartThread] INFO  jframe.core.dispatch.DefDispatcher - Delegate: PluginContextDispatcher Starting!
+15:28:15.306 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Start cleaning cache directory
+15:28:15.352 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Finish clean!
+15:28:15.377 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Forbid plugin: jframe.example.plugin.ExamplePlugin
+15:28:15.396 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.swt.SwtPlugin
+15:28:15.431 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.watch.JframeWatchPlugin
+15:28:15.555 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Forbid plugin: jframe.example.plugin.ExamplePlugin
+15:28:15.602 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.swt.SwtPlugin starting.
+15:28:15.642 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.watch.JframeWatchPlugin starting.
+15:29:14.154 [Thread-0] INFO  jframe.launcher.FrameMain - FrameMain delete pid:/home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+15:29:14.157 [DefFrameStopThread] INFO  jframe.core.DefFrame - DefFrame stopped successfully!
+15:29:14.159 [main] INFO  jframe.launcher.FrameMain - Application Stopped Successfully!
+15:30:39.061 [main] INFO  jframe.launcher.FrameMain - FrameMain is starting!
+15:30:39.069 [main] INFO  jframe.launcher.FrameMain - Loading config.properties successfully!
+15:30:39.069 [main] INFO  jframe.launcher.FrameMain - write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+15:30:39.090 [DefFrameStartThread] INFO  jframe.core.dispatch.DefDispatcher - Delegate: PluginContextDispatcher Starting!
+15:30:39.093 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Start cleaning cache directory
+15:30:39.094 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Finish clean!
+15:30:39.095 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Forbid plugin: jframe.example.plugin.ExamplePlugin
+15:30:39.096 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.swt.SwtPlugin
+15:30:39.103 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.watch.JframeWatchPlugin
+15:30:39.251 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.swt.SwtPlugin starting.
+15:30:39.259 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.watch.JframeWatchPlugin starting.
+15:31:32.949 [Thread-0] INFO  jframe.launcher.FrameMain - FrameMain delete pid:/home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+15:31:32.963 [DefFrameStopThread] INFO  jframe.core.DefFrame - DefFrame stopped successfully!
+15:31:32.964 [main] INFO  jframe.launcher.FrameMain - Application Stopped Successfully!
+15:31:36.062 [main] INFO  jframe.launcher.FrameMain - FrameMain is starting!
+15:31:36.070 [main] INFO  jframe.launcher.FrameMain - Loading config.properties successfully!
+15:31:36.070 [main] INFO  jframe.launcher.FrameMain - write pid file: /home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+15:31:36.092 [DefFrameStartThread] INFO  jframe.core.dispatch.DefDispatcher - Delegate: PluginContextDispatcher Starting!
+15:31:36.094 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Start cleaning cache directory
+15:31:36.096 [DefFrameStartThread] INFO  jframe.core.unit.PluginUnit - Finish clean!
+15:31:36.104 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.example.plugin.ExamplePlugin
+15:31:36.114 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.swt.SwtPlugin
+15:31:36.117 [DefFrameStartThread] INFO  jframe.core.plugin.loader.PluginCreator - Loading plugin jframe.watch.JframeWatchPlugin
+15:31:36.267 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.example.plugin.ExamplePlugin starting.
+15:31:36.269 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.swt.SwtPlugin starting.
+15:31:36.278 [DefFrameStartThread] INFO  jframe.core.plugin.DefPlugin - Plugin jframe.watch.JframeWatchPlugin starting.
+15:31:40.271 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Wed Jan 08 15:31:40 CST 2014
+15:31:44.270 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Wed Jan 08 15:31:44 CST 2014
+15:31:48.271 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Wed Jan 08 15:31:48 CST 2014
+15:31:50.271 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Wed Jan 08 15:31:50 CST 2014
+15:31:52.272 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Wed Jan 08 15:31:52 CST 2014
+15:31:54.272 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Wed Jan 08 15:31:54 CST 2014
+15:31:56.272 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Wed Jan 08 15:31:56 CST 2014
+15:32:00.273 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Wed Jan 08 15:32:00 CST 2014
+15:32:02.274 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Wed Jan 08 15:32:02 CST 2014
+15:32:04.274 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Wed Jan 08 15:32:04 CST 2014
+15:32:10.275 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Wed Jan 08 15:32:10 CST 2014
+15:32:14.276 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 1, MsgValue: Wed Jan 08 15:32:14 CST 2014
+15:32:16.276 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Wed Jan 08 15:32:16 CST 2014
+15:32:20.277 [Recver thread] INFO  jframe.example.plugin.ExamplePlugin - MsgType: 2, MsgValue: Wed Jan 08 15:32:20 CST 2014
+15:32:21.545 [Thread-0] INFO  jframe.launcher.FrameMain - FrameMain delete pid:/home/dzh/lx/ext-eclipse/jframe/jframe-release/jframe/temp/app.pid
+15:32:21.552 [DefFrameStopThread] INFO  jframe.core.DefFrame - DefFrame stopped successfully!
+15:32:21.555 [main] INFO  jframe.launcher.FrameMain - Application Stopped Successfully!

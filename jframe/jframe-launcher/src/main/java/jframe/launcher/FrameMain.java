@@ -104,7 +104,7 @@ public class FrameMain {
 
 	private static void exitSystem(int status) {
 		stopLog();
-		System.exit(status);
+		System.exit(status); //TODO
 	}
 
 }
