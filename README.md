@@ -10,7 +10,7 @@ A Common Plugin Framework implemented by Java. Without complex configuration, yo
 
 ## About Jframe Manual
 * Jframe's manual is jframe_manual_zh_CN.org in /jframe/doc/ directory.I edit it using Emacs's Org plug-in, and export a html version jframe_manual_zh_CN.html.
-* Online address is https://github.com/dzh/jframe/blob/master/doc/jframe_manual_zh_CN.org
+* Online address [jframe_manual_zh_CN](https://github.com/dzh/jframe/blob/master/doc/jframe_manual_zh_CN.org)
 
 ## Jframe Features
 * v1.0.0
