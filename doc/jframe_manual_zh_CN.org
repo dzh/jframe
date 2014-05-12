@@ -4,12 +4,35 @@
 #+AUTHOR: 戴忠
 #+EMAIL: archer.dzh@gmail.com
 
-* 框架简介
-
 * 工程目录
 ** 下载地址
 git clone https://github.com/dzh/jframe.git
-** 项目说明
+** 工程说明
+项目checkout之后的目录结构如下(/注: 以下结构可能与实际稍不同/)：
+#+BEGIN_EXAMPLE
+- jframe                            #checkout根目录
+  - doc                             #项目文档
+  - jframe                          #jframe框架根目录， 它是pom项目，在eclipse选择它install
+    - backup                        #存放一些文件，用户备份
+    - jframe-core                   #框架核心， module项目
+    - jframe-example-plugin         #演示插件编写的示例插件， module项目
+    - jframe-ext                    #jframe-core的扩展
+    - jframe-launcher               #启动Main函数
+    - jframe-release                #install构建的jframe结构，记住在jframe根目录install
+      - jframe                      #这个目录之下，代表了jframe框架的程序结构布局
+        - bin                       #启动、停止脚本
+        - conf                      #配置文件，包括config.properties、vmargs、logback.xml等
+        - doc                       #文档  
+        - lib                       #公共lib库,动态dll|so默认目录,由系统类加载器加载
+        - log                       #默认日志输出目录
+        - plugin                    #默认插件目录,下面的插件有插件类加载器加载
+        - temp                      #默认临时目录,如存放进程pid文件等
+        - update                    #默认系统更新目录,upg更新插件使用
+    - jframe-swt                    #jframe的swt插件实现,这个示例还没做好,目前演示了将jframe用于C端的方式
+    - jframe-watch                  #资源更新插件,跟踪配置文件的修改并通知其他插件
+  - jframe-plugins                  #jframe实现的一些插件
+#+END_EXAMPLE
+
 
 * 安装/使用
 ** 运行环境
@@ -17,7 +40,7 @@ git clone https://github.com/dzh/jframe.git
 - 支持linux、windows
 - Eclipse+Maven插件
 ** 构建启动
--  
+- 
 
 * 框架配置
 ** 启动脚本
@@ -39,7 +62,7 @@ git clone https://github.com/dzh/jframe.git
 ** 本地调试
 ** 使用jvisualvm
 - 性能监控配置
--  
+- 
 
 * 核心插件
 ** jframe-watch

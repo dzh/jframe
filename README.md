@@ -14,7 +14,7 @@ A Common Plugin Framework implemented by Java. Without complex configuration, yo
 
 ## Jframe Features
 * v1.0.0
-   * Can run on jdk1.5 or higher
+   * Run on jdk1.5 or higher
    * Use slf4j+logback as logging framework
    * Supoort daemon or normal launcher mode
    * Framework can be configured and can dynamically obtain configuration modification notification
