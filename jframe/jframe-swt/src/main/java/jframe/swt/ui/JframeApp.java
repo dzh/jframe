@@ -90,17 +90,17 @@ public class JframeApp {
 		// folder.setMaximizeVisible(true);
 		// configuration
 		CTabItem startTab = new CTabItem(folder, SWT.NONE);
-		startTab.setText("启动配置");
+		startTab.setText("TAB1");
 		Composite config = createMonitorConfig(folder);
 		startTab.setControl(config);
 
 		// monitor info
 		CTabItem item = new CTabItem(folder, SWT.NONE);
-		item.setText("监控信息");
+		item.setText("TAB2");
 		Text text = new Text(folder, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL
 				| SWT.H_SCROLL);
 		text.setEditable(false);
-		configMonitorInfo(text);
+		showRecvMsg(text);
 		item.setControl(text);
 
 		folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
@@ -111,6 +111,7 @@ public class JframeApp {
 				// }
 			}
 		});
+		folder.setSelection(item);
 
 	}
 
@@ -127,7 +128,7 @@ public class JframeApp {
 	/**
 	 * @param text
 	 */
-	private void configMonitorInfo(final Text text) {
+	private void showRecvMsg(final Text text) {
 		new Thread("MonitorMsg") {
 			public void run() {
 				while (true) {
@@ -225,7 +226,6 @@ public class JframeApp {
 		Rectangle clientArea = shell.getClientArea();
 		bar.setLocation(clientArea.x, clientArea.y);
 		bar.pack();
-
 	}
 
 	/**

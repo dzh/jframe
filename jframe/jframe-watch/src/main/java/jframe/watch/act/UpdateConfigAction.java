@@ -39,27 +39,30 @@ public class UpdateConfigAction implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		try {
+			Properties p = new Properties();
+			FileUtil.loadToProps(p, config); // TODO performance
+			Config newConf = ConfigUtil.genNewConfig(config);
 
-		Properties p = new Properties();
-		FileUtil.loadToProps(p, config); // TODO performance
-		Config newConf = ConfigUtil.genNewConfig(config);
-
-		Iterator<Object> iter = p.keySet().iterator();
-		String key = "", oldVal = "", newVal = "";
-		while (iter.hasNext()) {
-			key = iter.next().toString();
-			newVal = newConf.getConfig(key);
-			if (newVal == null)
-				continue;
-			// modify config content
-			oldVal = plugin.getContext().getConfig().modifyConfig(key, newVal);
-			// send ConfigMsg
-			if (!newVal.equals(oldVal)) {
-				plugin.send(ConfigMsg.createMsg(key, oldVal, newVal));
+			Iterator<Object> iter = p.keySet().iterator();
+			String key = "", oldVal = "", newVal = "";
+			while (iter.hasNext()) {
+				key = iter.next().toString();
+				newVal = newConf.getConfig(key);
+				if (newVal == null)
+					continue;
+				// modify config content
+				oldVal = plugin.getContext().getConfig()
+						.modifyConfig(key, newVal);
+				// send ConfigMsg
+				if (!newVal.equals(oldVal)) {
+					plugin.send(ConfigMsg.createMsg(key, oldVal, newVal));
+				}
 			}
+			newConf.clearConfig();
+			plugin = null;
+		} catch (Exception e) {
 		}
-		newConf.clearConfig();
-		plugin = null;
 	}
 
 }

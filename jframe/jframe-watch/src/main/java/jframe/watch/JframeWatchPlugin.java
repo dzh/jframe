@@ -4,6 +4,9 @@
 package jframe.watch;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import jframe.core.conf.Config;
 import jframe.core.msg.ConfigMsg;
@@ -19,9 +22,12 @@ import name.pachler.nio.file.WatchEvent;
 import name.pachler.nio.file.WatchKey;
 import name.pachler.nio.file.WatchService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
- * <li></li>
+ * <li>config.properties修改通知</li>
  * <li>TODO 其他文件处理</li>
  * <li>TODO 提供配置定义</li>
  * </p>
@@ -32,12 +38,17 @@ import name.pachler.nio.file.WatchService;
  */
 public class JframeWatchPlugin extends PluginSender {
 
+	private static final Logger LOG = LoggerFactory
+			.getLogger(JframeWatchPlugin.class);
+
 	private WatchService _watcher;
 
 	// private static final String WATCH_PATH = "watch.path";
 	// private static final String WATCH_FILE = "watch.file";
 	// private static final String WATCH_FILE_SUFFIX = "watch.file.suffix";
 	// private static final String SEPR = " "; // 属性值之间的分格符
+
+	private ExecutorService es = Executors.newFixedThreadPool(1); // TODO
 
 	public void init(PluginContext context) throws PluginException {
 		super.init(context);
@@ -49,7 +60,7 @@ public class JframeWatchPlugin extends PluginSender {
 				try {
 					doWatch();
 				} catch (Exception e) {
-					logError(e.getMessage());
+					LOG.error(e.getMessage());
 				}
 			}
 
@@ -59,7 +70,8 @@ public class JframeWatchPlugin extends PluginSender {
 				// register default conf home
 				Path path = Paths.get(getConfig(Config.APP_CONF));
 				path.register(_watcher, StandardWatchEventKind.ENTRY_CREATE,
-						StandardWatchEventKind.ENTRY_MODIFY);
+						StandardWatchEventKind.ENTRY_MODIFY,
+						StandardWatchEventKind.ENTRY_DELETE);
 				// register watch.path if exists TODO use anothor watcher
 				// String[] watchPaths = getConfig(WATCH_PATH, "").split(SEPR);
 				// for (String p : watchPaths) {
@@ -77,7 +89,6 @@ public class JframeWatchPlugin extends PluginSender {
 				for (;;) {
 					try {
 						key = _watcher.take();
-
 						for (WatchEvent<?> event : key.pollEvents()) {
 							WatchEvent.Kind<?> kind = event.kind();
 
@@ -86,9 +97,12 @@ public class JframeWatchPlugin extends PluginSender {
 							@SuppressWarnings("unchecked")
 							WatchEvent<Path> ev = (WatchEvent<Path>) event;
 							handleWatchEvent(ev);
+							LOG.info("kind {}, file {}", event.kind()
+									.toString(), event.context().toString());
 						}
 						key.reset();
 					} catch (Exception e) {
+						LOG.error(e.getMessage());
 						break;
 					}
 				}
@@ -97,8 +111,8 @@ public class JframeWatchPlugin extends PluginSender {
 			private void handleWatchEvent(WatchEvent<Path> ev) {
 				String path = ev.context().toString();
 				if (Config.FILE_CONFIG.equals(path)) {
-					new Thread(new UpdateConfigAction(JframeWatchPlugin.this,
-							getConfig(Config.FILE_CONFIG))).start();
+					es.submit(new UpdateConfigAction(JframeWatchPlugin.this,
+							getConfig(Config.FILE_CONFIG)));
 					return;
 				}
 
@@ -132,7 +146,14 @@ public class JframeWatchPlugin extends PluginSender {
 			if (_watcher != null)
 				_watcher.close();
 		} catch (IOException e) {
-			logWarn(e.getMessage());
+			LOG.warn(e.getMessage());
+		}
+
+		try {
+			es.shutdown();
+			es.awaitTermination(30, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			LOG.warn(e.getMessage());
 		}
 		super.stop();
 	}

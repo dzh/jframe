@@ -112,6 +112,9 @@ public class ExamplePlugin extends PluginSenderRecver {
 		}
 	}
 
+	/**
+	 * 重写这个方法，因为默认插件不接收自己的消息
+	 */
 	@MsgInterest
 	public boolean interestMsg(Msg<?> msg) {
 		if (msg == null || PluginStatus.STOP == getStatus())
