@@ -1,8 +1,7 @@
 JFrame Core
 ===============================================================
 ### Required JDK
-* Compile Level jdk5
-* Runtime need jdk5 or later
+* Run on jdk5 or later
 
 ### Plug-in Configuration File (plugin.properties)
 * Property introduce

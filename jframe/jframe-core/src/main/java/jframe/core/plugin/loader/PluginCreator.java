@@ -163,7 +163,6 @@ public class PluginCreator {
 			p = (Plugin) pcl.loadClass(pc.getPluginClass()).newInstance();
 		} catch (Exception e) {
 			LOG.error("Create Plugin Error: " + e.getLocalizedMessage());
-			return null;
 		}
 		return p;
 	}

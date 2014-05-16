@@ -208,20 +208,23 @@ public class Main {
 		int exit = 0;
 		do {
 			Process subp = launch(config);//
+			if (subp == null) {
+				LOG.error("Launch FrameMain Error! Are vmargs set the correct value?(win/linux)");
+				break;
+			}
 			Thread errT = redirectStream(subp.getErrorStream());
 			Thread stdT = redirectStream(subp.getInputStream());
 			LOG.info("Startup application process successfully!");
 			try {
 				exit = subp.waitFor();
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				LOG.warn(e.getMessage());
 				break;
 			} finally {
-				try {
-					errT.join();
-					stdT.join();
-				} catch (InterruptedException e) {
-				}
+				if (errT != null)
+					errT.interrupt();
+				if (stdT != null)
+					stdT.interrupt();
 			}
 		} while (exit != 0 && exit != 143);
 	}
@@ -230,6 +233,11 @@ public class Main {
 	 * @param inputStream
 	 */
 	private static Thread redirectStream(final InputStream inputStream) {
+		if (inputStream == null) {
+			LOG.error("Main redirectStream null");
+			return null;
+		}
+
 		Thread t = new Thread("redirectStream") {
 			public void run() {
 				BufferedReader br = null;
@@ -238,14 +246,18 @@ public class Main {
 							ENCODING));
 					while (!Thread.interrupted()) {
 						try {
-							LOG.info(br.readLine());
+							String str = br.readLine();
+							if (str == null)
+								Thread.sleep(1000);
+							else
+								LOG.info(str);
 						} catch (IOException e) {
 							LOG.error(e.getMessage());
 							break;
 						}
 					}
 				} catch (Exception e) {
-					LOG.error(e.getMessage());
+					LOG.warn(e.getMessage());
 				} finally {
 					if (br != null)
 						try {

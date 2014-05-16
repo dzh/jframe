@@ -12,12 +12,16 @@ A Common Plugin Framework implemented by Java. Without complex configuration, yo
 * `git clone git@github.com:dzh/jframe.git` On my pc, the repo is at ~/git/jframe
 * `import jframe into eclipse`, then "Run as" -> "Maven install" to build on jframe project.
 * `cd ~/git/jframe/jframe/jframe-release/jframe`, and then `ls temp`
-<pre>
+<p>
 if there are any *.pid files in temp folder,delete them first
-</pre>
+</p>
 * `bin/jframe.sh start`, maybe you need `chmod +x bin/*.sh`. (If a windows user, use start.bat)
-<pre></pre>
-The default start three plug-ins, jframe-example-pluin, jframe-swt and jframe-watch.
+<p>
+**Note**:
+Before to  start, modify `vmargs` in config.properties.If running on linux, set `vmargs = ${app.home}/conf/vmargs`,
+if on windows ,set `vmargs = ${app.home}/conf/vmargs-win`.
+The default will start three plug-ins:jframe-example-pluin, jframe-swt and jframe-watch.
+</p>
 * `jps -l`, if output similar content, then jframe start successfully.
 <pre>
 13466 jframe.launcher.FrameMain
