@@ -43,6 +43,15 @@ stop()
     fi
 }
 
+main()
+{
+	java -Dapp.home=${APP_HOME} \
+        -Dlogback.configurationFile=${APP_HOME}/conf/logback-plugin.xml \
+        -cp ${APP_HOME}/lib/*:${APP_HOME}/plugin/*:$PATH \
+        -Xmx60M -Xms10M -XX:MaxPermSize=50M -XX:+HeapDumpOnOutOfMemoryError \
+        $1
+}
+
 [ $# -gt 0 ] || usage
 
 APP_HOME=`dirname $(cd "$(dirname "$0")"; pwd)`
@@ -51,7 +60,8 @@ if [ $1 = "start" ]; then
     start
 elif [ $1 = "stop" ]; then 
     stop
+elif [ $1 = "-m" ]; then
+	main $2
 else
     usage
 fi
-

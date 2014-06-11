@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import jframe.core.conf.Config;
-import jframe.core.msg.ConfigMsg;
 import jframe.core.plugin.PluginContext;
 import jframe.core.plugin.PluginException;
 import jframe.core.plugin.PluginSender;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * <p>
  * <li>config.properties修改通知</li>
+ * <li>plugin</li>
  * <li>TODO 其他文件处理</li>
  * <li>TODO 提供配置定义</li>
  * </p>
@@ -53,6 +53,16 @@ public class JframeWatchPlugin extends PluginSender {
 	public void init(PluginContext context) throws PluginException {
 		super.init(context);
 	}
+
+	/**
+	 * if watch.conf is true, then enable update conf/ feature
+	 */
+	final static String Watch_Conf = "watch.conf";
+	
+	/**
+	 * if watch.conf is true, then enable update
+	 */
+	final static String Watch_Plugin = "watch.plugin";
 
 	public void start() throws PluginException {
 		new Thread("JframeWatch") {
@@ -128,9 +138,9 @@ public class JframeWatchPlugin extends PluginSender {
 				// }
 
 				// 默认处理 TODO
-				JframeWatchPlugin.this.send(ConfigMsg.createMsg(Paths.get(
-						getConfig(Config.APP_CONF)).toString()
-						+ "/" + path));
+				// JframeWatchPlugin.this.send(ConfigMsg.createMsg(Paths.get(
+				// getConfig(Config.APP_CONF)).toString()
+				// + "/" + path));
 			}
 		}.start();
 		super.start();

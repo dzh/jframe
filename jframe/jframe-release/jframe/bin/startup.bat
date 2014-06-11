@@ -1,6 +1,7 @@
 @echo off
 rem bat file directory
 
+setlocal
 cd %~dp0
 cd ..
 set APP_HOME=%cd%
@@ -22,7 +23,7 @@ if exist %PID_PATH% (
         -Xmx16M -Xms16M -Xmn8M -XX:MaxPermSize=20M -XX:+HeapDumpOnOutOfMemoryError ^
         -cp "%CLASSPATH%" jframe.launcher.Main
 )
-
+endlocal
 
 
 

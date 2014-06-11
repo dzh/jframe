@@ -49,7 +49,7 @@ public class Program {
 			fw.write(pid);
 			fw.flush();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (fw != null)
 				fw.close();

@@ -32,10 +32,9 @@
 		</encoder>
 	</appender>
 
-	<logger name="jframe" additivity="true">
-		<appender-ref ref="FILE" />
-	</logger>
-
+	<!-- <logger name="jframe" additivity="true"> <appender-ref ref="FILE" /> 
+		</logger> <logger name="com.dono" additivity="true"> <appender-ref ref="FILE" 
+		/> </logger> -->
 	<root level="info">
 		<appender-ref ref="STDOUT" />
 	</root>

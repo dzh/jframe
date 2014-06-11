@@ -21,11 +21,11 @@ public class ConfigMsg extends TextMsg {
 		return msg;
 	}
 
-	public static final ConfigMsg createMsg(String file) {
-		ConfigMsg msg = new ConfigMsg();
-		msg.setMeta("file", file);
-		return msg;
-	}
+//	public static final ConfigMsg createMsg(String file) {
+//		ConfigMsg msg = new ConfigMsg();
+//		msg.setMeta("file", file);
+//		return msg;
+//	}
 
 	public String getOldVal() {
 		return getMeta("old");
@@ -39,23 +39,23 @@ public class ConfigMsg extends TextMsg {
 		return getMeta("key");
 	}
 
-	public String getFile() {
-		return getMeta("file");
-	}
+	// public String getFile() {
+	// return getMeta("file");
+	// }
 
-	public boolean isConfig() {
-		return getMeta("key") != null;
-	}
+	// public boolean isConfig() {
+	// return getMeta("key") != null;
+	// }
 
-	public boolean isFile() {
-		return getMeta("file") != null;
-	}
+	// public boolean isFile() {
+	// return getMeta("file") != null;
+	// }
 
 	public String toString() {
-		if (getFile() != null)
-			return "file: " + getFile();
-		else
-			return "key: " + getKey() + ", oldVal: " + getOldVal()
-					+ ", newVal: " + getNewVal();
+		// if (getFile() != null)
+		// return "file: " + getFile();
+		// else
+		return "key: " + getKey() + ", oldVal: " + getOldVal() + ", newVal: "
+				+ getNewVal();
 	}
 }

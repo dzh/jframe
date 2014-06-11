@@ -26,6 +26,24 @@ public class FileUtil {
 	private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
 
 	/**
+	 * use getLastName
+	 * 
+	 * @param path
+	 * @return
+	 */
+	@Deprecated
+	public static final String getName(String path) {
+		int loc = path.lastIndexOf("/");
+		if (loc == -1)
+			return path;
+		if (loc < path.length() - 1) {
+			return path.substring(loc + 1);
+		}
+		// loc == path.length() - 1
+		return getName(path.substring(0, loc));
+	}
+
+	/**
 	 * <pre>
 	 * intercept path end,for example:
 	 * getName("a/b/c.jar") -> c.jar
@@ -37,7 +55,7 @@ public class FileUtil {
 	 * @param path
 	 * @return
 	 */
-	public static final String getName(String path) {
+	public static final String getLastName(String path) {
 		int loc = path.lastIndexOf("/");
 		if (loc == -1)
 			return path;
@@ -45,7 +63,7 @@ public class FileUtil {
 			return path.substring(loc + 1);
 		}
 		// loc == path.length() - 1
-		return getName(path.substring(0, loc));
+		return getLastName(path.substring(0, loc));
 	}
 
 	/**

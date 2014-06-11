@@ -1,6 +1,7 @@
 @echo off
 rem bat file directory
 
+setlocal
 cd %~dp0
 cd ..
 set APP_HOME=%cd%
@@ -33,4 +34,4 @@ if exist %PID_PATH% (
 ) else (
 		echo "Not found daemon.pid file %PID_PATH%!"
 )
-
+endlocal

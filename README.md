@@ -15,7 +15,7 @@ A Common Plugin Framework implemented by Java. Without complex configuration, yo
 <p>
 if there are any *.pid files in temp folder,delete them first
 </p>
-* `bin/jframe.sh start`, maybe you need `chmod +x bin/*.sh`. (If a windows user, use start.bat)
+* `bin/jframe.sh start`, maybe you need `chmod +x bin/*.sh`. (If a windows user, use startup.bat)
 <p>
 **Note**:
 Before to  start, modify `vmargs` in config.properties.If running on linux, set `vmargs = ${app.home}/conf/vmargs`,
@@ -28,7 +28,7 @@ The default will start three plug-ins:jframe-example-pluin, jframe-swt and jfram
 13451 jframe.launcher.Main
 </pre>
 You can also see log/*.log, or daemon.pid and app.pid generated in temp folder
-* `bin/jframe.sh stop` (stop.bat), to stop jframe.
+* `bin/jframe.sh stop` (shutdown.bat), to stop jframe.
 
 ## About Jframe Manual
 * Jframe's manual is jframe_manual_zh_CN.org in /jframe/doc/ directory.I edit it using Emacs's Org plug-in, and export a html version jframe_manual_zh_CN.html.

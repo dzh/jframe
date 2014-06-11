@@ -2,7 +2,7 @@ Clear File Plugin
 =====================
 清理文件的插件，用于测试环境
 
-* config.properties
+### 配置config.properties
 - clrfile.dirs 清理目标目录，目录间用空格分隔
 clrfile.dirs = /home/dzh/temp home/dzh/tmp
 - clrfile.expire[digit] 文件的过期时间,单位分钟
