@@ -51,6 +51,8 @@
 #-verbose:gc
 #-Xint
 #-Xloggc
+#-XX:GCTimeRatio=16
+#-XX:MaxTenuringThreshold=7
 
 -XX:+UseConcMarkSweepGC
 #-XX:+CMSPermGenSweepingEnabled
