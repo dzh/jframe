@@ -55,12 +55,12 @@ public class TestFileUtil {
 	 * getName("a/b/c.jar") -> c.jar getName("a/b/c/") -> c getName("/a") -> a
 	 * getName("a") -> a
 	 */
-	// @Test
+	@Test
 	public void testPath() {
-		Assert.assertEquals("c.jar", FileUtil.getName("a/b/c.jar"));
-		Assert.assertEquals("c", FileUtil.getName("a/b/c/"));
-		Assert.assertEquals("a", FileUtil.getName("/a"));
-		Assert.assertEquals("a", FileUtil.getName("a"));
+		Assert.assertEquals("c.jar", FileUtil.getLastName("a/b/c.jar"));
+		Assert.assertEquals("c", FileUtil.getLastName("a/b/c/"));
+		Assert.assertEquals("a", FileUtil.getLastName("/a"));
+		Assert.assertEquals("a", FileUtil.getLastName("a"));
 	}
 
 	@Test

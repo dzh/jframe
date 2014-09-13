@@ -253,8 +253,10 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 		}
 	}
 
-	private synchronized int newPluginID() {
-		return ++plugin_id;
+	private int newPluginID() {
+		synchronized (this) {
+			return ++plugin_id;
+		}
 	}
 
 	/*

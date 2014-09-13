@@ -11,8 +11,8 @@
 	<modules>
 		<module>release</module>
 		<module>jframe-clrfile</module>
-		<module>jframe-email</module>
 		<module>jframe-druid</module>
+		<module>jframe-watch</module>
 	</modules>
 	<build>
 		<plugins>
@@ -122,9 +122,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>cn.gi</groupId>
+			<groupId>cn</groupId>
 			<artifactId>jframe-core</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

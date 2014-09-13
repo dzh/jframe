@@ -3,17 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn</groupId>
 	<artifactId>jframe</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>jframe-core</module>
-		<module>jframe-swt</module>
-		<module>jframe-example</module>
-		<module>jframe-release</module>
-		<module>jframe-example-plugin</module>
 		<module>jframe-launcher</module>
+		<module>jframe-core</module>
 		<module>jframe-ext</module>
-		<module>jframe-watch</module>
+		<module>jframe-swt</module>
+		<module>jframe-example-plugin</module>
+		<module>jframe-release</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

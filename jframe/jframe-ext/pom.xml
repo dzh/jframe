@@ -4,16 +4,15 @@
 	<parent>
 		<groupId>cn</groupId>
 		<artifactId>jframe</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0</version>
 	</parent>
 	<artifactId>jframe-ext</artifactId>
-	<name>Jframe Extension</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.gi</groupId>
+			<groupId>cn</groupId>
 			<artifactId>jframe-core</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

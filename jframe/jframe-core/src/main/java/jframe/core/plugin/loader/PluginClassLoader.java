@@ -74,7 +74,6 @@ public class PluginClassLoader extends URLClassLoader {
 			resolveClass(c);
 		}
 		return c;
-		// }
 	}
 
 	@Override

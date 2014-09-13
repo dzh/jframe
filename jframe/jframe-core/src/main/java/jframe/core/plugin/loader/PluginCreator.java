@@ -96,7 +96,7 @@ public class PluginCreator {
 				List<String> dlls = new LinkedList<String>();
 				for (String d : p.getProperty(PluginCase.P_PLUGIN_DLL, "")
 						.split("\\s")) {
-					String name = FileUtil.getName(d);
+					String name = FileUtil.getLastName(d);
 					FileUtil.copyJarEntry(jar, d, dll.getAbsolutePath()
 							+ File.separator + name, false);
 					dlls.add(name);
@@ -111,7 +111,7 @@ public class PluginCreator {
 				List<String> libs = new LinkedList<String>();
 				for (String d : p.getProperty(PluginCase.P_PLUGIN_LIB, "")
 						.split("\\s")) {
-					String name = FileUtil.getName(d);
+					String name = FileUtil.getLastName(d);
 					FileUtil.copyJarEntry(jar, d, lib.getAbsolutePath()
 							+ File.separator + name, false);
 					libs.add(name);
@@ -186,13 +186,13 @@ public class PluginCreator {
 				return false;
 			}
 		} catch (IOException e) {
-			LOG.warn(e.getMessage());
+			LOG.error(e.getMessage());
 		} finally {
 			if (is != null)
 				try {
 					is.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOG.warn(e.getMessage());
 				}
 		}
 		return true;

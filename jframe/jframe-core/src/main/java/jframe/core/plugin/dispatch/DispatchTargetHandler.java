@@ -230,10 +230,7 @@ public class DispatchTargetHandler implements InvocationHandler {
 
 	private Method getCacheMethod(String name) {
 		WeakReference<Method> wr = _mc.get(name);
-		if (wr != null) {
-			return wr.get();
-		}
-		return null;
+		return null == wr ? null : wr.get();
 	}
 
 	private void putCacheMethod(String name, Method m) {
