@@ -8,10 +8,9 @@
 	<modules>
 		<module>jframe-launcher</module>
 		<module>jframe-core</module>
-		<module>jframe-ext</module>
-		<module>jframe-swt</module>
 		<module>jframe-example-plugin</module>
 		<module>jframe-release</module>
+		<module>jframe-example-plugin2</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

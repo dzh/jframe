@@ -29,6 +29,7 @@ public class ExampleClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
+	@SuppressWarnings("rawtypes")
 	public static void main(String[] args) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException, IOException {
 		CustomClassLoader ccl = new CustomClassLoader();
@@ -64,5 +65,4 @@ public class ExampleClassLoader extends URLClassLoader {
 
 		loader.close();
 	}
-
 }

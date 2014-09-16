@@ -9,16 +9,28 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Inject service object to a clazz's field
  * <p>
+ * Search order:
+ * <li></li>
  * <li></li>
  * </p>
  * 
  * @author dzh
- * @date Sep 23, 2013 11:36:33 AM
- * @since 1.0
+ * @date Sep 15, 2014 3:15:15 PM
+ * @since 1.1
  */
-@Target({ ElementType.METHOD })
+@Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Start {
+public @interface InjectService {
+
+	/**
+	 * service's id
+	 * 
+	 * @return
+	 */
+	String id();
+
+	// String plugin() default "";
 
 }

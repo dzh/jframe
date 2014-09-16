@@ -57,7 +57,7 @@ public class ExamplePlugin extends PluginSenderRecver {
 		new Thread("Recver thread") {
 			public void run() {
 				while (true) {
-					if (_stop && _queue.size() == 0) {
+					if (_stop) {
 						break;
 					}
 
@@ -65,7 +65,8 @@ public class ExamplePlugin extends PluginSenderRecver {
 					try {
 						msg = _queue.poll(10, TimeUnit.SECONDS);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						LOG.warn(e.getMessage());
+						break;
 					}
 					if (msg == null)
 						continue;

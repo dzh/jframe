@@ -26,6 +26,8 @@ public class PluginCase {
 	public static final String P_PLUGIN_NAME = "Plugin-Name";
 	public static final String P_PLUGIN_LIB = "Plugin-Lib";
 	public static final String P_PLUGIN_DLL = "Plugin-Dll";
+	public static final String P_EXPORT_SERVICE = "Export-Service";
+	public static final String P_IMPORT_SERVICE = "Import-Service";
 
 	private String pluginClass;
 
@@ -36,6 +38,10 @@ public class PluginCase {
 	private List<String> pluginDll = Collections.emptyList();
 
 	private List<String> pluginLib = Collections.emptyList();
+
+	private List<String> exportService = Collections.emptyList();
+
+	private List<String> importService = Collections.emptyList();
 
 	private String jarPath;
 
@@ -110,4 +116,20 @@ public class PluginCase {
 				+ getJarPath();
 	}
 
+	public List<String> getExportService() {
+		return exportService;
+	}
+
+	public void setExportService(List<String> exportService) {
+		this.exportService = exportService;
+	}
+
+	public List<String> getImportService() {
+		return importService;
+	}
+
+	public void setImportService(List<String> importService) {
+		this.importService = importService;
+	}
+	
 }

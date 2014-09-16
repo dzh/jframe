@@ -15,6 +15,8 @@ import jframe.core.plugin.Plugin;
 import jframe.core.plugin.PluginContext;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginCreator;
+import jframe.core.plugin.loader.ext.PluginLoaderContext;
+import jframe.core.plugin.loader.ext.PluginServiceCreator;
 import jframe.core.signal.Signal;
 import jframe.core.util.FileUtil;
 
@@ -37,15 +39,13 @@ public class PluginUnit extends AbstractUnit {
 
 	private PluginContext _context;
 
-	private PluginCreator _creator; // create plugin
+	private PluginLoaderContext _plc;
 
 	@Override
 	public void init(Frame frame) throws UnitException {
 		super.init(frame);
 		_context = new DefPluginContext();
 		_context.initContext(frame.getConfig());
-
-		_creator = PluginCreator.newCreator(frame.getConfig());
 	}
 
 	/*
@@ -79,30 +79,40 @@ public class PluginUnit extends AbstractUnit {
 	 * @param path_plugin
 	 */
 	private List<Plugin> loadPlugin() {
+		// create plugin
+		PluginCreator _creator = PluginCreator.newCreator(_context.getConfig());
+		if (_creator instanceof PluginServiceCreator) {
+			_plc = ((PluginServiceCreator) _creator).getLoaderContext();
+		}
+
 		List<Plugin> pluginList = new LinkedList<Plugin>();
 
-		String path_plugin = getFrame().getConfig()
-				.getConfig(Config.APP_PLUGIN);
-		File dir_plugin = new File(path_plugin);// plug-in root directory
-		if (!dir_plugin.exists()) {
-			LOG.error("Not found plugin path " + path_plugin);
-			return pluginList;
-		}
-		File[] plugins = dir_plugin.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".jar");
+		try {
+			String path_plugin = getFrame().getConfig().getConfig(
+					Config.APP_PLUGIN);
+			File dir_plugin = new File(path_plugin);// plug-in root directory
+			if (!dir_plugin.exists()) {
+				LOG.error("Not found plugin path " + path_plugin);
+				return pluginList;
 			}
-		});
+			File[] plugins = dir_plugin.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".jar");
+				}
+			});
 
-		PluginCase pc = null;
-		Plugin p = null;
-		for (File f : plugins) {
-			pc = _creator.loadPlugin(f);
-			if (pc != null) {
-				p = _creator.createPlugin(pc);
-				if (p != null)
-					pluginList.add(p);
+			PluginCase pc = null;
+			Plugin p = null;
+			for (File f : plugins) {
+				pc = _creator.loadPlugin(f);
+				if (pc != null) {
+					p = _creator.createPlugin(pc);
+					if (p != null)
+						pluginList.add(p);
+				}
 			}
+		} finally {
+			_creator.close();
 		}
 		return pluginList;
 	}
@@ -116,6 +126,9 @@ public class PluginUnit extends AbstractUnit {
 		if (_context != null) {
 			// stop plugins
 			_context.dispose();
+		}
+		if (_plc != null) {
+			_plc.close();
 		}
 	}
 

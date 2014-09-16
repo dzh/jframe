@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import jframe.core.plugin.Plugin;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PluginClassLoader extends URLClassLoader {
 
-	public static final Logger LOG = LoggerFactory
+	private static final Logger LOG = LoggerFactory
 			.getLogger(PluginClassLoader.class);
 
 	private PluginCase _case;
@@ -58,20 +60,41 @@ public class PluginClassLoader extends URLClassLoader {
 		Class<?> c = findLoadedClass(name);
 
 		if (c == null) {
-			// load from plug-in
-			try {
-				c = findClass(name);
-			} catch (ClassNotFoundException e1) {
-				// e1.printStackTrace();
-			}
-
-			if (c == null) { // load from parent class loader
-				// if not found ,throw ClassNotFoundException
-				c = getParent().loadClass(name);
-			}
+			c = loadLocalPlugin(name);
 		}
+		if (c == null)
+			throw new ClassNotFoundException(name);
+
 		if (resolve) {
 			resolveClass(c);
+		}
+		return c;
+	}
+
+	protected Plugin createPlugin(PluginCase pc) {
+		Plugin p = null;
+		try {
+			p = (Plugin) loadClass(pc.getPluginClass()).newInstance();
+		} catch (Exception e) {
+			LOG.error("Create Plugin Error: " + e.getLocalizedMessage());
+		}
+		return p;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 * @throws ClassNotFoundException
+	 */
+	protected Class<?> loadLocalPlugin(String name)
+			throws ClassNotFoundException {
+		Class<?> c = null;
+		try {
+			// load from plug-in
+			c = findClass(name);
+		} catch (ClassNotFoundException e) {
+			c = getParent().loadClass(name);
 		}
 		return c;
 	}

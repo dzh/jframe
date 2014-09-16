@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -18,6 +19,7 @@ import java.util.jar.JarFile;
 import jframe.core.conf.Config;
 import jframe.core.conf.ConfigConstants;
 import jframe.core.plugin.Plugin;
+import jframe.core.plugin.loader.ext.PluginServiceCreator;
 import jframe.core.util.FileUtil;
 
 import org.slf4j.Logger;
@@ -35,14 +37,15 @@ public class PluginCreator {
 
 	public static final String FILE_PLUGIN = "META-INF/plugin.properties";
 
-	private Config _config;
+	protected Config _config;
 
-	private PluginCreator(Config config) {
+	protected PluginCreator(Config config) {
 		this._config = config;
 	}
 
 	public static final PluginCreator newCreator(Config config) {
-		return new PluginCreator(config);
+		// TODO config
+		return new PluginServiceCreator(config);
 	}
 
 	public String getRootCachePath() {
@@ -95,7 +98,7 @@ public class PluginCreator {
 					dll.mkdirs();
 				List<String> dlls = new LinkedList<String>();
 				for (String d : p.getProperty(PluginCase.P_PLUGIN_DLL, "")
-						.split("\\s")) {
+						.split("\\s+")) {
 					String name = FileUtil.getLastName(d);
 					FileUtil.copyJarEntry(jar, d, dll.getAbsolutePath()
 							+ File.separator + name, false);
@@ -110,7 +113,7 @@ public class PluginCreator {
 					lib.mkdirs();
 				List<String> libs = new LinkedList<String>();
 				for (String d : p.getProperty(PluginCase.P_PLUGIN_LIB, "")
-						.split("\\s")) {
+						.split("\\s+")) {
 					String name = FileUtil.getLastName(d);
 					FileUtil.copyJarEntry(jar, d, lib.getAbsolutePath()
 							+ File.separator + name, false);
@@ -119,6 +122,8 @@ public class PluginCreator {
 				if (libs.size() > 0)
 					pc.setPluginLib(libs);
 			}
+
+			loadPlugin(pc, p);
 		} catch (IOException e) {
 			LOG.error("Jar IO is error." + e.getMessage());
 			return null;
@@ -135,6 +140,16 @@ public class PluginCreator {
 		return pc;
 	}
 
+	protected void loadPlugin(PluginCase pc, Properties p) {
+
+	}
+
+	protected List<String> parseList(String pValue) {
+		if (pValue == null || "".equals(pValue))
+			return Collections.emptyList();
+		return Arrays.asList(pValue.split("\\s+"));
+	}
+
 	/**
 	 * 
 	 * @param pc
@@ -143,8 +158,7 @@ public class PluginCreator {
 	public Plugin createPlugin(PluginCase pc) {
 		if (pc == null)
 			return null;
-		@SuppressWarnings("resource")
-		PluginClassLoader pcl = new PluginClassLoader(pc);
+		PluginClassLoader pcl = createPluginClassLoader(pc);
 		try {
 			pcl.addURL(new URL("file:" + pc.getJarPath()));
 			for (String lib : pc.getPluginLib()) {
@@ -154,17 +168,13 @@ public class PluginCreator {
 		} catch (MalformedURLException e) {
 			LOG.error("Exception when create plugin:" + e.getLocalizedMessage());
 			pcl.dispose();
-			pcl = null;
 			return null;
 		}
+		return pcl.createPlugin(pc);
+	}
 
-		Plugin p = null;
-		try {
-			p = (Plugin) pcl.loadClass(pc.getPluginClass()).newInstance();
-		} catch (Exception e) {
-			LOG.error("Create Plugin Error: " + e.getLocalizedMessage());
-		}
-		return p;
+	protected PluginClassLoader createPluginClassLoader(PluginCase pc) {
+		return new PluginClassLoader(pc);
 	}
 
 	/**
@@ -208,5 +218,12 @@ public class PluginCreator {
 		String[] plugins = _config.getConfig(ConfigConstants.PLUGIN_FORBID, "")
 				.split(" ");
 		return Arrays.asList(plugins).contains(pluginName);
+	}
+
+	/**
+	 * 
+	 */
+	public void close() {
+		_config = null;
 	}
 }

@@ -9,16 +9,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>
- * <li></li>
- * </p>
- * 
  * @author dzh
- * @date Sep 23, 2013 11:36:33 AM
- * @since 1.0
+ * @date Sep 16, 2014 11:35:51 AM
+ * @since 1.1
  */
 @Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Start {
+public @interface Stop {
 
 }

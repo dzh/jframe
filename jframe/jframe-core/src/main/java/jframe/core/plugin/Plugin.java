@@ -32,6 +32,13 @@ public interface Plugin {
 
 	void setID(int id);
 
+	/**
+	 * v1.1
+	 * 
+	 * @return
+	 */
+	PluginContext getContext();
+
 	String getName();
 
 	PluginClassLoader getPluginClassLoader();
