@@ -3,7 +3,6 @@
  */
 package jframe.example.plugin2;
 
-import jframe.core.plugin.Plugin;
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
 import jframe.example.plugin.CountService;
@@ -21,7 +20,7 @@ public class TestService {
 	static Logger LOG = LoggerFactory.getLogger(TestService.class);
 
 	@InjectPlugin
-	private static Plugin plugin;
+	private static ExamplePlugin2 plugin;
 
 	@InjectService(id = "example.CountService")
 	private static CountService cs;

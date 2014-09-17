@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * @date Sep 16, 2014 5:08:19 PM
  * @since 1.0
  */
-public class CountService2Impl implements CountService2 {
+class CountService2Impl implements CountService2 {
 
 	static Logger LOG = LoggerFactory.getLogger(CountService2Impl.class);
 

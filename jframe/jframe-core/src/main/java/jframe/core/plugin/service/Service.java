@@ -4,6 +4,7 @@
 package jframe.core.plugin.service;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import jframe.core.plugin.Plugin;
@@ -108,7 +109,9 @@ public class Service {
 		Object single = null;
 		try {
 			Class<?> clazz = getClassLoader().loadClass(getClazz());
-			single = clazz.newInstance();
+			Constructor<?> c = clazz.getDeclaredConstructor();
+			c.setAccessible(true);
+			single = c.newInstance();
 			// start
 			invokeServiceMethod(single, Start.class);
 		} catch (Exception e) {
