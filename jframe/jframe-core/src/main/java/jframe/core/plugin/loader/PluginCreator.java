@@ -19,6 +19,7 @@ import java.util.jar.JarFile;
 import jframe.core.conf.Config;
 import jframe.core.conf.ConfigConstants;
 import jframe.core.plugin.Plugin;
+import jframe.core.plugin.loader.ext.PluginLoaderContext;
 import jframe.core.plugin.loader.ext.PluginServiceCreator;
 import jframe.core.util.FileUtil;
 
@@ -43,9 +44,13 @@ public class PluginCreator {
 		this._config = config;
 	}
 
-	public static final PluginCreator newCreator(Config config) {
-		// TODO config
-		return new PluginServiceCreator(config);
+	protected PluginLoaderContext context;
+
+	public static final PluginCreator newCreator(Config config,
+			PluginLoaderContext context) {
+		PluginCreator pc = new PluginServiceCreator(config);
+		pc.context = context;
+		return pc;
 	}
 
 	public String getRootCachePath() {
@@ -155,26 +160,16 @@ public class PluginCreator {
 	 * @param pc
 	 * @return Plugin or Null
 	 */
-	public Plugin createPlugin(PluginCase pc) {
-		if (pc == null)
+	public Plugin createPlugin(PluginClassLoader pcl, PluginCase pc) {
+		if (pcl == null || pc == null)
 			return null;
-		PluginClassLoader pcl = createPluginClassLoader(pc);
-		try {
-			pcl.addURL(new URL("file:" + pc.getJarPath()));
-			for (String lib : pc.getPluginLib()) {
-				pcl.addURL(new URL("file:" + pc.getCacheLibPath()
-						+ File.separator + lib));
-			}
-		} catch (MalformedURLException e) {
-			LOG.error("Exception when create plugin:" + e.getLocalizedMessage());
-			pcl.dispose();
-			return null;
-		}
 		return pcl.createPlugin(pc);
 	}
 
-	protected PluginClassLoader createPluginClassLoader(PluginCase pc) {
-		return new PluginClassLoader(pc);
+	public PluginClassLoader createPluginClassLoader(PluginCase pc) {
+		PluginClassLoader pcl = new PluginClassLoader(pc, context);
+		
+		return pcl;
 	}
 
 	/**

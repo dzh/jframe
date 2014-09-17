@@ -115,7 +115,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 		// start plugin
 		try {
 			plugin.start();
-		} catch (PluginException e) {
+		} catch (Exception e) {
 			unregPlugin(plugin);
 			_LOG.error("Plugin start error: " + plugin.getName()
 					+ e.getLocalizedMessage());
@@ -210,13 +210,14 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 				plugin.destroy();
 			}
 		} catch (PluginException e) {
-			_LOG.error(e.getLocalizedMessage());
+			_LOG.error(e.getMessage());
 		}
 
 		synchronized (_plugins) {
 			PluginRef ref = _plugins.get(plugin.getID());
 			if (ref != null) {
 				if (!ref.isUpdating()) {
+					removeDispatchTarget(ref);
 					_plugins.remove(plugin.getID());
 					ref.dispose();
 				}

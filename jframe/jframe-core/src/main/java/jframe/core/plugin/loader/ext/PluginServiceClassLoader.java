@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 import jframe.core.plugin.Plugin;
+import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginClassLoader;
@@ -24,15 +25,12 @@ import org.slf4j.LoggerFactory;
  */
 public class PluginServiceClassLoader extends PluginClassLoader {
 
+	public PluginServiceClassLoader(PluginCase pc, PluginLoaderContext plc) {
+		super(pc, plc);
+	}
+
 	private static final Logger LOG = LoggerFactory
 			.getLogger(PluginServiceClassLoader.class);
-
-	private PluginLoaderContext plc;
-
-	public PluginServiceClassLoader(PluginCase pc, PluginLoaderContext plc) {
-		super(pc);
-		this.plc = plc;
-	}
 
 	@Override
 	protected Class<?> loadLocalPlugin(String name)
@@ -51,27 +49,44 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 			// load from plug-in
 			c = findClass(name);
 			injectService(c);
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			c = getParent().loadClass(name);
 		}
 		return c;
 	}
 
-	private void injectService(Class<?> clazz) {
+	@Override
+	protected void injectService(Class<?> clazz) throws Exception {
 		if (clazz == null)
 			return;
 		ServiceContext context = plc.getServiceContext();
 		for (Field f : clazz.getDeclaredFields()) {
 			if (Modifier.isStatic(f.getModifiers())
+					&& f.isAnnotationPresent(InjectPlugin.class)) {
+				try {
+					f.setAccessible(true);
+					f.set(null, getPlugin());
+				} catch (Exception e) {
+					LOG.error(e.getMessage());
+				}
+
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("InjectPlugin {} -> {}", getPlugin(), f.getName());
+				}
+			} else if (Modifier.isStatic(f.getModifiers())
 					&& f.isAnnotationPresent(InjectService.class)) {
 				context.attachService(context.getSvcById(f.getAnnotation(
-						InjectService.class).id()), clazz, true);
+						InjectService.class).id()), f, true);
 			}
 		}
 	}
 
 	public void injectPlugin(Class<? extends Plugin> plugin) {
-		injectService(plugin);
+		try {
+			injectService(plugin);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
 	}
 
 	/**
@@ -90,24 +105,12 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 	}
 
 	/**
-	 * Register service after creating plug-in successfully
-	 */
-	@Override
-	protected Plugin createPlugin(PluginCase pc) {
-		Plugin p = super.createPlugin(pc);
-		if (p != null) {
-			regService(pc, p);
-		}
-		return p;
-	}
-
-	/**
-	 * register service meta-data
+	 * register export-service
 	 * 
 	 * @param pc
 	 * @param p
 	 */
-	private void regService(PluginCase pc, Plugin p) {
+	public void loadService(PluginCase pc) {
 		ServiceContext sc = plc.getServiceContext();
 
 		List<String> exportService = pc.getExportService();
@@ -118,9 +121,9 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 								loadClass(name)
 										.getAnnotation(
 												jframe.core.plugin.annotation.Service.class))
-						.setName(name).setClassLoader(this).setPlugin(p));
+						.setName(name).setClassLoader(this));
 			} catch (Exception e) {
-				LOG.error("Create Annotation Service Error: " + e.getMessage());
+				LOG.error("Create Annotation Service Error: {}", e.getMessage());
 				continue;
 			}
 		}

@@ -4,12 +4,16 @@
 package jframe.core.plugin.loader;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
 import jframe.core.plugin.Plugin;
+import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.loader.ext.PluginLoaderContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +36,8 @@ public class PluginClassLoader extends URLClassLoader {
 
 	private PluginCase _case;
 
+	protected PluginLoaderContext plc;
+
 	/**
 	 * @param pRef
 	 */
@@ -41,10 +47,22 @@ public class PluginClassLoader extends URLClassLoader {
 		if (getParent() == null) {
 			throw new NullPointerException("PluginClassLoader's parent is null");
 		}
+		try {
+			addURL(new URL("file:" + pc.getJarPath()));
+			for (String lib : pc.getPluginLib()) {
+				addURL(new URL("file:" + pc.getCacheLibPath() + File.separator
+						+ lib));
+			}
+		} catch (MalformedURLException e) {
+			LOG.error("Exception when create plugin:" + e.getLocalizedMessage());
+			dispose();
+		}
 	}
 
-	public PluginClassLoader(PluginCase pc) {
+	public PluginClassLoader(PluginCase pc, PluginLoaderContext plc) {
 		this(new URL[] {}, pc);
+		this.plc = plc;
+
 	}
 
 	public void addURL(URL url) {
@@ -71,14 +89,30 @@ public class PluginClassLoader extends URLClassLoader {
 		return c;
 	}
 
-	protected Plugin createPlugin(PluginCase pc) {
-		Plugin p = null;
+	private Plugin _plugin;
+
+	protected synchronized Plugin createPlugin(PluginCase pc) {
+		if (_plugin != null)
+			return _plugin;
 		try {
-			p = (Plugin) loadClass(pc.getPluginClass()).newInstance();
+			_plugin = (Plugin) loadClass(pc.getPluginClass()).newInstance();
 		} catch (Exception e) {
 			LOG.error("Create Plugin Error: " + e.getLocalizedMessage());
 		}
-		return p;
+		return _plugin;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected Class<? extends Plugin> loadPlugin(PluginCase pc)
+			throws ClassNotFoundException {
+		return (Class<? extends Plugin>) loadClass(pc.getPluginClass());
+	}
+
+	public synchronized Plugin getPlugin() {
+		if (_plugin == null) {
+			createPlugin(getPluginCase());
+		}
+		return _plugin;
 	}
 
 	/**
@@ -93,10 +127,31 @@ public class PluginClassLoader extends URLClassLoader {
 		try {
 			// load from plug-in
 			c = findClass(name);
+			injectService(c);
 		} catch (ClassNotFoundException e) {
 			c = getParent().loadClass(name);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
 		}
 		return c;
+	}
+
+	protected void injectService(Class<?> clazz) throws Exception {
+		if (clazz == null)
+			return;
+
+		for (Field f : clazz.getDeclaredFields()) {
+			if (Modifier.isStatic(f.getModifiers())
+					&& f.isAnnotationPresent(InjectPlugin.class)) {
+				try {
+					f.setAccessible(true);
+					f.set(null, getPlugin());
+				} catch (Exception e) {
+					LOG.error(e.getMessage());
+				}
+				break;
+			}
+		}
 	}
 
 	@Override

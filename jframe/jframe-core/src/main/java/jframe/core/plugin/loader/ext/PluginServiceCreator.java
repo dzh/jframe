@@ -15,8 +15,6 @@ import jframe.core.plugin.loader.PluginCreator;
  */
 public class PluginServiceCreator extends PluginCreator {
 
-	private PluginLoaderContext loaderContext = new PluginLoaderContext();
-
 	public PluginServiceCreator(Config config) {
 		super(config);
 	}
@@ -40,15 +38,8 @@ public class PluginServiceCreator extends PluginCreator {
 	}
 
 	@Override
-	protected PluginClassLoader createPluginClassLoader(PluginCase pc) {
-		return new PluginServiceClassLoader(pc, loaderContext);
+	public PluginClassLoader createPluginClassLoader(PluginCase pc) {
+		return new PluginServiceClassLoader(pc, context);
 	}
 
-	public PluginLoaderContext getLoaderContext() {
-		return loaderContext;
-	}
-
-	public void setLoaderContext(PluginLoaderContext loaderContext) {
-		this.loaderContext = loaderContext;
-	}
 }

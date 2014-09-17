@@ -44,9 +44,9 @@ public class ExamplePlugin extends PluginSenderRecver {
 					if (_stop)
 						break;
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(6000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						LOG.warn(e.getMessage());
 					}
 					send(new TextMsg().setType(randomType(3)).setValue(
 							new Date().toString()));

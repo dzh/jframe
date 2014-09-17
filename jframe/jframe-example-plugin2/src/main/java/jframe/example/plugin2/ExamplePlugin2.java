@@ -26,19 +26,24 @@ public class ExamplePlugin2 extends PluginSenderRecver {
 	@InjectService(id = "example.CountService")
 	private static CountService cs;
 
+	@InjectService(id = "example.CountService2")
+	private static CountService2 cs2;
+
 	public void test() {
 		if (cs != null)
 			LOG.info("ExamplePlugin2 cs 1 + 2 = {}", cs.add(1, 2));
+		if (cs2 != null) {
+			LOG.info("ExamplePlugin2 cs 6 * 7 = {}", cs2.mul(6, 7));
+		}
 	}
 
 	@Override
 	public void start() throws PluginException {
-		test = new TestService();
-		LOG.info("ExamplePlugin2 is start");
-
+		super.start();
 		test();
-		if (cs != null)
-			LOG.info("cs 11 + 22 = {}", cs.add(11, 22));
+
+		test = new TestService();
+		test.test();
 	}
 
 	@Override

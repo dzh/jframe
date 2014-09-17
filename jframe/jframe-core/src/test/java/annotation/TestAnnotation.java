@@ -3,6 +3,8 @@
  */
 package annotation;
 
+import java.lang.reflect.Field;
+
 import jframe.core.plugin.annotation.Message;
 import jframe.core.plugin.annotation.Plugin;
 import junit.framework.Assert;
@@ -17,18 +19,23 @@ import org.junit.Test;
 public class TestAnnotation {
 
 	@Test
-	public void testInherited() {
-		//sub
+	public void testInherited() throws NoSuchFieldException, SecurityException {
+		// sub
 		SubClazz sub = new SubClazz();
 		Message msg = sub.getClass().getAnnotation(Message.class);
 		Assert.assertEquals(false, msg.isSender());
 		Assert.assertEquals(true, msg.isRecver());
 		Plugin plgn = sub.getClass().getAnnotation(Plugin.class);
 		Assert.assertNotNull(plgn);
-		
-		//super
+
+		// super
 		plgn = sub.getClass().getSuperclass().getAnnotation(Plugin.class);
 		Assert.assertNotNull(plgn);
+
+		// field
+		Field f = sub.getClass().getField("str");
+		System.out.println(f.getDeclaringClass());
+		System.out.println(f.getType());
 	}
 
 }

@@ -5,8 +5,10 @@ package jframe.core.unit;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import jframe.core.Frame;
 import jframe.core.conf.Config;
@@ -14,8 +16,10 @@ import jframe.core.plugin.DefPluginContext;
 import jframe.core.plugin.Plugin;
 import jframe.core.plugin.PluginContext;
 import jframe.core.plugin.loader.PluginCase;
+import jframe.core.plugin.loader.PluginClassLoader;
 import jframe.core.plugin.loader.PluginCreator;
 import jframe.core.plugin.loader.ext.PluginLoaderContext;
+import jframe.core.plugin.loader.ext.PluginServiceClassLoader;
 import jframe.core.plugin.loader.ext.PluginServiceCreator;
 import jframe.core.signal.Signal;
 import jframe.core.util.FileUtil;
@@ -46,6 +50,12 @@ public class PluginUnit extends AbstractUnit {
 		super.init(frame);
 		_context = new DefPluginContext();
 		_context.initContext(frame.getConfig());
+
+		_plc = new PluginLoaderContext();
+	}
+
+	public PluginLoaderContext getLoaderContext() {
+		return _plc;
 	}
 
 	/*
@@ -80,13 +90,10 @@ public class PluginUnit extends AbstractUnit {
 	 */
 	private List<Plugin> loadPlugin() {
 		// create plugin
-		PluginCreator _creator = PluginCreator.newCreator(_context.getConfig());
-		if (_creator instanceof PluginServiceCreator) {
-			_plc = ((PluginServiceCreator) _creator).getLoaderContext();
-		}
+		PluginCreator _creator = PluginCreator.newCreator(_context.getConfig(),
+				_plc);
 
 		List<Plugin> pluginList = new LinkedList<Plugin>();
-
 		try {
 			String path_plugin = getFrame().getConfig().getConfig(
 					Config.APP_PLUGIN);
@@ -101,15 +108,25 @@ public class PluginUnit extends AbstractUnit {
 				}
 			});
 
-			PluginCase pc = null;
-			Plugin p = null;
+			// Plugin p = null;
+			Map<PluginCase, PluginClassLoader> pcMap = new HashMap<PluginCase, PluginClassLoader>();
 			for (File f : plugins) {
-				pc = _creator.loadPlugin(f);
+				PluginCase pc = _creator.loadPlugin(f);
 				if (pc != null) {
-					p = _creator.createPlugin(pc);
-					if (p != null)
-						pluginList.add(p);
+					pcMap.put(pc, _creator.createPluginClassLoader(pc));
 				}
+			}
+			// load service
+			if (_creator instanceof PluginServiceCreator) {
+				for (PluginCase pc : pcMap.keySet()) {
+					((PluginServiceClassLoader) pcMap.get(pc)).loadService(pc);
+				}
+			}
+			// create plugin
+			for (PluginCase pc : pcMap.keySet()) {
+				Plugin p = _creator.createPlugin(pcMap.get(pc), pc);
+				if (p != null)
+					pluginList.add(p);
 			}
 		} finally {
 			_creator.close();

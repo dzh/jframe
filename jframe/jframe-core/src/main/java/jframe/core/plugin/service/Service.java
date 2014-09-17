@@ -4,13 +4,11 @@
 package jframe.core.plugin.service;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import jframe.core.plugin.Plugin;
-import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Start;
+import jframe.core.plugin.loader.PluginClassLoader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +42,6 @@ public class Service {
 	String clazz;
 
 	/**
-	 * service's plug-in class
-	 */
-	Plugin plugin;
-
-	/**
 	 * service's singleton instance
 	 */
 	Object single;
@@ -56,13 +49,13 @@ public class Service {
 	/**
 	 * 
 	 */
-	ClassLoader classLoader;
+	PluginClassLoader classLoader;
 
-	public ClassLoader getClassLoader() {
+	public PluginClassLoader getClassLoader() {
 		return classLoader;
 	}
 
-	public Service setClassLoader(ClassLoader classLoader) {
+	public Service setClassLoader(PluginClassLoader classLoader) {
 		this.classLoader = classLoader;
 		return this;
 	}
@@ -95,12 +88,7 @@ public class Service {
 	}
 
 	public Plugin getPlugin() {
-		return plugin;
-	}
-
-	public Service setPlugin(Plugin plugin) {
-		this.plugin = plugin;
-		return this;
+		return classLoader.getPlugin();
 	}
 
 	/**
@@ -108,36 +96,23 @@ public class Service {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Object getSingle() throws ServiceException {
-		synchronized (this) {
-			if (single == null) {
-				single = createSingle();
-			}
+	public synchronized Object getSingle() throws ServiceException {
+		if (single == null) {
+			single = createSingle();
 		}
 		return single;
 
 	}
 
-	private Object createSingle() throws ServiceException {
+	private synchronized Object createSingle() throws ServiceException {
 		Object single = null;
 		try {
 			Class<?> clazz = getClassLoader().loadClass(getClazz());
 			single = clazz.newInstance();
-			for (Field f : clazz.getDeclaredFields()) {
-				if (Modifier.isStatic(f.getModifiers())
-						&& f.isAnnotationPresent(InjectPlugin.class)) {
-					try {
-						f.set(null, plugin);
-					} catch (Exception e) {
-						LOG.error(e.getMessage());
-					}
-					break;
-				}
-			}
 			// start
 			invokeServiceMethod(single, Start.class);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new ServiceException(e.getCause());
 		}
 		return single;
 	}
@@ -148,20 +123,16 @@ public class Service {
 	 * @param svc
 	 * @throws Exception
 	 */
-	public static void invokeServiceMethod(Object svc,
+	public static void invokeServiceMethod(Object single,
 			Class<? extends Annotation> anno) throws Exception {
-		Class<?> clazz = svc.getClass();
+		Class<?> clazz = single.getClass();
 		for (Method m : clazz.getDeclaredMethods()) {
 			if (m.isAnnotationPresent(anno)) {
 				m.setAccessible(true);
-				m.invoke(svc);
+				m.invoke(single);
 				break;
 			}
 		}
-	}
-
-	public void setSingle(Object single) {
-		this.single = single;
 	}
 
 	public static Service newInstance(jframe.core.plugin.annotation.Service anno)

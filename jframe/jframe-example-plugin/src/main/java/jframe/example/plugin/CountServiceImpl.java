@@ -1,5 +1,7 @@
 package jframe.example.plugin;
 
+import jframe.core.plugin.Plugin;
+import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
 
@@ -16,6 +18,9 @@ public class CountServiceImpl implements CountService {
 
 	static Logger LOG = LoggerFactory.getLogger(CountServiceImpl.class);
 
+	@InjectPlugin
+	static Plugin plugin;
+
 	public int add(int x, int y) {
 		return x + y;
 	}
@@ -23,6 +28,7 @@ public class CountServiceImpl implements CountService {
 	@Start
 	void start() {
 		LOG.info("CountServiceImpl start");
+		LOG.info("ExamplePlugin {}", plugin.getName());
 	}
 
 	@Stop

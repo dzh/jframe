@@ -104,7 +104,10 @@ public class ServiceContext {
 			return;
 		synchronized (_svcRef) {
 			List<Class<?>> ref = _svcRef.get(id);
-			ref = ref == null ? new LinkedList<Class<?>>() : ref;
+			if (ref == null) {
+				ref = new LinkedList<Class<?>>();
+				_svcRef.put(id, ref);
+			}
 			if (!ref.contains(clazz))
 				ref.add(clazz);
 		}
@@ -134,26 +137,58 @@ public class ServiceContext {
 	 * @param reg
 	 *            regSvcRef
 	 */
+	@Deprecated
 	public void attachService(Service svc, Class<?> clazz, boolean reg) {
 		if (svc == null || clazz == null)
 			return;
 		for (Field f : clazz.getDeclaredFields()) {
 			if (Modifier.isStatic(f.getModifiers())
 					&& f.isAnnotationPresent(InjectService.class)
-					&& svc.getId().equalsIgnoreCase(
+					&& svc.getId().equals(
 							f.getAnnotation(InjectService.class).id())) {
-				try {
-					f.setAccessible(true);
-					f.set(null, svc.getSingle());
-				} catch (Exception e) {
-					LOG.error(e.getMessage());
-				}
+				attachService(svc, f, reg);
 				break;
 			}
 		}
 
 		if (reg) {
 			regSvcRef(svc.getId(), clazz);
+		}
+	}
+
+	public void attachService(Service svc, Field f, boolean reg) {
+		if (svc == null || f == null)
+			return;
+
+		if (hasInjected(svc, f.getDeclaringClass()))
+			return;
+
+		try {
+			f.setAccessible(true);
+			f.set(null, svc.getSingle());
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+
+		if (reg) {
+			regSvcRef(svc.getId(), f.getDeclaringClass());
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("AttachService {} -> {}", svc.toString(),
+					f.getDeclaringClass());
+		}
+	}
+
+	boolean hasInjected(Service svc, Class<?> clazz) {
+		if (svc == null || clazz == null)
+			return false;
+
+		synchronized (_svcRef) {
+			List<Class<?>> list = _svcRef.get(svc.getId());
+			if (list == null)
+				return false;
+			return list.contains(clazz);
 		}
 	}
 
@@ -171,7 +206,7 @@ public class ServiceContext {
 		for (Field f : clazz.getDeclaredFields()) {
 			if (Modifier.isStatic(f.getModifiers())
 					&& f.isAnnotationPresent(InjectService.class)
-					&& svc.getId().equalsIgnoreCase(
+					&& svc.getId().equals(
 							f.getAnnotation(InjectService.class).id())) {
 				try {
 					f.setAccessible(true);
@@ -186,6 +221,10 @@ public class ServiceContext {
 		if (unreg) {
 			unregSvcRef(svc.getId(), clazz);
 		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("DetachService {} -> {}", svc.toString(), clazz);
+		}
 	}
 
 	/**
@@ -197,19 +236,24 @@ public class ServiceContext {
 		Service svc = getSvcById(id);
 		if (svc == null)
 			return;
-		synchronized (_svcRef) {
-			Iterator<Class<?>> iter = _svcRef.get(id).iterator();
-			while (iter.hasNext()) {
-				Class<?> clazz = iter.next();
-				detachService(svc, clazz, true);
-				iter.remove();
-			}
-		}
 
 		try {
-			Service.invokeServiceMethod(svc, Stop.class);
-		} catch (Exception e) {
-			LOG.warn("Stop service {} waring!", svc.getName());
+			synchronized (_svcRef) {
+				if (_svcRef.get(id) != null) {
+					Iterator<Class<?>> iter = _svcRef.get(id).iterator();
+					while (iter.hasNext()) {
+						Class<?> clazz = iter.next();
+						detachService(svc, clazz, true);
+						iter.remove();
+					}
+				}
+			}
+		} finally {
+			try {
+				Service.invokeServiceMethod(svc, Stop.class);
+			} catch (Exception e) {
+				LOG.warn("Stop service {} waring!", svc.getName());
+			}
 		}
 	}
 

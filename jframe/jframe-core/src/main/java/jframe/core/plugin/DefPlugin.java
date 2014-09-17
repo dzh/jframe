@@ -4,7 +4,6 @@
 package jframe.core.plugin;
 
 import jframe.core.plugin.loader.PluginClassLoader;
-import jframe.core.plugin.loader.ext.PluginServiceClassLoader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,12 +94,6 @@ public class DefPlugin implements Plugin {
 	public void start() throws PluginException {
 		logInfo("Plugin " + getName() + " starting.");
 		setStatus(PluginStatus.START);
-		
-		// FIXME 目前加载方式导致Plugin有服务注入时，可能还找不到Service，所以再次注入
-		if (getPluginClassLoader() instanceof PluginServiceClassLoader) {
-			((PluginServiceClassLoader) getPluginClassLoader())
-					.injectPlugin(this.getClass());
-		}
 	}
 
 	/*

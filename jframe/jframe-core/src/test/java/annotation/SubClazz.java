@@ -12,5 +12,5 @@ import jframe.core.plugin.annotation.Message;
  */
 @Message(isRecver = true)
 public class SubClazz extends SuperClazz {
-	
+	public String str;
 }
