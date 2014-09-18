@@ -42,6 +42,9 @@ You can also see log/*.log, or daemon.pid and app.pid generated in temp folder
    * Framework can be configured and can dynamically obtain configuration modification notification
    * Hot deployment plug-in system, and can control plug-in start/stop order
    * Communicate with each other via asynchronous message between plug-ins
+* v1.1.0
+  * Add plugin service feature, include annotations: `Service, InjectService`, Start and Stop`
+  * Add annotation `InjectPlugin` which injecting self-plugin instance into classes of the plugin
    
 ## Question Contact
 <pre>

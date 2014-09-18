@@ -61,26 +61,61 @@ git clone https://github.com/dzh/jframe.git
 ** 插件示例
 ** 开发插件
 ** 插件使用技巧
-*** 插件间互相调用
+*** 插件间交互~Policy
+
+*** 插件间交互~Service
+- 插件服务特性说明
+  - 插件服务不依赖于插件启动次序
+  - 插件卸载时, 定义在插件里的服务也将卸载, 并清除已注入的服务实例
+  - 服务是基于接口的同步注入编程模型，方便插件间模块交互
+- 定义插件服务
+  - 编写服务接口 通过注解定义服务，@Service(id='服务唯一ID',clazz='服务实现类') 
+  - 编写服务实现类 接口和实现目前要求在同一个插件内
+  - 导出服务 plugin.properties里`Export-Service`
+- 导入插件服务
+  - 导入服务 plugin.properties里`Import-Service`
+  - 注入服务 InjectService(id='服务唯一ID')
+- 示例插件 jframe-example-pluign,jframe-example-plugin2
 *** 获取配置更新
 
+** 插件注解说明
+*** 插件相关
+- @Plugin 插件配置
+- @Message 插件消息配置
+
+*** 服务相关
+- @Service 定义插件
+- @Start   服务实例初始化启动
+- @Stop    服务示例卸载时执行
+*** 注入
+- @InjectPlugin  注入插件示例
+- @InjectService 注入服务
+
 * 调试/性能
+
 ** 远程调试
 *** 调试守护进程(Main)
 *** 调试框架进程(FrameMain)
+
 ** 本地调试
+
 ** 使用jvisualvm
 - 性能监控配置
 - 
 
 * 核心插件
+
 ** jframe-watch
+
 *** 功能
 *** 配置
+
 ** jframe-upg
+
 ** jframe-rcp
 
 * 源码分析
+
 ** 启动/关闭
 ** 加载插件
 ** 消息分发
