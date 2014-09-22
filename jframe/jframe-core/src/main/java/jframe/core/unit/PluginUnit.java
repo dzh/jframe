@@ -17,8 +17,9 @@ import jframe.core.plugin.Plugin;
 import jframe.core.plugin.PluginContext;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginClassLoader;
+import jframe.core.plugin.loader.PluginClassLoaderContext;
 import jframe.core.plugin.loader.PluginCreator;
-import jframe.core.plugin.loader.ext.PluginLoaderContext;
+import jframe.core.plugin.loader.ext.DefPluginLoaderContext;
 import jframe.core.plugin.loader.ext.PluginServiceClassLoader;
 import jframe.core.plugin.loader.ext.PluginServiceCreator;
 import jframe.core.signal.Signal;
@@ -43,7 +44,7 @@ public class PluginUnit extends AbstractUnit {
 
 	private PluginContext _context;
 
-	private PluginLoaderContext _plc;
+	private PluginClassLoaderContext _plc;
 
 	@Override
 	public void init(Frame frame) throws UnitException {
@@ -51,10 +52,10 @@ public class PluginUnit extends AbstractUnit {
 		_context = new DefPluginContext();
 		_context.initContext(frame.getConfig());
 
-		_plc = new PluginLoaderContext();
+		_plc = new DefPluginLoaderContext();
 	}
 
-	public PluginLoaderContext getLoaderContext() {
+	public PluginClassLoaderContext getLoaderContext() {
 		return _plc;
 	}
 

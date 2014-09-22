@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="org/mybatis/example/config.properties">
+		<property name="username" value="dev_user" />
+		<property name="password" value="F2Fa3!33TYyg" />
+	</properties>
+
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="true" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<!-- NONE, PARTIAL, FULL -->
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<!-- SIMPLE REUSE BATCH -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="20" />
+		<setting name="safeRowBoundsEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="false" />
+		<!-- SESSION | STATEMENT -->
+		<setting name="localCacheScope" value="SESSION" />
+		<!-- JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER -->
+		<setting name="jdbcTypeForNull" value="OTHER" />
+		<!-- A method name list separated by commas -->
+		<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+		<setting name="defaultScriptingLanguage"
+			value="org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver" />
+		<setting name="callSettersOnNulls" value="false" />
+		<!-- <setting name="logPrefix" value="jframe.mybatis" /> -->
+		<!-- SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING 
+			| NO_LOGGING -->
+		<setting name="logImpl" value="SLF4J" />
+		<!-- CGLIB | JAVASSIST -->
+		<setting name="proxyFactory" value="CGLIB" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="Author" type="domain.blog.Author" />
+		<typeAlias alias="Blog" type="domain.blog.Blog" />
+		<typeAlias alias="Comment" type="domain.blog.Comment" />
+
+		<typeAlias alias="Post" type="domain.blog.Post" />
+		<typeAlias alias="Section" type="domain.blog.Section" />
+		<typeAlias alias="Tag" type="domain.blog.Tag" />
+		<package name="domain.blog" />
+	</typeAliases>
+
+	<typeHandlers>
+		<typeHandler handler="org.mybatis.example.ExampleTypeHandler" />
+		<package name="org.mybatis.example" />
+	</typeHandlers>
+
+	<environments default="development">
+		<environment id="runtime">
+			<transactionManager type="JDBC" />
+			<dataSource type="jframe.mybatis.ds.JframeDataSourceFactory">
+				<property name="driver" value="${driverClassName}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<property name="driver.encoding" value="utf-8" />
+			</dataSource>
+		</environment>
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driverClassName}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<property name="driver.encoding" value="utf-8" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="org/mybatis/example/BlogMapper.xml" />
+	</mappers>
+</configuration>

@@ -13,7 +13,6 @@ import java.net.URLClassLoader;
 
 import jframe.core.plugin.Plugin;
 import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.loader.ext.PluginLoaderContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +35,13 @@ public class PluginClassLoader extends URLClassLoader {
 
 	private PluginCase _case;
 
-	protected PluginLoaderContext plc;
+	protected PluginClassLoaderContext plc;
 
 	/**
 	 * @param pRef
 	 */
-	public PluginClassLoader(URL[] urls, PluginCase pc) {
+	public PluginClassLoader(URL[] urls, PluginCase pc,
+			PluginClassLoaderContext plc) {
 		super(urls, pc.getClass().getClassLoader());
 		this._case = pc;
 		if (getParent() == null) {
@@ -57,12 +57,17 @@ public class PluginClassLoader extends URLClassLoader {
 			LOG.error("Exception when create plugin:" + e.getLocalizedMessage());
 			dispose();
 		}
+
+		this.plc = plc;
+		this.plc.regPluginClassLoader(this);
 	}
 
-	public PluginClassLoader(PluginCase pc, PluginLoaderContext plc) {
-		this(new URL[] {}, pc);
-		this.plc = plc;
+	public PluginClassLoaderContext getPluginClassLoaderContext() {
+		return plc;
+	}
 
+	public PluginClassLoader(PluginCase pc, PluginClassLoaderContext plc) {
+		this(new URL[] {}, pc, plc);
 	}
 
 	public void addURL(URL url) {
@@ -78,8 +83,32 @@ public class PluginClassLoader extends URLClassLoader {
 		Class<?> c = findLoadedClass(name);
 
 		if (c == null) {
-			c = loadLocalPlugin(name);
+			// load import class
+			if (getPluginCase().getImportClass().contains(name)) {
+				PluginClassLoader pcl = getPluginClassLoaderContext()
+						.findImportClassLoader(name);
+				if (pcl != null)
+					return pcl.loadClass(name);
+			}
+			// load plugin class
+			try {
+				c = findPluginClass(name);
+				injectAnnocation(c);
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
+			}
 		}
+
+		if (c == null) {
+			try {
+				c = getParent().loadClass(name);
+			} catch (ClassNotFoundException e) {
+				c = loadImportPlugin(name);
+			} catch (Exception e) {
+				LOG.warn(e.getMessage());
+			}
+		}
+
 		if (c == null)
 			throw new ClassNotFoundException(name);
 
@@ -103,7 +132,7 @@ public class PluginClassLoader extends URLClassLoader {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Class<? extends Plugin> loadPlugin(PluginCase pc)
+	protected Class<? extends Plugin> loadPluginClass(PluginCase pc)
 			throws ClassNotFoundException {
 		return (Class<? extends Plugin>) loadClass(pc.getPluginClass());
 	}
@@ -121,36 +150,64 @@ public class PluginClassLoader extends URLClassLoader {
 	 * @return
 	 * @throws ClassNotFoundException
 	 */
-	protected Class<?> loadLocalPlugin(String name)
-			throws ClassNotFoundException {
+	protected Class<?> findPluginClass(String name) {
 		Class<?> c = null;
 		try {
 			// load from plug-in
 			c = findClass(name);
-			injectService(c);
 		} catch (ClassNotFoundException e) {
-			c = getParent().loadClass(name);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
 		}
 		return c;
 	}
 
-	protected void injectService(Class<?> clazz) throws Exception {
+	/**
+	 * load class from import-plugin
+	 * 
+	 * @param name
+	 * @return
+	 */
+	protected Class<?> loadImportPlugin(String name) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("LoadImportPlugin -> {}", name);
+		}
+
+		Class<?> clazz = null;
+		for (String plugin : getPluginCase().getImportPlugin()) {
+			try {
+				PluginClassLoader pcl = plc.findPluginClassLoader(plugin);
+				if (pcl == null) // TODO
+					continue;
+				clazz = pcl.loadClass(name);
+				break;
+			} catch (ClassNotFoundException e) {
+			}
+		}
+		return clazz;
+	}
+
+	protected void injectAnnocation(Class<?> clazz) throws Exception {
 		if (clazz == null)
 			return;
 
 		for (Field f : clazz.getDeclaredFields()) {
 			if (Modifier.isStatic(f.getModifiers())
 					&& f.isAnnotationPresent(InjectPlugin.class)) {
-				try {
-					f.setAccessible(true);
-					f.set(null, getPlugin());
-				} catch (Exception e) {
-					LOG.error(e.getMessage());
-				}
+				injectPlugin(f);
 				break;
 			}
+		}
+	}
+
+	protected void injectPlugin(Field f) {
+		try {
+			f.setAccessible(true);
+			f.set(null, getPlugin());
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("InjectPlugin {} -> {}", getPlugin(), f.getName());
 		}
 	}
 
@@ -210,5 +267,6 @@ public class PluginClassLoader extends URLClassLoader {
 			LOG.warn("Exception when PluginClassLoader close():"
 					+ e.getMessage());
 		}
+		plc.unregPluginClassLoader(this);
 	}
 }

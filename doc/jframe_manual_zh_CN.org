@@ -1,3 +1,4 @@
+
 #+STARTUP: showall
 
 #+TITLE: Jframe Manual
@@ -66,14 +67,15 @@ git clone https://github.com/dzh/jframe.git
 *** 插件间交互~Service
 - 插件服务特性说明
   - 插件服务不依赖于插件启动次序
+  - 服务是单例的
   - 插件卸载时, 定义在插件里的服务也将卸载, 并清除已注入的服务实例
   - 服务是基于接口的同步注入编程模型，方便插件间模块交互
 - 定义插件服务
   - 编写服务接口 通过注解定义服务，@Service(id='服务唯一ID',clazz='服务实现类') 
   - 编写服务实现类 接口和实现目前要求在同一个插件内
-  - 导出服务 plugin.properties里`Export-Service`
-- 导入插件服务
-  - 导入服务 plugin.properties里`Import-Service`
+  - 定义服务 plugin.properties里`Plugin-Service`，服务间用空格分隔(默认作为Export-Class导出)
+- 使用插件服务
+  - 导入插件接口 plugin.properties里`Import-Class`，服务间用空格分隔
   - 注入服务 InjectService(id='服务唯一ID')
 - 示例插件 jframe-example-pluign,jframe-example-plugin2
 *** 获取配置更新

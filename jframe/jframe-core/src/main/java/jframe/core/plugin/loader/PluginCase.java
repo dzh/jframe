@@ -26,8 +26,10 @@ public class PluginCase {
 	public static final String P_PLUGIN_NAME = "Plugin-Name";
 	public static final String P_PLUGIN_LIB = "Plugin-Lib";
 	public static final String P_PLUGIN_DLL = "Plugin-Dll";
-	public static final String P_EXPORT_SERVICE = "Export-Service";
-	public static final String P_IMPORT_SERVICE = "Import-Service";
+	public static final String P_PLUGIN_SERVICE = "Plugin-Service";
+	public static final String P_IMPORT_PLUGIN = "Import-Plugin";
+	public static final String P_IMPORT_CLASS = "Import-Class";
+	public static final String P_EXPORT_CLASS = "Export-Class";
 
 	private String pluginClass;
 
@@ -39,13 +41,25 @@ public class PluginCase {
 
 	private List<String> pluginLib = Collections.emptyList();
 
-	private List<String> exportService = Collections.emptyList();
+	private List<String> pluginService = Collections.emptyList();
 
-	private List<String> importService = Collections.emptyList();
+	private List<String> importPlugin = Collections.emptyList();
+
+	private List<String> importClass = Collections.emptyList();
+
+	private List<String> exportClass = Collections.emptyList();
 
 	private String jarPath;
 
 	private String cachePath;
+
+	public List<String> getExportClass() {
+		return exportClass;
+	}
+
+	public void setExportClass(List<String> exportClass) {
+		this.exportClass = exportClass;
+	}
 
 	public String getPluginClass() {
 		return pluginClass;
@@ -116,20 +130,28 @@ public class PluginCase {
 				+ getJarPath();
 	}
 
-	public List<String> getExportService() {
-		return exportService;
+	public List<String> getPluginService() {
+		return pluginService;
 	}
 
-	public void setExportService(List<String> exportService) {
-		this.exportService = exportService;
+	public void setPluginService(List<String> pluginService) {
+		this.pluginService = pluginService;
 	}
 
-	public List<String> getImportService() {
-		return importService;
+	public List<String> getImportPlugin() {
+		return importPlugin;
 	}
 
-	public void setImportService(List<String> importService) {
-		this.importService = importService;
+	public void setImportPlugin(List<String> importPlugin) {
+		this.importPlugin = importPlugin;
 	}
-	
+
+	public List<String> getImportClass() {
+		return importClass;
+	}
+
+	public void setImportClass(List<String> importClass) {
+		this.importClass = importClass;
+	}
+
 }

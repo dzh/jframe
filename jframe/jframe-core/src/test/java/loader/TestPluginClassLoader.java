@@ -8,7 +8,7 @@ import java.net.URL;
 import jframe.core.dispatch.DefDispatcher;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginClassLoader;
-import jframe.core.plugin.loader.ext.PluginLoaderContext;
+import jframe.core.plugin.loader.ext.DefPluginLoaderContext;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class TestPluginClassLoader {
 				.getResource("jframe-example-plugin-1.0.0.jar");
 		URL url2 = TestPluginClassLoader.class
 				.getResource("jframe-core-1.0.0.jar");
-		PluginLoaderContext plc = new PluginLoaderContext();
+		DefPluginLoaderContext plc = new DefPluginLoaderContext();
 		PluginCase pc = new PluginCase();
 		pcl = new PluginClassLoader(pc, plc);
 		pcl.addURL(url1);

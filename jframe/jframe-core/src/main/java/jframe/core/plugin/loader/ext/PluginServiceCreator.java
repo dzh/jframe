@@ -21,15 +21,16 @@ public class PluginServiceCreator extends PluginCreator {
 
 	@Override
 	protected void loadPlugin(PluginCase pc, Properties p) {
-		if (p.getProperty(PluginCase.P_EXPORT_SERVICE) != null) {
-			pc.setExportService(parseList(p
-					.getProperty(PluginCase.P_EXPORT_SERVICE)));
+		super.loadPlugin(pc, p);
+		if (p.getProperty(PluginCase.P_PLUGIN_SERVICE) != null) {
+			pc.setPluginService(parseList(p
+					.getProperty(PluginCase.P_PLUGIN_SERVICE)));
 		}
 
-		if (p.getProperty(PluginCase.P_IMPORT_SERVICE) != null) {
-			pc.setImportService(parseList(p
-					.getProperty(PluginCase.P_IMPORT_SERVICE)));
-		}
+		// if (p.getProperty(PluginCase.P_IMPORT_SERVICE) != null) {
+		// pc.setImportService(parseList(p
+		// .getProperty(PluginCase.P_IMPORT_SERVICE)));
+		// }
 	}
 
 	@Override

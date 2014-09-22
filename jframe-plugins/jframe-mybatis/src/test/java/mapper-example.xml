@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+	<select id="selectBlog" resultType="Blog">
+		select * from Blog where id =
+		#{id}
+	</select>
+
+
+	<select id="selectPerson" parameterType="int" resultType="hashmap">
+		SELECT
+		* FROM PERSON WHERE ID = #{id}
+	</select>
+
+	<insert id="insertAuthor" parameterType="domain.blog.Author"
+		flushCache="true" statementType="PREPARED" keyProperty="" keyColumn=""
+		useGeneratedKeys="false" timeout="20">
+	</insert>
+
+	<update id="insertAuthor" parameterType="domain.blog.Author"
+		flushCache="true" statementType="PREPARED" timeout="20">
+	</update>
+
+	<delete id="insertAuthor" parameterType="domain.blog.Author"
+		flushCache="true" statementType="PREPARED" timeout="20">
+	</delete>
+
+	<insert id="insertAuthor">
+		insert into Author (id,username,password,email,bio)
+		values (#{id},#{username},#{password},#{email},#{bio})
+	</insert>
+
+	<update id="updateAuthor">
+		update Author set
+		username = #{username},
+		password =
+		#{password},
+		email = #{email},
+		bio = #{bio}
+		where id = #{id}
+	</update>
+
+	<delete id="deleteAuthor">
+		delete from Author where id = #{id}
+	</delete>
+
+
+	<sql id="userColumns"> id,username,password </sql>
+	<select id="selectUsers" resultType="map">
+		select
+		<include refid="userColumns" />
+		from some_table
+		where id = #{id}
+	</select>
+
+	<select id="selectUsers" resultType="User">
+		select id, username,
+		password
+		from users
+		where id = #{id}
+	</select>
+
+	<select id="selectUsers" resultType="map">
+		select id, username,
+		hashedPassword
+		from some_table
+		where id = #{id}
+	</select>
+
+
+	<select id="selectUsers" resultType="User">
+		select
+		user_id as "id",
+		user_name as "userName",
+		hashed_password as "hashedPassword"
+		from
+		some_table
+		where id = #{id}
+	</select>
+
+	<!-- LRU FIFO SOFT WEAK -->
+	<cache eviction="LRU" flushInterval="60000" size="512" readOnly="true" />
+
+	<!-- org.mybatis.cache.Cache -->
+	<cache type="com.domain.something.MyCustomCache" />
+
+	<select flushCache="false" useCache="true" />
+	<insert flushCache="true" />
+	<update flushCache="true" />
+	<delete flushCache="true" />
+	<cache-ref namespace="com.someone.application.data.SomeMapper"/>
+</mapper>

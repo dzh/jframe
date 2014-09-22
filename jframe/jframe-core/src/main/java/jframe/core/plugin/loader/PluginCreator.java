@@ -6,8 +6,6 @@ package jframe.core.plugin.loader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -19,7 +17,6 @@ import java.util.jar.JarFile;
 import jframe.core.conf.Config;
 import jframe.core.conf.ConfigConstants;
 import jframe.core.plugin.Plugin;
-import jframe.core.plugin.loader.ext.PluginLoaderContext;
 import jframe.core.plugin.loader.ext.PluginServiceCreator;
 import jframe.core.util.FileUtil;
 
@@ -44,10 +41,10 @@ public class PluginCreator {
 		this._config = config;
 	}
 
-	protected PluginLoaderContext context;
+	protected PluginClassLoaderContext context;
 
 	public static final PluginCreator newCreator(Config config,
-			PluginLoaderContext context) {
+			PluginClassLoaderContext context) {
 		PluginCreator pc = new PluginServiceCreator(config);
 		pc.context = context;
 		return pc;
@@ -65,7 +62,6 @@ public class PluginCreator {
 	 */
 	public PluginCase loadPlugin(File plugin) {
 		JarFile jar = null;
-		InputStream is = null;
 		PluginCase pc = null;
 		try {
 			jar = new JarFile(plugin);
@@ -74,10 +70,19 @@ public class PluginCreator {
 				return null;
 			}
 
-			is = jar.getInputStream(jar.getJarEntry(FILE_PLUGIN));
 			Properties p = new Properties();
-			p.load(is);
-			is.close();
+			InputStream is = null;
+			try {
+				is = jar.getInputStream(jar.getJarEntry(FILE_PLUGIN));
+				p.load(is);
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
+				return null;
+			} finally {
+				if (is != null)
+					is.close();
+			}
+
 			if (isForbidden(p.getProperty(PluginCase.P_PLUGIN_NAME))) {
 				LOG.info("Forbid plugin: "
 						+ p.getProperty(PluginCase.P_PLUGIN_NAME));
@@ -146,7 +151,19 @@ public class PluginCreator {
 	}
 
 	protected void loadPlugin(PluginCase pc, Properties p) {
-
+		// parse import-plugin
+		if (p.getProperty(PluginCase.P_IMPORT_PLUGIN) != null) {
+			pc.setImportPlugin(parseList(p
+					.getProperty(PluginCase.P_IMPORT_PLUGIN)));
+		}
+		if (p.getProperty(PluginCase.P_IMPORT_CLASS) != null) {
+			pc.setImportClass(parseList(p
+					.getProperty(PluginCase.P_IMPORT_CLASS)));
+		}
+		if (p.getProperty(PluginCase.P_EXPORT_CLASS) != null) {
+			pc.setExportClass(parseList(p
+					.getProperty(PluginCase.P_EXPORT_CLASS)));
+		}
 	}
 
 	protected List<String> parseList(String pValue) {
@@ -168,7 +185,7 @@ public class PluginCreator {
 
 	public PluginClassLoader createPluginClassLoader(PluginCase pc) {
 		PluginClassLoader pcl = new PluginClassLoader(pc, context);
-		
+
 		return pcl;
 	}
 

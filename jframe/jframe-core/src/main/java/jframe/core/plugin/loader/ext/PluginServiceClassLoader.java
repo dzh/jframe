@@ -7,11 +7,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-import jframe.core.plugin.Plugin;
-import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginClassLoader;
+import jframe.core.plugin.loader.PluginClassLoaderContext;
 import jframe.core.plugin.service.Service;
 import jframe.core.plugin.service.ServiceContext;
 
@@ -25,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PluginServiceClassLoader extends PluginClassLoader {
 
-	public PluginServiceClassLoader(PluginCase pc, PluginLoaderContext plc) {
+	public PluginServiceClassLoader(PluginCase pc, PluginClassLoaderContext plc) {
 		super(pc, plc);
 	}
 
@@ -33,75 +32,26 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 			.getLogger(PluginServiceClassLoader.class);
 
 	@Override
-	protected Class<?> loadLocalPlugin(String name)
-			throws ClassNotFoundException {
-		try {
-			// TODO Import-Service有点多余, 除了性能之外
-			if (getPluginCase().getImportService().contains(name)) {
-				return loadOtherPlugin(name);
-			}
-		} catch (ClassNotFoundException e) {
-
-		}
-
-		Class<?> c = null;
-		try {
-			// load from plug-in
-			c = findClass(name);
-			injectService(c);
-		} catch (Exception e) {
-			c = getParent().loadClass(name);
-		}
-		return c;
-	}
-
-	@Override
-	protected void injectService(Class<?> clazz) throws Exception {
+	protected void injectAnnocation(Class<?> clazz) throws Exception {
 		if (clazz == null)
 			return;
-		ServiceContext context = plc.getServiceContext();
-		for (Field f : clazz.getDeclaredFields()) {
-			if (Modifier.isStatic(f.getModifiers())
-					&& f.isAnnotationPresent(InjectPlugin.class)) {
-				try {
-					f.setAccessible(true);
-					f.set(null, getPlugin());
-				} catch (Exception e) {
-					LOG.error(e.getMessage());
-				}
+		super.injectAnnocation(clazz);
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("InjectPlugin {} -> {}", getPlugin(), f.getName());
-				}
-			} else if (Modifier.isStatic(f.getModifiers())
+		Field[] fields = clazz.getDeclaredFields();
+		// inject service
+		for (Field f : fields) {
+			if (Modifier.isStatic(f.getModifiers())
 					&& f.isAnnotationPresent(InjectService.class)) {
-				context.attachService(context.getSvcById(f.getAnnotation(
-						InjectService.class).id()), f, true);
+				injectImportService(f);
 			}
 		}
 	}
 
-	public void injectPlugin(Class<? extends Plugin> plugin) {
-		try {
-			injectService(plugin);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-		}
-	}
-
-	/**
-	 * load class from other plug-in
-	 * 
-	 * @param name
-	 * @return
-	 * @throws ClassNotFoundException
-	 */
-	private Class<?> loadOtherPlugin(String name) throws ClassNotFoundException {
-		Service svc = plc.getServiceContext().getSvcByName(name);
-		if (svc != null) {
-			return svc.getClassLoader().loadClass(name);
-		}
-		return null;
+	protected void injectImportService(Field f) {
+		ServiceContext context = plc.getServiceContext();
+		context.attachService(
+				context.getSvcById(f.getAnnotation(InjectService.class).id()),
+				f, true);
 	}
 
 	/**
@@ -113,8 +63,8 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 	public void loadService(PluginCase pc) {
 		ServiceContext sc = plc.getServiceContext();
 
-		List<String> exportService = pc.getExportService();
-		for (String name : exportService) {
+		List<String> pluginService = pc.getPluginService();
+		for (String name : pluginService) {
 			try {
 				sc.regSvc(Service
 						.newInstance(
@@ -130,15 +80,15 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 	}
 
 	public void dispose() {
-		detachExportService();
+		detachPluginService();
 		super.dispose();
 	}
 
-	private void detachExportService() {
+	private void detachPluginService() {
 		ServiceContext context = plc.getServiceContext();
-		List<String> exportService = getPluginCase().getExportService();
+		List<String> pluginService = getPluginCase().getPluginService();
 
-		for (String svc : exportService) {
+		for (String svc : pluginService) {
 			Service s = context.getSvcByName(svc);
 			if (s == null)
 				continue;
