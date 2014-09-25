@@ -7,6 +7,7 @@ import jframe.core.msg.Msg;
 import jframe.core.plugin.PluginException;
 import jframe.core.plugin.PluginSenderRecver;
 import jframe.core.plugin.annotation.InjectService;
+import jframe.core.plugin.annotation.Injector;
 import jframe.example.plugin.CountService;
 
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * @date Sep 15, 2014 2:42:21 PM
  * @since 1.0
  */
+@Injector
 public class ExamplePlugin2 extends PluginSenderRecver {
 
 	static final Logger LOG = LoggerFactory.getLogger(ExamplePlugin2.class);

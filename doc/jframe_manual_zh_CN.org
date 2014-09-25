@@ -76,7 +76,7 @@ git clone https://github.com/dzh/jframe.git
   - 定义服务 plugin.properties里`Plugin-Service`，服务间用空格分隔(默认作为Export-Class导出)
 - 使用插件服务
   - 导入插件接口 plugin.properties里`Import-Class`，服务间用空格分隔
-  - 注入服务 InjectService(id='服务唯一ID')
+  - 注入服务 InjectService(id='服务唯一ID')，使用服务的类必须加Injector
 - 示例插件 jframe-example-pluign,jframe-example-plugin2
 *** 获取配置更新
 
@@ -90,6 +90,7 @@ git clone https://github.com/dzh/jframe.git
 - @Start   服务实例初始化启动
 - @Stop    服务示例卸载时执行
 *** 注入
+- @Injector 说明类使用注入功能，类没有这个注解的则下面的注解无效
 - @InjectPlugin  注入插件示例
 - @InjectService 注入服务
 

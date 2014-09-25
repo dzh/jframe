@@ -5,6 +5,7 @@ package jframe.example.plugin2;
 
 import jframe.core.plugin.Plugin;
 import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
  * @date Sep 16, 2014 5:08:19 PM
  * @since 1.0
  */
+@Injector
 class CountService2Impl implements CountService2 {
 
 	static Logger LOG = LoggerFactory.getLogger(CountService2Impl.class);

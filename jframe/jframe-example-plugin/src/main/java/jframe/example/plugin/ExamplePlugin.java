@@ -13,6 +13,7 @@ import jframe.core.msg.Msg;
 import jframe.core.msg.TextMsg;
 import jframe.core.plugin.PluginException;
 import jframe.core.plugin.PluginSenderRecver;
+import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Message;
 import jframe.core.plugin.annotation.MsgInterest;
 import jframe.core.plugin.annotation.Plugin;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
  * @date Sep 18, 2013 4:14:07 PM
  * @since 1.0
  */
+@Injector
 @Plugin(startOrder = 2, stopOrder = 6)
 @Message(isSender = true, isRecver = true, msgTypes = { 1, 2 }, recvConfig = true, recvPoison = true)
 public class ExamplePlugin extends PluginSenderRecver {

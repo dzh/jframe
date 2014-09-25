@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
 
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
  * @date Sep 18, 2014 2:17:43 PM
  * @since 1.0
  */
+@Injector
 class MybatisServiceImpl implements MybatisService {
 
 	static Logger LOG = LoggerFactory.getLogger(MybatisServiceImpl.class);

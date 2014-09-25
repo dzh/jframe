@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import jframe.core.plugin.PluginException;
 import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
 import jframe.datasource.DataSourcePlugin;
@@ -31,6 +32,7 @@ import com.alibaba.druid.pool.DruidPooledConnection;
  * @date Oct 21, 2013 2:32:51 PM
  * @since 1.0
  */
+@Injector
 public class DruidServiceImpl implements DataSourceService {
 
 	private static final Logger LOG = LoggerFactory

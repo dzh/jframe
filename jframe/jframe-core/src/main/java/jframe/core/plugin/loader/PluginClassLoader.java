@@ -13,6 +13,7 @@ import java.net.URLClassLoader;
 
 import jframe.core.plugin.Plugin;
 import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,10 +91,11 @@ public class PluginClassLoader extends URLClassLoader {
 				if (pcl != null)
 					return pcl.loadClass(name);
 			}
-			// load plugin class
+			// load plug-in class
 			try {
 				c = findPluginClass(name);
-				injectAnnocation(c);
+				if (isInjector(c))
+					injectAnnocation(c);
 			} catch (Exception e) {
 				LOG.error(e.getMessage());
 			}
@@ -185,6 +187,20 @@ public class PluginClassLoader extends URLClassLoader {
 		return clazz;
 	}
 
+	protected boolean isInjector(Class<?> clazz) {
+		try {
+			return clazz != null && clazz.isAnnotationPresent(Injector.class) ? true
+					: false;
+		} catch (Exception e) {
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param clazz
+	 * @throws Exception
+	 */
 	protected void injectAnnocation(Class<?> clazz) throws Exception {
 		if (clazz == null)
 			return;

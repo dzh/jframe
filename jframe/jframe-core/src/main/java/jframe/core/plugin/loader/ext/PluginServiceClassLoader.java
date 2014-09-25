@@ -30,7 +30,7 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(PluginServiceClassLoader.class);
-
+	
 	@Override
 	protected void injectAnnocation(Class<?> clazz) throws Exception {
 		if (clazz == null)
