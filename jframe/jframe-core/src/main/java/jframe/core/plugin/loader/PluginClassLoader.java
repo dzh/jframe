@@ -10,6 +10,8 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.LinkedList;
+import java.util.List;
 
 import jframe.core.plugin.Plugin;
 import jframe.core.plugin.annotation.InjectPlugin;
@@ -34,9 +36,24 @@ public class PluginClassLoader extends URLClassLoader {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(PluginClassLoader.class);
 
+	private Plugin _plugin;
+
 	private PluginCase _case;
 
 	protected PluginClassLoaderContext plc;
+
+	/**
+	 * to fix issue java.lang.ClassCircularityError 记录正在注入中的类名 TODO 需要验证
+	 */
+	private List<Class<?>> injectingClazz = new LinkedList<Class<?>>();
+
+	protected synchronized Class<?> findInjectingClass(String name) {
+		for (Class<?> clazz : injectingClazz) {
+			if (clazz.getName().equals(name))
+				return clazz;
+		}
+		return null;
+	}
 
 	/**
 	 * @param pRef
@@ -84,6 +101,11 @@ public class PluginClassLoader extends URLClassLoader {
 		Class<?> c = findLoadedClass(name);
 
 		if (c == null) {
+			// get injecting class
+			c = findInjectingClass(name);
+			if (c != null)
+				return c;
+
 			// load import class
 			if (getPluginCase().getImportClass().contains(name)) {
 				PluginClassLoader pcl = getPluginClassLoaderContext()
@@ -94,8 +116,11 @@ public class PluginClassLoader extends URLClassLoader {
 			// load plug-in class
 			try {
 				c = findPluginClass(name);
-				if (isInjector(c))
+				if (isInjector(c)) {
+					injectingClazz.add(c);
 					injectAnnocation(c);
+					injectingClazz.remove(c);
+				}
 			} catch (Exception e) {
 				LOG.error(e.getMessage());
 			}
@@ -119,8 +144,6 @@ public class PluginClassLoader extends URLClassLoader {
 		}
 		return c;
 	}
-
-	private Plugin _plugin;
 
 	protected synchronized Plugin createPlugin(PluginCase pc) {
 		if (_plugin != null)
@@ -283,6 +306,7 @@ public class PluginClassLoader extends URLClassLoader {
 			LOG.warn("Exception when PluginClassLoader close():"
 					+ e.getMessage());
 		}
+		injectingClazz = null;
 		plc.unregPluginClassLoader(this);
 	}
 }
