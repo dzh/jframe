@@ -1,13 +1,15 @@
 *.class
 
 # Package Files #
-*.jar
+# /META-INF/lib/*.jar
+# *.jar
 *.war
 *.ear
 *~
 .settings/
 .svn/
 target/
+.classpath
 jframe/jframe-release/jframe/lib/
 jframe/jframe-release/jframe/log/
 jframe/jframe-release/jframe/plugin/

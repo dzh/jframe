@@ -14,6 +14,8 @@
 		<module>jframe-datasource</module>
 		<module>jframe-watch</module>
 		<module>jframe-mybatis</module>
+		<module>jframe-getui</module>
+		<module>jframe-pushy</module>
 	</modules>
 	<build>
 		<plugins>
