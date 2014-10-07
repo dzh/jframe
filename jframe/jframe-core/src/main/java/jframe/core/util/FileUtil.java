@@ -67,6 +67,21 @@ public class FileUtil {
 	}
 
 	/**
+	 * 
+	 * @param file
+	 *            file's name
+	 * @return file's suffix if it existed, or empty string
+	 */
+	public static final String getSuffix(String file) {
+		if (file == null)
+			return "";
+		int loc = file.lastIndexOf('.');
+		if (loc == -1 || loc == file.length() - 1)
+			return "";
+		return file.substring(loc + 1);
+	}
+
+	/**
 	 * delete all files and folders under this path
 	 * 
 	 * @param path

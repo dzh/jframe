@@ -55,7 +55,7 @@ public class PushyConf {
 	public static final String KEY_HOST = "host";
 	public static final String KEY_HOST_PORT = "host.port";
 	public static final String KEY_FEEDBACK = "feedback";
-	public static final String KEY_FEEDBACK_PORT = "feedback.post";
+	public static final String KEY_FEEDBACK_PORT = "feedback.port";
 
 	synchronized static void init(InputStream is) throws Exception {
 		PropertyResourceBundle props = new PropertyResourceBundle(is);
