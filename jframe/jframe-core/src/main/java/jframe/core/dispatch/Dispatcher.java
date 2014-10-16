@@ -2,6 +2,7 @@ package jframe.core.dispatch;
 
 import java.util.Collection;
 
+import jframe.core.conf.Config;
 import jframe.core.msg.Msg;
 
 /**
@@ -14,6 +15,8 @@ import jframe.core.msg.Msg;
 public interface Dispatcher {
 
 	String getID();
+
+	Config getConfig();
 
 	/**
 	 * @Title start
@@ -39,7 +42,7 @@ public interface Dispatcher {
 	 * @return boolean
 	 * @throws
 	 */
-	boolean dispatch(Msg<?> msg);
+	void dispatch(Msg<?> msg);
 
 	void addDispatchSource(DispatchSource source);
 

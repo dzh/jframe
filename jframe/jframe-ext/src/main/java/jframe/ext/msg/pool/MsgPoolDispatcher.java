@@ -3,6 +3,7 @@
  */
 package jframe.ext.msg.pool;
 
+import jframe.core.conf.Config;
 import jframe.core.dispatch.DefDispatcher;
 import jframe.core.msg.Msg;
 
@@ -19,19 +20,14 @@ import jframe.core.msg.Msg;
  */
 public class MsgPoolDispatcher<V> extends DefDispatcher {
 
-	private MsgPool<V> msgPool = null;
-
-	/**
-	 * @param id
-	 */
-	protected MsgPoolDispatcher(String id) {
-		super(id);
-		//msgPool = new MsgPool<V>();
+	public MsgPoolDispatcher(String id, Config config) {
+		super(id, config);
 	}
 
-	public boolean dispatch(Msg<?> msg) {
+	private MsgPool<V> msgPool = null;
 
-		return false;
+	public void dispatch(Msg<?> msg) {
+
 	}
 
 	@Override

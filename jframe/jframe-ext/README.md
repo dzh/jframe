@@ -1,1 +1,9 @@
-定义jframe的核心扩展功能
+Jframe-core Extension
+================================
+
+### MQ分发器 
+* jframe.ext.dispatch.ActivemqDispatcher
+* config.properties
+	* context.dispatcher = jframe.ext.dispatch.ActivemqDispatcher
+	* file.dispatcher.mq = ${app.home}/conf/d-activemq.properties
+* put d-activemq.properties into ${app.home}/conf/

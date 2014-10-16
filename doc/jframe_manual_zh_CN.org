@@ -121,7 +121,12 @@ git clone https://github.com/dzh/jframe.git
 
 ** 启动/关闭
 ** 加载插件
-** 消息分发
 
+** 消息分发
+*** 进程内分发
+jframe.core.dispatch.DefDispatcher
+*** 队列分发
+jframe.ext.dispatch.ActivemqDispatcher
+- 
 
 

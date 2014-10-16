@@ -4,8 +4,6 @@
 package jframe.pushy;
 
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import jframe.core.plugin.annotation.Service;
 
@@ -23,9 +21,10 @@ import jframe.core.plugin.annotation.Service;
 @Service(clazz = "jframe.pushy.impl.PushyServiceImpl", id = "jframe.service.pushy")
 public interface PushyService {
 
-	void sendMessage(String token, String payload);
+	void sendMessage(String token, String payload) throws Exception;
 
-	void sendMessage(String token, String payload, Date expirationDate);
+	void sendMessage(String token, String payload, Date expirationDate)
+			throws Exception;
 
-	List<String> getExpiredTokens(long timeout, TimeUnit timeoutUnit);
+//	List<String> getExpiredTokens(long timeout, TimeUnit timeoutUnit);
 }

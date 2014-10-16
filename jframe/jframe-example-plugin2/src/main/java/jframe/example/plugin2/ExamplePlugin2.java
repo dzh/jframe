@@ -33,7 +33,7 @@ public class ExamplePlugin2 extends PluginSenderRecver {
 
 	public void test() {
 		if (cs != null)
-			LOG.info("ExamplePlugin2 cs 1 + 2 = {}", cs.add(1, 2));
+			LOG.info("ExamplePlugin cs 1 + 2 = {}", cs.add(1, 2));
 		if (cs2 != null) {
 			LOG.info("ExamplePlugin2 cs 6 * 7 = {}", cs2.mul(6, 7));
 		}

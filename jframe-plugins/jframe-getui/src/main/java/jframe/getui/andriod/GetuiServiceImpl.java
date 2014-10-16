@@ -65,13 +65,17 @@ public class GetuiServiceImpl implements GetuiService {
 	}
 
 	@Stop
-	void stop() {
+	public void stop() {
 		try {
 			push.close();
 		} catch (IOException e) {
 			LOG.error(e.getMessage());
 		}
 		plugin = null;
+	}
+
+	public void setPush(IGtPush push) {
+		this.push = push;
 	}
 
 	/**

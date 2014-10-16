@@ -4,10 +4,9 @@
 package jframe.pushy;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.MissingResourceException;
-import java.util.PropertyResourceBundle;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,18 +33,10 @@ public class PushyConf {
 		if (init)
 			return;
 
-		InputStream fis = null;
 		try {
-			fis = new FileInputStream(file);
-			init(fis);
+			init(new FileInputStream(file));
 		} catch (Exception e) {
 			throw e;
-		} finally {
-			if (fis != null)
-				try {
-					fis.close();
-				} catch (IOException e) {
-				}
 		}
 		init = true;
 	}
@@ -57,17 +48,20 @@ public class PushyConf {
 	public static final String KEY_FEEDBACK = "feedback";
 	public static final String KEY_FEEDBACK_PORT = "feedback.port";
 
-	synchronized static void init(InputStream is) throws Exception {
-		PropertyResourceBundle props = new PropertyResourceBundle(is);
+	public synchronized static void init(InputStream is) throws Exception {
 		try {
-			IOS_AUTH = props.getString(KEY_IOS_AUTH);
-			IOS_PASSWORD = props.getString(KEY_IOS_PASSWORD);
-			HOST = props.getString(KEY_HOST);
-			HOST_PORT = props.getString(KEY_HOST_PORT);
-			FEEDBACK = props.getString(KEY_FEEDBACK);
-			FEEDBACK_PORT = props.getString(KEY_FEEDBACK_PORT);
+			Properties props = new Properties();
+			IOS_AUTH = props.getProperty(KEY_IOS_AUTH).trim();
+			IOS_PASSWORD = props.getProperty(KEY_IOS_PASSWORD).trim();
+			HOST = props.getProperty(KEY_HOST).trim();
+			HOST_PORT = props.getProperty(KEY_HOST_PORT).trim();
+			FEEDBACK = props.getProperty(KEY_FEEDBACK).trim();
+			FEEDBACK_PORT = props.getProperty(KEY_FEEDBACK_PORT).trim();
 		} catch (MissingResourceException e) {
 			throw e;
+		} finally {
+			if (is != null)
+				is.close();
 		}
 	}
 

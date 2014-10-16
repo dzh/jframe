@@ -4,11 +4,7 @@
 package jframe.pushy.impl;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import jframe.core.conf.Config;
 import jframe.core.plugin.annotation.InjectPlugin;
@@ -23,10 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.relayrides.pushy.apns.ApnsEnvironment;
-import com.relayrides.pushy.apns.ExpiredToken;
-import com.relayrides.pushy.apns.FeedbackConnectionException;
+import com.relayrides.pushy.apns.FailedConnectionListener;
 import com.relayrides.pushy.apns.PushManager;
-import com.relayrides.pushy.apns.PushManagerFactory;
+import com.relayrides.pushy.apns.PushManagerConfiguration;
+import com.relayrides.pushy.apns.RejectedNotificationListener;
+import com.relayrides.pushy.apns.RejectedNotificationReason;
+import com.relayrides.pushy.apns.util.SSLContextUtil;
 import com.relayrides.pushy.apns.util.SimpleApnsPushNotification;
 import com.relayrides.pushy.apns.util.TokenUtil;
 
@@ -36,7 +34,7 @@ import com.relayrides.pushy.apns.util.TokenUtil;
  * @since 1.0
  */
 @Injector
-class PushyServiceImpl implements PushyService {
+public class PushyServiceImpl implements PushyService {
 
 	static Logger LOG = LoggerFactory.getLogger(PushyServiceImpl.class);
 
@@ -57,15 +55,15 @@ class PushyServiceImpl implements PushyService {
 
 		try {
 			PushyConf.init(conf);
-			PushManagerFactory<SimpleApnsPushNotification> pushManagerFactory = new PushManagerFactory<SimpleApnsPushNotification>(
+			pushManager = new PushManager<SimpleApnsPushNotification>(
 					getEnvironment(PushyConf.HOST, PushyConf.HOST_PORT,
 							PushyConf.FEEDBACK, PushyConf.FEEDBACK_PORT),
-					PushManagerFactory.createDefaultSSLContext(
+					SSLContextUtil.createDefaultSSLContext(
 							plugin.getConfig(Config.APP_CONF) + "/"
 									+ PushyConf.IOS_AUTH,
-							PushyConf.IOS_PASSWORD));
+							PushyConf.IOS_PASSWORD), null, null, null,
+					new PushManagerConfiguration(), "PushManager");
 
-			pushManager = pushManagerFactory.buildPushManager();
 			pushManager.start();
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -75,6 +73,38 @@ class PushyServiceImpl implements PushyService {
 
 		// pushManager.registerRejectedNotificationListener(listener);
 		// pushManager.registerFailedConnectionListener(listener)
+		class MyRejectedNotificationListener implements
+				RejectedNotificationListener<SimpleApnsPushNotification> {
+
+			@Override
+			public void handleRejectedNotification(
+					final PushManager<? extends SimpleApnsPushNotification> pushManager,
+					final SimpleApnsPushNotification notification,
+					final RejectedNotificationReason reason) {
+
+				System.out.format("%s was rejected with rejection reason %s\n",
+						notification, reason);
+			}
+		}
+		pushManager
+				.registerRejectedNotificationListener(new MyRejectedNotificationListener());
+
+		class MyFailedConnectionListener implements
+				FailedConnectionListener<SimpleApnsPushNotification> {
+			@Override
+			public void handleFailedConnection(
+					final PushManager<? extends SimpleApnsPushNotification> pushManager,
+					final Throwable cause) {
+				System.out.println(cause.getMessage());
+			}
+		}
+		pushManager
+				.registerFailedConnectionListener(new MyFailedConnectionListener());
+	}
+
+	public void setPushManager(
+			PushManager<SimpleApnsPushNotification> pushManager) {
+		this.pushManager = pushManager;
 	}
 
 	public static ApnsEnvironment getEnvironment(String host, String port,
@@ -84,10 +114,11 @@ class PushyServiceImpl implements PushyService {
 	}
 
 	@Stop
-	void stop() {
+	public void stop() {
 		if (pushManager != null) {
 			try {
-				pushManager.shutdown(10000);
+				pushManager.shutdown();
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				LOG.error(e.getMessage());
 			}
@@ -96,31 +127,32 @@ class PushyServiceImpl implements PushyService {
 	}
 
 	@Override
-	public void sendMessage(String token, String payload) {
+	public void sendMessage(String token, String payload) throws Exception {
 		sendMessage(token, payload, null);
 	}
 
-	@Override
-	public List<String> getExpiredTokens(long timeout, TimeUnit timeoutUnit) {
-		List<ExpiredToken> list = null;
-		try {
-			list = pushManager.getExpiredTokens(10, TimeUnit.SECONDS);
-		} catch (InterruptedException | FeedbackConnectionException e) {
-			LOG.error(e.getMessage());
-		}
-		if (list == null) {
-			list = Collections.emptyList();
-		}
+	// public List<String> getExpiredTokens(long timeout, TimeUnit timeoutUnit)
+	// {
+	// List<ExpiredToken> list = null;
+	// try {
+	// list = pushManager.getExpiredTokens(10, TimeUnit.SECONDS);
+	// } catch (InterruptedException | FeedbackConnectionException e) {
+	// LOG.error(e.getMessage());
+	// }
+	// if (list == null) {
+	// list = Collections.emptyList();
+	// }
+	//
+	// List<String> tokens = new ArrayList<String>(list.size());
+	// for (ExpiredToken t : list) {
+	// tokens.add(TokenUtil.tokenBytesToString(t.getToken()));
+	// }
+	// return tokens;
+	// }
 
-		List<String> tokens = new ArrayList<String>(list.size());
-		for (ExpiredToken t : list) {
-			tokens.add(TokenUtil.tokenBytesToString(t.getToken()));
-		}
-		return tokens;
-	}
-
 	@Override
-	public void sendMessage(String token, String payload, Date expirationDate) {
+	public void sendMessage(String token, String payload, Date expirationDate)
+			throws Exception {
 		try {
 			pushManager.getQueue().put(
 					new SimpleApnsPushNotification(TokenUtil

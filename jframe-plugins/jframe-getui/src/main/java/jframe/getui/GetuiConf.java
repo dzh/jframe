@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.MissingResourceException;
-import java.util.PropertyResourceBundle;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,36 +32,33 @@ public class GetuiConf {
 		if (init)
 			return;
 
-		InputStream fis = null;
 		try {
-			fis = new FileInputStream(file);
-			init(fis);
+			init(new FileInputStream(file));
 		} catch (Exception e) {
 			throw e;
-		} finally {
-			if (fis != null)
-				try {
-					fis.close();
-				} catch (IOException e) {
-				}
 		}
 		init = true;
 	}
 
 	public static final String KEY_APPID = "app.id";
 	public static final String KEY_APPKEY = "app.key";
-	public static final String KEY_MASTER_SCRET = "master_secret";
+	public static final String KEY_MASTER_SECRET = "master_secret";
 	public static final String KEY_HOST = "host";
 
-	synchronized static void init(InputStream is) throws IOException {
-		PropertyResourceBundle props = new PropertyResourceBundle(is);
+	public synchronized static void init(InputStream is) throws IOException {
+		if (is == null)
+			return;
+		Properties props = new Properties();
 		try {
-			APPID = props.getString(KEY_APPID);
-			APPKEY = props.getString(KEY_APPKEY);
-			MASTER_SECRET = props.getString(KEY_MASTER_SCRET);
-			HOST = props.getString(KEY_HOST);
+			props.load(is);
+			APPID = props.getProperty(KEY_APPID);
+			APPKEY = props.getProperty(KEY_APPKEY);
+			MASTER_SECRET = props.getProperty(KEY_MASTER_SECRET);
+			HOST = props.getProperty(KEY_HOST);
 		} catch (MissingResourceException e) {
 			LOG.error(e.getMessage());
+		} finally {
+			is.close();
 		}
 	}
 

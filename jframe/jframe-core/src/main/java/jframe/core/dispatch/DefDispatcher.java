@@ -3,15 +3,12 @@
  */
 package jframe.core.dispatch;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import jframe.core.conf.Config;
 import jframe.core.msg.Msg;
 
 import org.slf4j.Logger;
@@ -26,15 +23,14 @@ import org.slf4j.LoggerFactory;
  * @author dzh
  * @date Jun 18, 2013 4:21:18 PM
  */
-public class DefDispatcher implements Dispatcher {
+public class DefDispatcher extends AbstractDispatcher {
+
+	public DefDispatcher(String id, Config config) {
+		super(id, config);
+	}
+
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DefDispatcher.class);
-
-	private String _ID;
-
-	private final List<DispatchSource> _dsList = new CopyOnWriteArrayList<DispatchSource>();
-
-	private final List<DispatchTarget> _dtList = new CopyOnWriteArrayList<DispatchTarget>();
 
 	private BlockingQueue<Msg<?>> _queue;
 
@@ -42,61 +38,14 @@ public class DefDispatcher implements Dispatcher {
 
 	private final CountDownLatch latch = new CountDownLatch(1);
 
-	public DefDispatcher(String id) {
-		this._ID = id;
-	}
-
-	public static final Dispatcher newDispatcher(String id) {
-		return new DefDispatcher(id);
-	}
-
-	public boolean dispatch(Msg<?> msg) {
-		if (msg != null) {
-			List<DispatchTarget> dtList = _dtList;
-			for (DispatchTarget dt : dtList) {
-				if (dt.interestMsg(msg)) {
-					dt.receive(msg);
-				}
-			}
-		}
-		return false;
-	}
-
-	public String getID() {
-		return _ID;
-	}
-
-	public void addDispatchSource(DispatchSource source) {
-		if (source == null || _dsList.contains(source))
-			return;
-
-		source.addDispatch(this);
-		_dsList.add(source);
-	}
-
-	public void removeDispatchSource(DispatchSource source) {
-		if (source == null)
-			return;
-		source.removeDispatch(this);
-		_dsList.remove(source);
-	}
-
-	public void addDispatchTarget(DispatchTarget target) {
-		if (target == null || _dtList.contains(target))
-			return;
-		_dtList.add(target);
-	}
-
-	public void removeDispatchTarget(DispatchTarget target) {
-		if (target == null)
-			return;
-		_dtList.remove(target);
+	public static final Dispatcher newDispatcher(String id, Config conf) {
+		return new DefDispatcher(id, conf);
 	}
 
 	private Thread disptchThread;
 
 	public void start() {
-		LOG.info("Dispatcher: " + _ID + " Starting!");
+		LOG.info("Dispatcher: " + getID() + " Starting!");
 		stop = false;
 		_queue = createDispatchQueue();
 		initDispatchQueue(_queue);
@@ -160,12 +109,13 @@ public class DefDispatcher implements Dispatcher {
 	/**
 	 * 
 	 */
+	@Override
 	public void close() {
 		if (stop)
 			return;
-		LOG.info("Dispacher: " + _ID + " Stopping!");
+		LOG.info("Dispacher: " + getID() + " Stopping!");
 		closeDispatch();
-		dispose();
+		super.close();
 		saveDispatchQueue(_queue);
 	}
 
@@ -180,35 +130,6 @@ public class DefDispatcher implements Dispatcher {
 		} catch (InterruptedException e) {
 			LOG.error(e.getMessage());
 		}
-	}
-
-	/**
-	 * cleanup DispatchSource and DispatchTarget
-	 */
-	private void dispose() {
-		List<DispatchSource> dslist = _dsList;
-		for (DispatchSource ds : dslist) {
-			ds.removeDispatch(this);
-		}
-		_dtList.clear();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.dispatch.Dispatcher#getDispatchSource()
-	 */
-	public Collection<DispatchSource> getDispatchSource() {
-		return Collections.unmodifiableList(_dsList);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.dispatch.Dispatcher#getDispatchTarget()
-	 */
-	public Collection<DispatchTarget> getDispatchTarget() {
-		return Collections.unmodifiableList(_dtList);
 	}
 
 }

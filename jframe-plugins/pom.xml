@@ -16,6 +16,7 @@
 		<module>jframe-mybatis</module>
 		<module>jframe-getui</module>
 		<module>jframe-pushy</module>
+		<module>jframe-apns</module>
 	</modules>
 	<build>
 		<plugins>

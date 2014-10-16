@@ -67,12 +67,15 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 			Class<?> clazz = Class.forName(_config.getConfig(
 					ConfigConstants.CONTEXT_DISPATCHER,
 					DefDispatcher.class.getName()));
-			d = (Dispatcher) clazz.getConstructor(String.class).newInstance(
-					_config.getConfig(ConfigConstants.CONTEXT_DISPATCHER_ID,
-							"PluginContextDispatcher"));
+			d = (Dispatcher) clazz.getConstructor(String.class, Config.class)
+					.newInstance(
+							_config.getConfig(
+									ConfigConstants.CONTEXT_DISPATCHER_ID,
+									"PluginContextDispatcher"), _config);
 		} catch (Exception e) {
 			_LOG.error(e.getMessage());
-			d = DefDispatcher.newDispatcher("PluginContextDispatcher");
+			d = DefDispatcher.newDispatcher("PluginContextDispatcher",
+					getConfig());
 		}
 		return d;
 	}

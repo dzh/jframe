@@ -6,6 +6,8 @@ package jframe.core.dispatch;
 import java.util.ArrayList;
 import java.util.List;
 
+import jframe.core.conf.Config;
+
 /**
  * dispatch管理管理工厂
  * 
@@ -40,8 +42,8 @@ public class DefDispatchFactory implements DispatchFactory {
 		return dl;
 	}
 
-	public Dispatcher createDispatcher(String dispatcherID) {
-		Dispatcher d = DefDispatcher.newDispatcher(dispatcherID);
+	public Dispatcher createDispatcher(String dispatcherID, Config config) {
+		Dispatcher d = DefDispatcher.newDispatcher(dispatcherID, config);
 		d.start();
 		synchronized (_lock) {
 			_dList.add(d);

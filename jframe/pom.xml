@@ -11,6 +11,7 @@
 		<module>jframe-example-plugin</module>
 		<module>jframe-release</module>
 		<module>jframe-example-plugin2</module>
+		<module>jframe-ext</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
