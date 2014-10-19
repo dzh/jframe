@@ -20,12 +20,14 @@ public class TestApns {
 
 	@Test
 	public void testApns() {
-		ApnsService service = APNS.newService()
-				.withCert("/home/dzh/share/dono/bak/shareCar.p12", "sharecar")
-				.withProductionDestination().build();
-		String payload = APNS.newPayload().alertTitle("爱拼车")
+		ApnsService service = APNS
+				.newService()
+				.withCert("/home/dzh/temp/apple/developer/sharecar.p12",
+						"123456").withSandboxDestination().build();
+		String payload = APNS.newPayload().alertTitle("爱拼车22")
 				.alertBody("Can't be simpler than this!").build();
 		String token = "857309a68c3fe80751b65a0c6c9f394960ebc1a1942dc5219ec46d9e40ed5ace";
+		// String token = "83c02996f76268c6b569943cd42feec6"
 		service.push(token, payload);
 
 		service.testConnection();

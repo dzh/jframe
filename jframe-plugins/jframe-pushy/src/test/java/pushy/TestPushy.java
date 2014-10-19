@@ -33,7 +33,7 @@ public class TestPushy {
 
 	static String Img_Logo = "push.png";
 
-	String token = "<857309a6 8c3fe807 51b65a0c 6c9f3949 60ebc1a1 942dc521 9ec46d9e 40ed5ace>";
+	String token = "857309a68c3fe80751b65a0c6c9f394960ebc1a1942dc5219ec46d9e40ed5ace";
 
 	@Before
 	public void init() throws Exception {
@@ -44,7 +44,7 @@ public class TestPushy {
 		PushManagerConfiguration conf = new PushManagerConfiguration();
 		conf.setConcurrentConnectionCount(2);
 		PushManager<SimpleApnsPushNotification> pushManager = new PushManager<SimpleApnsPushNotification>(
-				ApnsEnvironment.getProductionEnvironment(),
+				ApnsEnvironment.getSandboxEnvironment(),
 				SSLContextUtil.createDefaultSSLContext(PushyConf.IOS_AUTH,
 						PushyConf.IOS_PASSWORD), null, null, null, conf,
 				"PushManager");
@@ -64,6 +64,7 @@ public class TestPushy {
 		pushy.stop();
 	}
 
+	@Test
 	public void test() {
 		try {
 			pushApple(token, "111111111", null);

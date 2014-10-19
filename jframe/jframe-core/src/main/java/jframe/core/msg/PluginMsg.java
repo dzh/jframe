@@ -15,11 +15,11 @@ public class PluginMsg<V> implements Msg<V> {
 
 	public static final String PluginName = "Plugin";
 
-	private final Map<String, String> _meta = new HashMap<String, String>(10);
+	private final Map<String, String> meta = new HashMap<String, String>(10);
 
 	private int type;
 
-	private V msg;
+	private V value;
 
 	public int getType() {
 		return type;
@@ -31,21 +31,21 @@ public class PluginMsg<V> implements Msg<V> {
 	}
 
 	public PluginMsg<V> setMeta(String key, String value) {
-		_meta.put(key, value);
+		meta.put(key, value);
 		return this;
 	}
 
 	public String getMeta(String key) {
-		return _meta.get(key);
+		return meta.get(key);
 	}
 
 	public PluginMsg<V> setValue(V msg) {
-		this.msg = msg;
+		this.value = msg;
 		return this;
 	}
 
 	public V getValue() {
-		return msg;
+		return value;
 	}
 
 	public void accept(MsgVisitor<V> visitor) {
@@ -54,7 +54,7 @@ public class PluginMsg<V> implements Msg<V> {
 
 	public void clear() {
 		clearMeta();
-		msg = null;
+		value = null;
 	}
 
 	public String toString() {
@@ -67,7 +67,7 @@ public class PluginMsg<V> implements Msg<V> {
 	 * @see jframe.core.msg.Msg#clearMeta()
 	 */
 	public void clearMeta() {
-		_meta.clear();
+		meta.clear();
 	}
 
 	/*
@@ -76,6 +76,6 @@ public class PluginMsg<V> implements Msg<V> {
 	 * @see jframe.core.msg.Msg#removeMeta(java.lang.String)
 	 */
 	public String removeMeta(String key) {
-		return _meta.remove(key);
+		return meta.remove(key);
 	}
 }

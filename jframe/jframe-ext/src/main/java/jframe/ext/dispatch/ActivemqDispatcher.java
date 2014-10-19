@@ -19,14 +19,11 @@ import javax.jms.TextMessage;
 import jframe.core.conf.Config;
 import jframe.core.dispatch.AbstractDispatcher;
 import jframe.core.msg.Msg;
-import jframe.core.msg.TextMsg;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
 
 /**
  * TODO 对于各种Msg类型的支持
@@ -117,6 +114,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 					MessageConsumer consumer = session
 							.createConsumer(destination);
 
+					MsgTransfer msgTransfer = MqConf.Transfer;
 					while (!stop) {
 						Message message = consumer
 								.receive(MqConf.ConsumerTimeout);
@@ -124,9 +122,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 							if (message instanceof TextMessage) {
 								String text = ((TextMessage) message).getText();
 								try {
-									Msg<?> msg = JSON.parseObject(text,
-											TextMsg.class);
-									dispatch(msg);
+									dispatch(msgTransfer.decode(text));
 								} catch (Exception e) {
 									LOG.error(e.getMessage());
 								}
@@ -173,8 +169,8 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 					.createQueue(getSendQueueName(msg));
 			MessageProducer producer = session.createProducer(destination);
 
-			TextMessage message = session.createTextMessage(JSON
-					.toJSONString(msg));
+			TextMessage message = session.createTextMessage(MqConf.Transfer
+					.encode(msg));
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("produce msg {}", message.getText());
 			}

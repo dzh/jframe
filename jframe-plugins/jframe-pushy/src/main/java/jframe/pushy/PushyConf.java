@@ -51,6 +51,7 @@ public class PushyConf {
 	public synchronized static void init(InputStream is) throws Exception {
 		try {
 			Properties props = new Properties();
+			props.load(is);
 			IOS_AUTH = props.getProperty(KEY_IOS_AUTH).trim();
 			IOS_PASSWORD = props.getProperty(KEY_IOS_PASSWORD).trim();
 			HOST = props.getProperty(KEY_HOST).trim();

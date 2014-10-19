@@ -4,9 +4,7 @@
 package jframe.ext.dispatch;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.MissingResourceException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -48,6 +46,8 @@ public class MqConf {
 
 	static boolean init = false;
 
+	static MsgTransfer Transfer;
+
 	public synchronized static void init(String file) throws Exception {
 		if (init)
 			return;
@@ -60,7 +60,7 @@ public class MqConf {
 		init = true;
 	}
 
-	public synchronized static void init(InputStream is) throws IOException {
+	public synchronized static void init(InputStream is) throws Exception {
 		if (is == null)
 			return;
 		Properties props = new Properties();
@@ -83,8 +83,13 @@ public class MqConf {
 			// consumer
 			ConsumerTimeout = Long.parseLong(props.getProperty(
 					"ConsumerTimeout", "60000"));
-		} catch (MissingResourceException e) {
-			LOG.error(e.getMessage());
+
+			// transfer
+			Transfer = (MsgTransfer) Class.forName(
+					props.getProperty("MsgTransfer",
+							TextMsgTransfer.class.getName())).newInstance();
+		} catch (Exception e) {
+			throw e;
 		} finally {
 			is.close();
 		}
