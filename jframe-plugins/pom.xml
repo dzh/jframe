@@ -17,6 +17,8 @@
 		<module>jframe-getui</module>
 		<module>jframe-pushy</module>
 		<module>jframe-apns</module>
+		<module>jframe-memcached-client</module>
+		<module>jframe-httpclient</module>
 	</modules>
 	<build>
 		<plugins>

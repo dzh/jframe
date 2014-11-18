@@ -33,7 +33,7 @@ public class TestPushy {
 
 	static String Img_Logo = "push.png";
 
-	String token = "857309a68c3fe80751b65a0c6c9f394960ebc1a1942dc5219ec46d9e40ed5ace";
+	String token = "58699b9bcd54e144c09dbf1e78ea1d674db8299709b4242b3eacc29d51359324";
 
 	@Before
 	public void init() throws Exception {
@@ -69,7 +69,7 @@ public class TestPushy {
 		try {
 			pushApple(token, "111111111", null);
 
-			Thread.sleep(10 * 1000);
+//			Thread.sleep(10 * 1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

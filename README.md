@@ -53,7 +53,7 @@ You can also see log/*.log, or daemon.pid and app.pid generated in temp folder
 ## Question Contact
 <pre>
 jframe-dev@googlegroups.com  (u need join first)
-archer.dzh@gmail.com         (personal)
+dzh_11@qq.com                (personal)
 </pre>
 
 

@@ -2,8 +2,8 @@
 #+STARTUP: showall
 
 #+TITLE: Jframe Manual
-#+AUTHOR: 戴忠
-#+EMAIL: archer.dzh@gmail.com
+#+AUTHOR: dzh
+#+EMAIL: jframe-dev@googlegroups.com
 
 * 工程目录
 ** 下载地址
@@ -98,7 +98,9 @@ git clone https://github.com/dzh/jframe.git
 
 ** 远程调试
 *** 调试守护进程(Main)
+
 *** 调试框架进程(FrameMain)
+
 
 ** 本地调试
 
