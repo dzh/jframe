@@ -19,8 +19,11 @@ import org.junit.Test;
  */
 public class TestPropertiesConf {
 
+	private PropertiesConfig PropertiesConfig;
+
 	@Before
 	public void testPayOption() throws Exception {
+		PropertiesConfig = new PropertiesConfig();
 		PropertiesConfig.init(Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("util/conf-demo.properties"));
 

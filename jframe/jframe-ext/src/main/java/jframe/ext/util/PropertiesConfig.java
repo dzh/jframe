@@ -31,9 +31,9 @@ public class PropertiesConfig {
 
 	static final Logger LOG = LoggerFactory.getLogger(MqConf.class);
 
-	static boolean init = false;
+	boolean init = false;
 
-	public synchronized static void init(String file) throws Exception {
+	public synchronized void init(String file) throws Exception {
 		if (init)
 			return;
 
@@ -45,9 +45,9 @@ public class PropertiesConfig {
 		init = true;
 	}
 
-	private static Map<String, String> conf;
+	private Map<String, String> conf;
 
-	public synchronized static void init(InputStream is) throws Exception {
+	public synchronized void init(InputStream is) throws Exception {
 		if (is == null || init)
 			return;
 
@@ -67,7 +67,7 @@ public class PropertiesConfig {
 		}
 	}
 
-	public synchronized static void replace(VarHandler vh) {
+	public synchronized void replace(VarHandler vh) {
 		if (conf == null)
 			return;
 		for (String key : conf.keySet()) {
@@ -75,7 +75,7 @@ public class PropertiesConfig {
 		}
 	}
 
-	public synchronized static String getConf(String group, String key) {
+	public synchronized String getConf(String group, String key) {
 		if (conf == null)
 			return "";
 
