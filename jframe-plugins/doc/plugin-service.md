@@ -18,4 +18,12 @@
 * jframe-getui
 - jframe.getui.GetuiService
 	- @Service(clazz = "jframe.getui.andriod.GetuiServiceImpl", id = "jframe.service.getui")
+	
+* jframe-memcached-client
+- jframe.memcached.client.MemcachedService
+	- @Service(clazz = "jframe.memcached.client.MemcachedServiceImpl", id = "jframe.service.memcached.client")
+	
+* jframe-jedis
+- jframe.jedis.service.JedisService
+	- @Service(clazz = "jframe.jedis.service.JedisServiceImpl", id = "jframe.service.jedis")
 

@@ -7,7 +7,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.Properties;
 
-import jframe.core.plugin.Plugin;
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
@@ -57,14 +56,14 @@ public class MemcachedServiceImpl implements MemcachedService {
 	private MemCachedClient mcc;
 
 	@InjectPlugin
-	static Plugin plugin;
+	static MemcachedPlugin plugin;
 
 	/**
 	 * 
 	 */
 	@Start
 	public void start() {
-		String path = plugin.getContext().getConfig().getConfig(confName, "");
+		String path = plugin.getConfig(confName, "");
 		Properties _conf = MemcachedFactory.load(new File(path));
 		if (_conf == null) {
 			LOG.error("Not found memcached.file {}", path);
