@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dono.share.memcached;
+package jframe.memcached.client;
 
 import java.io.File;
 import java.io.FileInputStream;

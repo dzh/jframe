@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dono.share.memcached;
+package jframe.memcached.client;
 
 import java.util.Date;
 
@@ -14,7 +14,7 @@ import jframe.core.plugin.annotation.Service;
  * @date Aug 16, 2014 4:41:46 PM
  * @since 1.0
  */
-@Service(clazz = "dono.share.memcached.MemcachedServiceImpl", id = "dono.share.memcached")
+@Service(clazz = "jframe.memcached.client.MemcachedServiceImpl", id = "jframe.service.memcached.client")
 public interface MemcachedService {
 
 	boolean add(String key, Object value, Date expiry);

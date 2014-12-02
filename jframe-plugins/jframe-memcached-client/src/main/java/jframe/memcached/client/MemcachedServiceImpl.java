@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dono.share.memcached;
+package jframe.memcached.client;
 
 import java.io.File;
 import java.util.Date;
@@ -29,7 +29,7 @@ import com.whalin.MemCached.SockIOPool;
 @Injector
 public class MemcachedServiceImpl implements MemcachedService {
 
-	static final String confName = "memcached.file";
+	static final String confName = "file.memcached";
 
 	static final Logger LOG = LoggerFactory
 			.getLogger(MemcachedServiceImpl.class);
