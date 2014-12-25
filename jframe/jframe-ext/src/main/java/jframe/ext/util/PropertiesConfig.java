@@ -75,10 +75,13 @@ public class PropertiesConfig {
 		}
 	}
 
+	public synchronized String[] getGroupIds() {
+		return conf.get("group.id").split("\\s+");
+	}
+
 	public synchronized String getConf(String group, String key) {
 		if (conf == null)
 			return "";
-
 		String val = null;
 		if (group != null) {
 			val = conf.get("@" + group + "." + key);

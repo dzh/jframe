@@ -42,4 +42,6 @@ public interface DataSourceService {
 
 	DataSource getDataSource();
 
+	void closeService();
+
 }

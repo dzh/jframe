@@ -70,7 +70,7 @@ public class DruidServiceImpl implements DataSourceService {
 		return _dataSource.getConnection();
 	}
 
-	private void initDataSource(String path) throws PluginException {
+	public void initDataSource(String path) throws PluginException {
 		File dsFile = new File(path);
 		if (!dsFile.exists()) {
 			LOG.error("Not found datasource file {}", path);
@@ -112,6 +112,14 @@ public class DruidServiceImpl implements DataSourceService {
 	@Override
 	public DataSource getDataSource() {
 		return _dataSource;
+	}
+
+	@Override
+	public void closeService() {
+		if (_dataSource != null) {
+			_dataSource.close();
+		}
+		LOG.info("DataSource is closed");
 	}
 
 }
