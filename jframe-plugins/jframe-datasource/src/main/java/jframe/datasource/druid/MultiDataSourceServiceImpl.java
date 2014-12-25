@@ -43,7 +43,7 @@ public class MultiDataSourceServiceImpl implements MultiDataSourceService {
 
 	@Start
 	public void start() {
-		String[] ids = _plugin.getConfig(MULTI_DS_ID, "").split("\\s");
+		String[] ids = _plugin.getConfig(MULTI_DS_ID, "").split("\\s+");
 		for (String id : ids) {
 			DruidServiceImpl ds = new DruidServiceImpl();
 			try {
