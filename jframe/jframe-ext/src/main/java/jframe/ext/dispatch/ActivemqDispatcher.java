@@ -92,7 +92,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 					try {
 						sendMq(queue.take());
 
-						Thread.sleep(6);
+						Thread.sleep(MqConf.SendSleepTime);
 					} catch (Exception e) {
 						LOG.warn(e.getMessage());
 					}
@@ -126,7 +126,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 								try {
 									dispatch(msgTransfer.decode(text));
 
-									Thread.sleep(6);
+									Thread.sleep(MqConf.RecvSleepTime);
 								} catch (Exception e) {
 									LOG.error(e.getMessage());
 								}
