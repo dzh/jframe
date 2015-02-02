@@ -19,6 +19,7 @@
 		<module>jframe-apns</module>
 		<module>jframe-memcached-client</module>
 		<module>jframe-jedis</module>
+		<module>jframe-httpclient</module>
 	</modules>
 	<build>
 		<plugins>

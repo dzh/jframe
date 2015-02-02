@@ -22,16 +22,20 @@ import jframe.core.plugin.annotation.Service;
 @Service(clazz = "jframe.httpclient.service.impl.HttpClientServiceImpl", id = "jframe.service.httpclient")
 public interface HttpClientService {
 
-	public static enum PROTOCOL {
-		HTTP, HTTPS
-	}
+	String M_POST = "post";
+	String M_GET = "get";
 
-	public static enum METHOD {
-		POST, GET
-	}
+	String P_HTTPS = "https";
+	String P_HTTP = "http";
 
-	void sendGroup(PROTOCOL p, METHOD m, String data, Map<String, String> paras);
+	void send(String id, String data, Map<String, String> http,
+			Map<String, String> para);
 
-	void sendRandom();
+	void sendGroup(String gid, String data, Map<String, String> http,
+			Map<String, String> para);
 
+	void sendRandom(String data, Map<String, String> http,
+			Map<String, String> para);
+
+	void sendAll(String data, Map<String, String> http, Map<String, String> para);
 }

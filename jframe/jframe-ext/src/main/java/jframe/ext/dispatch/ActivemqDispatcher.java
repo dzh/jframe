@@ -91,6 +91,8 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 				while (!stop) {
 					try {
 						sendMq(queue.take());
+
+						Thread.sleep(6);
 					} catch (Exception e) {
 						LOG.warn(e.getMessage());
 					}
@@ -123,6 +125,8 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 								String text = ((TextMessage) message).getText();
 								try {
 									dispatch(msgTransfer.decode(text));
+
+									Thread.sleep(6);
 								} catch (Exception e) {
 									LOG.error(e.getMessage());
 								}
