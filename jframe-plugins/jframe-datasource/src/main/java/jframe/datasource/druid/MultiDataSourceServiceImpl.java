@@ -47,7 +47,7 @@ public class MultiDataSourceServiceImpl implements MultiDataSourceService {
 		for (String id : ids) {
 			DruidServiceImpl ds = new DruidServiceImpl();
 			try {
-				ds.initDataSource(PREFIX_FILE + id);
+				ds.initDataSource(_plugin.getConfig(PREFIX_FILE + id));
 			} catch (PluginException e) {
 				LOG.error("{} -> " + e.getMessage(), id);
 				System.exit(1);
