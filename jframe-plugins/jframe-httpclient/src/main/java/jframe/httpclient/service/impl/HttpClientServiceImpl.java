@@ -241,11 +241,17 @@ public class HttpClientServiceImpl implements HttpClientService {
 			request = new HttpGet(target.toURI() + path + "?" + data);
 		} else {
 			request = new HttpPost(target.toURI() + path);
-			String mimeType = HttpClientConfig.getConf(id,
-					HttpClientConfig.P_MIMETYPE, "text/plain");
+			String mimeType = paras == null ? "text/plain" : paras
+					.get(P_MIMETYPE);
 			((HttpPost) request).setEntity(new StringEntity(data, ContentType
 					.create(mimeType, HttpClientConfig.getConf(id,
 							HttpClientConfig.HTTP_CHARSET))));
+		}
+
+		if (headers != null) {
+			for (String key : headers.keySet()) {
+				request.addHeader(key, headers.get(key));
+			}
 		}
 
 		CloseableHttpResponse resp = null;
@@ -275,7 +281,7 @@ public class HttpClientServiceImpl implements HttpClientService {
 			Reader reader = new InputStreamReader(entity.getContent(), charset);
 			Type type = new TypeToken<T>() {
 			}.getType();
-			return gson.fromJson(reader, type);
+			return GSON.fromJson(reader, type);
 		} finally {
 			if (resp != null) {
 				EntityUtils.consume(resp.getEntity());
@@ -283,7 +289,7 @@ public class HttpClientServiceImpl implements HttpClientService {
 		}
 	}
 
-	static final Gson gson = new GsonBuilder().create();
+	static final Gson GSON = new GsonBuilder().create();
 
 	//
 	// public static final String toJson(Object obj) {

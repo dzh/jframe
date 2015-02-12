@@ -35,8 +35,6 @@ public class HttpClientConfig {
 	public static final String HTTP_KEEP_ALIVE = "http.keep-alive";
 	public static final String HTTP_CHARSET = "http.charset";
 
-	public static final String P_MIMETYPE = "mimeType";
-
 	public static void init(String file) throws Exception {
 		CONFIG.init(file);
 	}

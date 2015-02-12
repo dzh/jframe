@@ -23,6 +23,9 @@ import jframe.core.plugin.annotation.Service;
 @Service(clazz = "jframe.httpclient.service.impl.HttpClientServiceImpl", id = "jframe.service.httpclient")
 public interface HttpClientService {
 
+	String P_MIMETYPE = "mimeType";
+	String P_METHOD = "method";
+
 	<T> T send(String id, String path, String data,
 			Map<String, String> headers, Map<String, String> paras)
 			throws Exception;
