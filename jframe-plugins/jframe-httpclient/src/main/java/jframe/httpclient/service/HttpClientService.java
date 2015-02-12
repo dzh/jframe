@@ -10,9 +10,10 @@ import jframe.core.plugin.annotation.Service;
 /**
  * <p>
  * 特性:
- * <li>同时向所有服务器发送，向指定服务器发送，向随机服务器发送</li>
- * <li>发送失败自动重发,重发fail.repeat次</li>
+ * <li>TODO 同时向所有服务器发送，向指定服务器发送，向随机服务器发送</li>
+ * <li>TODO 发送失败自动重发,重发fail.repeat次</li>
  * <li>TODO 支持https</li>
+ * <li>TODO 发送失败异常处理</li>
  * </p>
  * 
  * @author dzh
@@ -22,20 +23,17 @@ import jframe.core.plugin.annotation.Service;
 @Service(clazz = "jframe.httpclient.service.impl.HttpClientServiceImpl", id = "jframe.service.httpclient")
 public interface HttpClientService {
 
-	String M_POST = "post";
-	String M_GET = "get";
+	<T> T send(String id, String path, String data,
+			Map<String, String> headers, Map<String, String> paras)
+			throws Exception;
 
-	String P_HTTPS = "https";
-	String P_HTTP = "http";
+	<T> T sendGroup(String gid, String path, String data,
+			Map<String, String> headers, Map<String, String> paras)
+			throws Exception;
 
-	void send(String id, String data, Map<String, String> http,
-			Map<String, String> para);
+	<T> T sendRandom(String path, String data, Map<String, String> headers,
+			Map<String, String> paras) throws Exception;
 
-	void sendGroup(String gid, String data, Map<String, String> http,
-			Map<String, String> para);
-
-	void sendRandom(String data, Map<String, String> http,
-			Map<String, String> para);
-
-	void sendAll(String data, Map<String, String> http, Map<String, String> para);
+	<T> T sendAll(String path, String data, Map<String, String> headers,
+			Map<String, String> paras) throws Exception;
 }
