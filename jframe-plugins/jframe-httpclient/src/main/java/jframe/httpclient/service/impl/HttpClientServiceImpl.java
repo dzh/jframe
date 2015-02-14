@@ -5,8 +5,6 @@ package jframe.httpclient.service.impl;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Type;
-import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -276,12 +274,10 @@ public class HttpClientServiceImpl implements HttpClientService {
 			// };
 			resp = httpClient.execute(request);
 			HttpEntity entity = resp.getEntity();
-			ContentType contentType = ContentType.getOrDefault(entity);
-			Charset charset = contentType.getCharset();
-			Reader reader = new InputStreamReader(entity.getContent(), charset);
-			Type type = new TypeToken<T>() {
-			}.getType();
-			return GSON.fromJson(reader, type);
+			Reader reader = new InputStreamReader(entity.getContent(),
+					ContentType.getOrDefault(entity).getCharset());
+			return GSON.fromJson(reader, new TypeToken<T>() {
+			}.getType());
 		} finally {
 			if (resp != null) {
 				EntityUtils.consume(resp.getEntity());
