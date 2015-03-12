@@ -76,22 +76,23 @@ public class MqConf {
 			// producer
 			MqUrl = props.getProperty("MqUrl");
 			UseAsyncSend = Boolean.parseBoolean(props.getProperty(
-					"UseAsyncSend", "false"));
+					"UseAsyncSend", "false").trim());
 			CreateConnectionOnStartup = Boolean.parseBoolean(props.getProperty(
-					"CreateConnectionOnStartup", "false"));
+					"CreateConnectionOnStartup", "false").trim());
 			MaxConnections = Integer.parseInt(props.getProperty(
-					"MaxConnections", "10"));
+					"MaxConnections", "10").trim());
 			MaximumActiveSessionPerConnection = Integer.parseInt(props
-					.getProperty("MaximumActiveSessionPerConnection", "100"));
+					.getProperty("MaximumActiveSessionPerConnection", "100")
+					.trim());
 
 			// consumer
 			ConsumerTimeout = Long.parseLong(props.getProperty(
-					"ConsumerTimeout", "60000"));
+					"ConsumerTimeout", "60000").trim());
 
 			SendSleepTime = Long.parseLong(props.getProperty("SendSleepTime",
-					"6"));
+					"6").trim());
 			RecvSleepTime = Long.parseLong(props.getProperty("RecvSleepTime",
-					"6"));
+					"6").trim());
 
 			// transfer
 			Transfer = (MsgTransfer) Class.forName(
