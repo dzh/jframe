@@ -97,7 +97,8 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 					try {
 						sendMq(queue.take());
 
-						Thread.sleep(MqConf.SendSleepTime);
+						if (MqConf.SendSleepTime > 0)
+							Thread.sleep(MqConf.SendSleepTime);
 					} catch (Exception e) {
 						LOG.warn(e.getMessage());
 					}
