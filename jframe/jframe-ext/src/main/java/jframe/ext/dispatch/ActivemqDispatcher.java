@@ -57,6 +57,11 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 	 */
 	static String Msg_SendQueue = "d.mq.send.queue";
 
+	/**
+	 * 发送消息持久化
+	 */
+	static String Msg_DeliveryMode = "d.mq.delivery.mode";
+
 	// static String Msg_RecvQueue = "d.mq.recv.queue";
 
 	public ActivemqDispatcher(String id, Config config) {
@@ -126,7 +131,8 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 								try {
 									dispatch(msgTransfer.decode(text));
 
-									Thread.sleep(MqConf.RecvSleepTime);
+									if (MqConf.RecvSleepTime > 0)
+										Thread.sleep(MqConf.RecvSleepTime);
 								} catch (Exception e) {
 									LOG.error(e.getMessage());
 								}
@@ -172,6 +178,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 			Destination destination = session
 					.createQueue(getSendQueueName(msg));
 			MessageProducer producer = session.createProducer(destination);
+			producer.setDeliveryMode(getDeliveryMode(msg));
 
 			TextMessage message = session.createTextMessage(MqConf.Transfer
 					.encode(msg));
@@ -191,6 +198,18 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 				} catch (JMSException e) {
 				}
 		}
+	}
+
+	private int getDeliveryMode(Msg<?> msg) {
+		try {
+			if (msg.getMeta(Msg_DeliveryMode) == null) {
+				return javax.jms.DeliveryMode.PERSISTENT;
+			}
+			return Integer.parseInt(msg.getMeta(Msg_DeliveryMode));
+		} catch (Exception e) {
+
+		}
+		return javax.jms.DeliveryMode.PERSISTENT;
 	}
 
 	public String getSendQueueName(Msg<?> msg) {

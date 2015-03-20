@@ -33,7 +33,7 @@ public class TestPushy {
 
 	static String Img_Logo = "push.png";
 
-	String token = "857309a68c3fe80751b65a0c6c9f394960ebc1a1942dc5219ec46d9e40ed5ace";
+	String token = "3568a0158b669e1d1dd60c202d9431a72ddb77b2dc4f8156034099a98cd219e9";
 
 	@Before
 	public void init() throws Exception {

@@ -45,6 +45,7 @@ public abstract class AbstractDispatcher implements Dispatcher {
 	}
 
 	/*
+	 * TODO 优化
 	 * (non-Javadoc)
 	 * 
 	 * @see jframe.core.dispatch.Dispatcher#dispatch(jframe.core.msg.Msg)

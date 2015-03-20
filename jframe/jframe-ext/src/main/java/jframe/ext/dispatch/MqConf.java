@@ -52,6 +52,8 @@ public class MqConf {
 
 	static MsgTransfer Transfer;
 
+	public static int DeliveryMode = 2;
+
 	public synchronized static void init(String file) throws Exception {
 		if (init)
 			return;
@@ -98,6 +100,10 @@ public class MqConf {
 			Transfer = (MsgTransfer) Class.forName(
 					props.getProperty("MsgTransfer",
 							TextMsgTransfer.class.getName())).newInstance();
+
+			// message
+			DeliveryMode = Integer.parseInt(props.getProperty("DeliveryMode",
+					String.valueOf(javax.jms.DeliveryMode.PERSISTENT)));
 		} catch (Exception e) {
 			throw e;
 		} finally {
