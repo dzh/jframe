@@ -54,6 +54,10 @@ import com.google.gson.reflect.TypeToken;
 @Injector
 public class HttpClientServiceImpl implements HttpClientService {
 
+	HttpClientServiceImpl() {
+
+	}
+
 	static Logger LOG = LoggerFactory.getLogger(HttpClientServiceImpl.class);
 
 	static String FILE_CONF = "file.httpclient";
@@ -314,6 +318,106 @@ public class HttpClientServiceImpl implements HttpClientService {
 	public <T> T sendAll(String path, String data, Map<String, String> headers,
 			Map<String, String> paras) throws Exception {
 		throw new Exception("");
+	}
+
+	public static HttpClientService testHttpClient(String httpclient) {
+		try {
+			HttpClientConfig.init(httpclient);
+			// SSLContext sslContext = SSLContexts.createSystemDefault();
+			// SSLConnectionSocketFactory sslsf = new
+			// SSLConnectionSocketFactory(
+			// sslContext,
+			// SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
+			// KeyStore myTrustStore = <...>
+			// SSLContext sslContext = SSLContexts.custom()
+			// .useTLS()
+			// .loadTrustMaterial(myTrustStore)
+			// .build();
+			// SSLConnectionSocketFactory sslsf = new
+			// SSLConnectionSocketFactory(sslContext);
+			// ConnectionSocketFactory plainsf = <...>
+			// LayeredConnectionSocketFactory sslsf = <...>
+			// Registry<ConnectionSocketFactory> r =
+			// RegistryBuilder.<ConnectionSocketFactory>create()
+			// .register("http", plainsf)
+			// .register("https", sslsf)
+			// .build();
+			// HttpClientConnectionManager cm = new
+			// PoolingHttpClientConnectionManager(r);
+
+			PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+			cm.setMaxTotal(Integer.parseInt(HttpClientConfig.getConf(null,
+					HttpClientConfig.HTTP_MAX_CONN, "200")));
+			cm.setDefaultMaxPerRoute(Integer.parseInt(HttpClientConfig.getConf(
+					null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
+
+			for (String host : HttpClientConfig.getHosts()) {
+				String maxConn = HttpClientConfig.getConf(host,
+						HttpClientConfig.HTTP_MAX_CONN, null);
+				if (null == maxConn) {
+					continue;
+				}
+				HttpHost localhost = new HttpHost(HttpClientConfig.getConf(
+						host, HttpClientConfig.IP),
+						Integer.parseInt(HttpClientConfig.getConf(host,
+								HttpClientConfig.PORT, "80")));
+				cm.setMaxPerRoute(new HttpRoute(localhost),
+						Integer.parseInt(maxConn));
+			}
+
+			// _httpClient.getParams().setIntParameter("http.socket.timeout",
+			// 5000);
+
+			ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
+				public long getKeepAliveDuration(HttpResponse response,
+						HttpContext context) {
+					// Honor 'keep-alive' header
+					HeaderElementIterator it = new BasicHeaderElementIterator(
+							response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+					while (it.hasNext()) {
+						HeaderElement he = it.nextElement();
+						String param = he.getName();
+						String value = he.getValue();
+						if (value != null && param.equalsIgnoreCase("timeout")) {
+							try {
+								return Long.parseLong(value) * 1000;
+							} catch (NumberFormatException ignore) {
+							}
+						}
+					}
+
+					String keepAlive = null;
+					HttpHost target = (HttpHost) context
+							.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
+					for (String host : HttpClientConfig.getHosts()) {
+						String ip = HttpClientConfig.getConf(host,
+								HttpClientConfig.IP, "0");
+						if (target.getHostName().equals(ip)) {
+							keepAlive = HttpClientConfig.getConf(host,
+									HttpClientConfig.HTTP_KEEP_ALIVE, null);
+							break;
+						}
+					}
+
+					if (keepAlive == null) {
+						keepAlive = HttpClientConfig.getConf(null,
+								HttpClientConfig.HTTP_KEEP_ALIVE, "10");
+					}
+					return Integer.parseInt(keepAlive) * 1000;
+				}
+
+			};
+//			httpClient = HttpClients.custom().setConnectionManager(cm)
+//					.setKeepAliveStrategy(myStrategy).build();
+//
+//			IdleConnectionMonitorThread = new IdleConnectionMonitorThread(
+//					cm);
+//			IdleConnectionMonitorThread.start();
+		} catch (Exception e) {
+			LOG.error("HttpClientServiceImpl init error {}!", e.getMessage());
+		}
+//		return this;
+		return null;
 	}
 
 }

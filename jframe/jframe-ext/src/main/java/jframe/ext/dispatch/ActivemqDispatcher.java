@@ -4,7 +4,9 @@
 package jframe.ext.dispatch;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.jms.Connection;
@@ -63,6 +65,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 	static String Msg_DeliveryMode = "d.mq.delivery.mode";
 
 	// static String Msg_RecvQueue = "d.mq.recv.queue";
+	private ExecutorService workPool;
 
 	public ActivemqDispatcher(String id, Config config) {
 		super(id, config);
@@ -88,6 +91,10 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 
 		_queue = new LinkedBlockingQueue<Msg<?>>();
 
+		workPool = new ThreadPoolExecutor(1, Runtime.getRuntime()
+				.availableProcessors() + 1, 60L, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<Runnable>());
+
 		new Thread("DispatcherSendMqThread") {
 			public void run() {
 				LOG.info("DispatcherSendMqThread starting");
@@ -95,8 +102,15 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 				final BlockingQueue<Msg<?>> queue = _queue;
 				while (!stop) {
 					try {
-						sendMq(queue.take());
-
+						workPool.execute(new Runnable() {
+							public void run() {
+								try {
+									sendMq(queue.take());
+								} catch (InterruptedException e) {
+									LOG.warn(e.getMessage());
+								}
+							}
+						});
 						if (MqConf.SendSleepTime > 0)
 							Thread.sleep(MqConf.SendSleepTime);
 					} catch (Exception e) {
@@ -119,28 +133,39 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 							Session.AUTO_ACKNOWLEDGE);
 					Destination destination = session
 							.createQueue(MqConf.DefMqRecvQueue);
-					MessageConsumer consumer = session
+					final MessageConsumer consumer = session
 							.createConsumer(destination);
 
-					MsgTransfer msgTransfer = MqConf.Transfer;
+					final MsgTransfer msgTransfer = MqConf.Transfer;
 					while (!stop) {
-						Message message = consumer
-								.receive(MqConf.ConsumerTimeout);
-						if (message != null) {
-							if (message instanceof TextMessage) {
-								String text = ((TextMessage) message).getText();
-								try {
-									dispatch(msgTransfer.decode(text));
+						try {
+							workPool.execute(new Runnable() {
+								public void run() {
+									try {
+										Message message = consumer
+												.receive(MqConf.ConsumerTimeout);
+										if (message != null) {
+											if (message instanceof TextMessage) {
+												String text = ((TextMessage) message)
+														.getText();
+												dispatch(msgTransfer
+														.decode(text));
+												if (LOG.isDebugEnabled()) {
+													LOG.debug("Consume msg {}",
+															text);
+												}
+											}
+										}
+									} catch (Exception e) {
+										LOG.warn(e.getMessage());
+									}
+								}
+							});
 
-									if (MqConf.RecvSleepTime > 0)
-										Thread.sleep(MqConf.RecvSleepTime);
-								} catch (Exception e) {
-									LOG.error(e.getMessage());
-								}
-								if (LOG.isDebugEnabled()) {
-									LOG.debug("Consume msg {}", text);
-								}
-							}
+							if (MqConf.RecvSleepTime > 0)
+								Thread.sleep(MqConf.RecvSleepTime);
+						} catch (Exception e) {
+							LOG.error(e.getMessage());
 						}
 					}
 					consumer.close();
@@ -252,8 +277,16 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 	public void close() {
 		stop = true;
 		super.close();
-		if (poolFactory != null) {
-			poolFactory.stop();
+		try {
+			if (poolFactory != null) {
+				poolFactory.stop();
+			}
+
+			if (workPool != null) {
+				workPool.shutdown();
+				workPool.awaitTermination(60, TimeUnit.SECONDS);
+			}
+		} catch (InterruptedException e) {
 		}
 		LOG.info("ActivemqDispatcher stopped!");
 	}
