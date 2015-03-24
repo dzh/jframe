@@ -6,6 +6,7 @@ package jframe.core.plugin.dispatch;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
@@ -64,6 +65,8 @@ public class DispatchTargetHandler implements InvocationHandler {
 		_mc.clear();
 		Message ma = plugin.getClass().getAnnotation(Message.class);
 		_types = ma.msgTypes();
+		if (_types != null)
+			Arrays.sort(_types);
 		int maxCache = ma.msgMaxCache();
 		if (_cache == null) {
 			_cache = new LinkedBlockingDeque<Msg<?>>(maxCache);
@@ -121,6 +124,11 @@ public class DispatchTargetHandler implements InvocationHandler {
 							} catch (Exception e) {
 								LOG.warn(e.getMessage());
 							}
+						}
+
+						try {
+							Thread.sleep(2);
+						} catch (InterruptedException e) {
 						}
 					}
 				}
@@ -212,20 +220,13 @@ public class DispatchTargetHandler implements InvocationHandler {
 	}
 
 	/**
-	 * TODO 优化算法
-	 * 
 	 * @param msg
 	 * @return
 	 */
 	boolean interestMsg(Msg<?> msg) {
 		if (_types == null || _types.length == 0)
 			return true;
-
-		for (int t : _types) {
-			if (t == msg.getType())
-				return true;
-		}
-		return false;
+		return Arrays.binarySearch(_types, msg.getType()) < 0 ? false : true;
 	}
 
 	private Method getCacheMethod(String name) {

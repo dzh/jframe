@@ -102,15 +102,18 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 				final BlockingQueue<Msg<?>> queue = _queue;
 				while (!stop) {
 					try {
-						workPool.execute(new Runnable() {
-							public void run() {
-								try {
-									sendMq(queue.take());
-								} catch (InterruptedException e) {
-									LOG.warn(e.getMessage());
+						final Msg<?> msg = queue.take();
+						if (msg != null) {
+							workPool.execute(new Runnable() {
+								public void run() {
+									try {
+										sendMq(msg);
+									} catch (Exception e) {
+										LOG.warn(e.getMessage());
+									}
 								}
-							}
-						});
+							});
+						}
 						if (MqConf.SendSleepTime > 0)
 							Thread.sleep(MqConf.SendSleepTime);
 					} catch (Exception e) {
@@ -139,12 +142,12 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 					final MsgTransfer msgTransfer = MqConf.Transfer;
 					while (!stop) {
 						try {
-							workPool.execute(new Runnable() {
-								public void run() {
-									try {
-										Message message = consumer
-												.receive(MqConf.ConsumerTimeout);
-										if (message != null) {
+							final Message message = consumer
+									.receive(MqConf.ConsumerTimeout);
+							if (message != null)
+								workPool.execute(new Runnable() {
+									public void run() {
+										try {
 											if (message instanceof TextMessage) {
 												String text = ((TextMessage) message)
 														.getText();
@@ -155,13 +158,11 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 															text);
 												}
 											}
+										} catch (Exception e) {
+											LOG.warn(e.getMessage());
 										}
-									} catch (Exception e) {
-										LOG.warn(e.getMessage());
 									}
-								}
-							});
-
+								});
 							if (MqConf.RecvSleepTime > 0)
 								Thread.sleep(MqConf.RecvSleepTime);
 						} catch (Exception e) {

@@ -49,6 +49,9 @@ public class DefDispatcher extends AbstractDispatcher {
 		stop = false;
 		_queue = createDispatchQueue();
 		initDispatchQueue(_queue);
+
+		final long sleep = Integer.parseInt(getConfig().getConfig(
+				"DefDispatcher.sleep", "2"));
 		disptchThread = new Thread("DispatchThread") { // 分发线程
 			public void run() {
 				final BlockingQueue<Msg<?>> queue = _queue;
@@ -57,6 +60,9 @@ public class DefDispatcher extends AbstractDispatcher {
 						if (queue.isEmpty() && stop)
 							break;
 						dispatch(queue.take());
+
+						if (sleep > 0)
+							Thread.sleep(sleep);
 					} catch (Exception e) {
 						LOG.warn(e.getMessage());
 					}
