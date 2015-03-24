@@ -3,8 +3,14 @@
  */
 package jframe.pushy.impl;
 
+import io.netty.channel.nio.NioEventLoopGroup;
+
 import java.io.File;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import jframe.core.conf.Config;
 import jframe.core.plugin.annotation.InjectPlugin;
@@ -42,6 +48,10 @@ public class PushyServiceImpl implements PushyService {
 
 	PushManager<SimpleApnsPushNotification> pushManager;
 
+	ExecutorService exeSvc;
+
+	NioEventLoopGroup eventGroup;
+
 	@Start
 	void start() {
 		String conf = plugin.getConfig(FILE_CONF);
@@ -51,6 +61,11 @@ public class PushyServiceImpl implements PushyService {
 		}
 
 		try {
+			exeSvc = new ThreadPoolExecutor(1, Runtime.getRuntime()
+					.availableProcessors() + 1, 60L, TimeUnit.SECONDS,
+					new LinkedBlockingQueue<Runnable>());
+			eventGroup = new NioEventLoopGroup();
+
 			PushyConf.init(conf);
 			pushManager = new PushManager<SimpleApnsPushNotification>(
 					getEnvironment(PushyConf.HOST, PushyConf.HOST_PORT,
@@ -58,7 +73,7 @@ public class PushyServiceImpl implements PushyService {
 					SSLContextUtil.createDefaultSSLContext(
 							plugin.getConfig(Config.APP_CONF) + "/"
 									+ PushyConf.IOS_AUTH,
-							PushyConf.IOS_PASSWORD), null, null, null,
+							PushyConf.IOS_PASSWORD), eventGroup, exeSvc, null,
 					new PushManagerConfiguration(), "PushManager");
 
 			pushManager.start();
@@ -70,33 +85,34 @@ public class PushyServiceImpl implements PushyService {
 
 		// pushManager.registerRejectedNotificationListener(listener);
 		// pushManager.registerFailedConnectionListener(listener)
-//		class MyRejectedNotificationListener implements
-//				RejectedNotificationListener<SimpleApnsPushNotification> {
-//
-//			@Override
-//			public void handleRejectedNotification(
-//					final PushManager<? extends SimpleApnsPushNotification> pushManager,
-//					final SimpleApnsPushNotification notification,
-//					final RejectedNotificationReason reason) {
+		// class MyRejectedNotificationListener implements
+		// RejectedNotificationListener<SimpleApnsPushNotification> {
+		//
+		// @Override
+		// public void handleRejectedNotification(
+		// final PushManager<? extends SimpleApnsPushNotification> pushManager,
+		// final SimpleApnsPushNotification notification,
+		// final RejectedNotificationReason reason) {
 
-//				System.out.format("%s was rejected with rejection reason %s\n",
-//						notification, reason);
-//			}
-//		}
+		// System.out.format("%s was rejected with rejection reason %s\n",
+		// notification, reason);
+		// }
+		// }
 		// pushManager
-		// .registerRejectedNotificationListener(new MyRejectedNotificationListener());
+		// .registerRejectedNotificationListener(new
+		// MyRejectedNotificationListener());
 
-//		class MyFailedConnectionListener implements
-//				FailedConnectionListener<SimpleApnsPushNotification> {
-//			@Override
-//			public void handleFailedConnection(
-//					final PushManager<? extends SimpleApnsPushNotification> pushManager,
-//					final Throwable cause) {
-//				System.out.println(cause.getMessage());
-//			}
-//		}
-//		pushManager
-//				.registerFailedConnectionListener(new MyFailedConnectionListener());
+		// class MyFailedConnectionListener implements
+		// FailedConnectionListener<SimpleApnsPushNotification> {
+		// @Override
+		// public void handleFailedConnection(
+		// final PushManager<? extends SimpleApnsPushNotification> pushManager,
+		// final Throwable cause) {
+		// System.out.println(cause.getMessage());
+		// }
+		// }
+		// pushManager
+		// .registerFailedConnectionListener(new MyFailedConnectionListener());
 	}
 
 	public void setPushManager(
@@ -114,8 +130,19 @@ public class PushyServiceImpl implements PushyService {
 	public void stop() {
 		if (pushManager != null) {
 			try {
-				pushManager.shutdown();
-				Thread.sleep(1000);
+				pushManager.shutdown(10 * 1000);
+			} catch (InterruptedException e) {
+				LOG.error(e.getMessage());
+			}
+		}
+
+		if (eventGroup != null) {
+			eventGroup.shutdownGracefully();
+		}
+		if (exeSvc != null) {
+			try {
+				exeSvc.shutdown();
+				exeSvc.awaitTermination(6, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				LOG.error(e.getMessage());
 			}
