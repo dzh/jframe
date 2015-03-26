@@ -3,8 +3,14 @@
  */
 package pushy;
 
+import io.netty.channel.nio.NioEventLoopGroup;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import jframe.pushy.PushyConf;
 import jframe.pushy.impl.PushyServiceImpl;
@@ -35,22 +41,32 @@ public class TestPushy {
 
 	String token = "3568a0158b669e1d1dd60c202d9431a72ddb77b2dc4f8156034099a98cd219e9";
 
+	ExecutorService exeSvc;
+
+	NioEventLoopGroup eventGroup;
+
 	@Before
 	public void init() throws Exception {
 		PushyConf.init(Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("pushy/pushy.properties"));
 		System.out.println(PushyConf.IOS_PASSWORD);
 
+		exeSvc = new ThreadPoolExecutor(1, Runtime.getRuntime()
+				.availableProcessors() + 1, 60L, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<Runnable>());
+		eventGroup = new NioEventLoopGroup();
+
 		PushManagerConfiguration conf = new PushManagerConfiguration();
-		conf.setConcurrentConnectionCount(2);
+		conf.setConcurrentConnectionCount(PushyConf.PUSH_CONN_COUNT);
 		PushManager<SimpleApnsPushNotification> pushManager = new PushManager<SimpleApnsPushNotification>(
-				ApnsEnvironment.getSandboxEnvironment(),
+				ApnsEnvironment.getProductionEnvironment(),
 				SSLContextUtil.createDefaultSSLContext(PushyConf.IOS_AUTH,
-						PushyConf.IOS_PASSWORD), null, null, null, conf,
+						PushyConf.IOS_PASSWORD), eventGroup, null, null, conf,
 				"PushManager");
-		pushManager.start();
 		pushy = new PushyServiceImpl();
 		pushy.setPushManager(pushManager);
+
+		pushManager.start();
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -66,13 +82,69 @@ public class TestPushy {
 
 	@Test
 	public void test() {
-		try {
-			pushApple(token, "111111111", null);
+		new Thread() {
+			public void run() {
+				try {
+					System.out.println(new Date());
+					for (int i = 0; i < 10000; i++) {
+						pushApple(token, i + "A", null);
+//						Thread.sleep(2);
+					}
+					System.out.println(new Date());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
-//			Thread.sleep(10 * 1000);
-		} catch (Exception e) {
-			e.printStackTrace();
+		}.start();
+
+		new Thread() {
+			public void run() {
+				try {
+					System.out.println(new Date());
+					for (int i = 0; i < 10000; i++) {
+						pushApple(token, i + "B", null);
+//						Thread.sleep(2);
+					}
+					System.out.println(new Date());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		new Thread() {
+			public void run() {
+				try {
+					System.out.println(new Date());
+					for (int i = 0; i < 100; i++) {
+						pushApple(token, i + "C", null);
+//						Thread.sleep(2);
+					}
+					System.out.println(new Date());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		// new Thread() {
+		// public void run() {
+		// try {
+		// System.out.println(new Date());
+		// for (int i = 0; i < 100; i++)
+		// pushApple(token, i + "D", null);
+		// System.out.println(new Date());
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }.start();
+
+		try {
+			Thread.sleep(5 * 1000);
+		} catch (InterruptedException e) {
 		}
+
 	}
 
 	public void pushApple(String token, String msg, Integer badge)

@@ -26,6 +26,9 @@ public class GetuiConf {
 	public static String MASTER_SECRET;
 	public static String HOST;
 
+	public static String HTTP_CONN_COUNT = "100";
+	public static String HTTP_CONN_TIMEOUT = "30000";
+
 	static boolean init = false;
 
 	public synchronized static void init(String file) throws Exception {
@@ -44,6 +47,8 @@ public class GetuiConf {
 	public static final String KEY_APPKEY = "app.key";
 	public static final String KEY_MASTER_SECRET = "master_secret";
 	public static final String KEY_HOST = "host";
+	public static final String KEY_HTTP_CONN_COUNT = "http.conn.count";
+	public static final String KEY_HTTP_CONN_TIMEOUT = "http.conn.timeout";
 
 	public synchronized static void init(InputStream is) throws IOException {
 		if (is == null)
@@ -55,6 +60,9 @@ public class GetuiConf {
 			APPKEY = props.getProperty(KEY_APPKEY);
 			MASTER_SECRET = props.getProperty(KEY_MASTER_SECRET);
 			HOST = props.getProperty(KEY_HOST);
+			HTTP_CONN_COUNT = props.getProperty(KEY_HTTP_CONN_COUNT, "100");
+			HTTP_CONN_TIMEOUT = props.getProperty(KEY_HTTP_CONN_TIMEOUT,
+					"30000");
 		} catch (MissingResourceException e) {
 			LOG.error(e.getMessage());
 		} finally {

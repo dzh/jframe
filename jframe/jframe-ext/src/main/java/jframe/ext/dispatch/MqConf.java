@@ -44,9 +44,9 @@ public class MqConf {
 
 	/**************************************************************/
 
-	public static long SendSleepTime = 6;
+	public static long SendSleepTime = 0;
 
-	public static long RecvSleepTime = 6;
+	public static long RecvSleepTime = 0;
 
 	static boolean init = false;
 
@@ -92,9 +92,9 @@ public class MqConf {
 					"ConsumerTimeout", "60000").trim());
 
 			SendSleepTime = Long.parseLong(props.getProperty("SendSleepTime",
-					"6").trim());
+					"0").trim());
 			RecvSleepTime = Long.parseLong(props.getProperty("RecvSleepTime",
-					"6").trim());
+					"0").trim());
 
 			// transfer
 			Transfer = (MsgTransfer) Class.forName(

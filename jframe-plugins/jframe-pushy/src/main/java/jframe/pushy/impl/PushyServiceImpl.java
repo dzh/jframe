@@ -64,9 +64,11 @@ public class PushyServiceImpl implements PushyService {
 			exeSvc = new ThreadPoolExecutor(1, Runtime.getRuntime()
 					.availableProcessors() + 1, 60L, TimeUnit.SECONDS,
 					new LinkedBlockingQueue<Runnable>());
-			eventGroup = new NioEventLoopGroup();
+			eventGroup = new NioEventLoopGroup(1);
 
 			PushyConf.init(conf);
+			PushManagerConfiguration pushConf = new PushManagerConfiguration();
+			pushConf.setConcurrentConnectionCount(PushyConf.PUSH_CONN_COUNT);
 			pushManager = new PushManager<SimpleApnsPushNotification>(
 					getEnvironment(PushyConf.HOST, PushyConf.HOST_PORT,
 							PushyConf.FEEDBACK, PushyConf.FEEDBACK_PORT),
@@ -74,7 +76,7 @@ public class PushyServiceImpl implements PushyService {
 							plugin.getConfig(Config.APP_CONF) + "/"
 									+ PushyConf.IOS_AUTH,
 							PushyConf.IOS_PASSWORD), eventGroup, exeSvc, null,
-					new PushManagerConfiguration(), "PushManager");
+					pushConf, "PushManager");
 
 			pushManager.start();
 		} catch (Exception e) {

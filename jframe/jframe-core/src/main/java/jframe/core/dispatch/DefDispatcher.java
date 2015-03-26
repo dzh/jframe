@@ -51,7 +51,7 @@ public class DefDispatcher extends AbstractDispatcher {
 		initDispatchQueue(_queue);
 
 		final long sleep = Integer.parseInt(getConfig().getConfig(
-				"DefDispatcher.sleep", "2"));
+				"DefDispatcher.sleep", "0"));
 		disptchThread = new Thread("DispatchThread") { // 分发线程
 			public void run() {
 				final BlockingQueue<Msg<?>> queue = _queue;

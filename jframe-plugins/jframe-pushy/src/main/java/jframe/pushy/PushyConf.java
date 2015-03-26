@@ -28,6 +28,7 @@ public class PushyConf {
 	public static String HOST_PORT;
 	public static String FEEDBACK;
 	public static String FEEDBACK_PORT;
+	public static int PUSH_CONN_COUNT = 10;
 
 	public synchronized static void init(String file) throws Exception {
 		if (init)
@@ -47,6 +48,7 @@ public class PushyConf {
 	public static final String KEY_HOST_PORT = "host.port";
 	public static final String KEY_FEEDBACK = "feedback";
 	public static final String KEY_FEEDBACK_PORT = "feedback.port";
+	public static final String KEY_PUSH_CONN_COUNT = "push.conn.count";
 
 	public synchronized static void init(InputStream is) throws Exception {
 		try {
@@ -58,6 +60,8 @@ public class PushyConf {
 			HOST_PORT = props.getProperty(KEY_HOST_PORT).trim();
 			FEEDBACK = props.getProperty(KEY_FEEDBACK).trim();
 			FEEDBACK_PORT = props.getProperty(KEY_FEEDBACK_PORT).trim();
+			PUSH_CONN_COUNT = Integer.parseInt(props.getProperty(
+					KEY_PUSH_CONN_COUNT, "10"));
 		} catch (MissingResourceException e) {
 			throw e;
 		} finally {

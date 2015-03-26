@@ -53,8 +53,10 @@ public class GetuiServiceImpl implements GetuiService {
 
 		try {
 			GetuiConf.init(conf);
-			System.setProperty("gexin.rp.sdk.http.connection.timeout", "30000");
-			System.setProperty("gexin.rp.sdk.http.connection.pool.size", "100");
+			System.setProperty("gexin.rp.sdk.http.connection.timeout",
+					GetuiConf.HTTP_CONN_TIMEOUT);
+			System.setProperty("gexin.rp.sdk.http.connection.pool.size",
+					GetuiConf.HTTP_CONN_COUNT);
 			push = new IGtPush(GetuiConf.HOST, GetuiConf.APPKEY,
 					GetuiConf.MASTER_SECRET, true);
 		} catch (Exception e) {
