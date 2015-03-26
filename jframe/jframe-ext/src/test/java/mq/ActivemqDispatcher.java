@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jframe.ext.dispatch;
+package mq;
 
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
@@ -72,6 +72,10 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 		super(id, config);
 	}
 
+	public ActivemqDispatcher() {
+		super("ActivemqDispatcher", null);
+	}
+
 	public void start() {
 		if (!initMqConf()) {
 			LOG.error("ActivemqDispatcher read conf error!");
@@ -109,6 +113,13 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 								public void run() {
 									try {
 										sendMq(msg);
+										if (TestActiveMq.SUM - msg.getType() < 5)
+											System.out
+													.println("Finish send type ->"
+															+ msg.getType()
+															+ ", data->"
+															+ new Date()
+																	.toString());
 									} catch (Exception e) {
 										LOG.warn(e.getMessage());
 									}
@@ -117,11 +128,6 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 						}
 						if (MqConf.SendSleepTime > 0)
 							Thread.sleep(MqConf.SendSleepTime);
-						if (LOG.isDebugEnabled()) {
-							LOG.debug(
-									"Mq send msg -> {}, sum -> {}, date-> {}",
-									msg.toString(), queue.size(), new Date());
-						}
 					} catch (Exception e) {
 						LOG.warn(e.getMessage());
 					}
@@ -160,9 +166,8 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 												dispatch(msgTransfer
 														.decode(text));
 												if (LOG.isDebugEnabled()) {
-													LOG.debug(
-															"Mq dispatch msg -> {}, date-> {}",
-															text, new Date());
+													LOG.debug("Consume msg {}",
+															text);
 												}
 											}
 										} catch (Exception e) {
@@ -172,6 +177,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 								});
 							if (MqConf.RecvSleepTime > 0)
 								Thread.sleep(MqConf.RecvSleepTime);
+//							Thread.sleep(2);
 						} catch (Exception e) {
 							LOG.error(e.getMessage());
 						}
@@ -259,7 +265,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 	private boolean initMqConf() {
 		Config config = getConfig();
 		try {
-			MqConf.init(config.getConfig(MQ_FILE));
+			MqConf.init("/home/dzh/git/jframe/jframe/jframe-ext/src/test/java/mq/d-activemq.properties");
 			return true;
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
