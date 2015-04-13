@@ -34,6 +34,8 @@ public class HttpClientConfig {
 	public static final String HTTP_IDLE_CONN_CLOSE = "http.idle.conn.close";
 	public static final String HTTP_KEEP_ALIVE = "http.keep-alive";
 	public static final String HTTP_CHARSET = "http.charset";
+	public static final String HTTP_SO_TIMEOUT = "http.so.timeout";
+	public static final String HTTP_CONN_TIMEOUT = "http.conn.timeout";
 
 	public static void init(String file) throws Exception {
 		CONFIG.init(file);

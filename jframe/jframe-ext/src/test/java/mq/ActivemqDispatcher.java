@@ -265,7 +265,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
 	private boolean initMqConf() {
 		Config config = getConfig();
 		try {
-			MqConf.init("/home/dzh/git/jframe/jframe/jframe-ext/src/test/java/mq/d-activemq.properties");
+			MqConf.init("/Users/dzh/git/jframe/jframe/jframe-ext/src/test/java/mq/d-activemq.properties");
 			return true;
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

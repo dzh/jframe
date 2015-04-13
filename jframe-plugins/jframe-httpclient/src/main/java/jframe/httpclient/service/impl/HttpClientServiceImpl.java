@@ -21,10 +21,11 @@ import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -69,10 +70,22 @@ public class HttpClientServiceImpl implements HttpClientService {
 	@InjectPlugin
 	static HttpClientPlugin plugin;
 
+	static RequestConfig requestConfig;
+
 	@Start
 	public void start() {
 		try {
 			HttpClientConfig.init(plugin.getConfig(FILE_CONF));
+			requestConfig = RequestConfig
+					.custom()
+					.setSocketTimeout(
+							Integer.parseInt(HttpClientConfig.getConf(null,
+									HttpClientConfig.HTTP_SO_TIMEOUT, "6000")))
+					.setConnectTimeout(
+							Integer.parseInt(HttpClientConfig.getConf(null,
+									HttpClientConfig.HTTP_CONN_TIMEOUT, "3000")))
+					.build();
+
 			// SSLContext sslContext = SSLContexts.createSystemDefault();
 			// SSLConnectionSocketFactory sslsf = new
 			// SSLConnectionSocketFactory(
@@ -194,7 +207,6 @@ public class HttpClientServiceImpl implements HttpClientService {
 
 		@Override
 		public void run() {
-
 			try {
 				while (!shutdown) {
 					synchronized (this) {
@@ -236,7 +248,7 @@ public class HttpClientServiceImpl implements HttpClientService {
 				.getConf(id, HttpClientConfig.PORT)),
 				HttpHost.DEFAULT_SCHEME_NAME);
 
-		HttpUriRequest request;
+		HttpRequestBase request;
 		String mehtod = HttpClientConfig.getConf(id,
 				HttpClientConfig.HTTP_METHOD, HttpClientConfig.M_POST);
 		if (HttpClientConfig.M_GET.equals(mehtod)) {
@@ -249,6 +261,7 @@ public class HttpClientServiceImpl implements HttpClientService {
 					.create(mimeType, HttpClientConfig.getConf(id,
 							HttpClientConfig.HTTP_CHARSET))));
 		}
+		request.setConfig(requestConfig);
 
 		if (headers != null) {
 			for (String key : headers.keySet()) {
@@ -407,16 +420,16 @@ public class HttpClientServiceImpl implements HttpClientService {
 				}
 
 			};
-//			httpClient = HttpClients.custom().setConnectionManager(cm)
-//					.setKeepAliveStrategy(myStrategy).build();
-//
-//			IdleConnectionMonitorThread = new IdleConnectionMonitorThread(
-//					cm);
-//			IdleConnectionMonitorThread.start();
+			// httpClient = HttpClients.custom().setConnectionManager(cm)
+			// .setKeepAliveStrategy(myStrategy).build();
+			//
+			// IdleConnectionMonitorThread = new IdleConnectionMonitorThread(
+			// cm);
+			// IdleConnectionMonitorThread.start();
 		} catch (Exception e) {
 			LOG.error("HttpClientServiceImpl init error {}!", e.getMessage());
 		}
-//		return this;
+		// return this;
 		return null;
 	}
 

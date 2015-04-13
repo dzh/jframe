@@ -15,9 +15,8 @@ import org.junit.Test;
  * @since 1.0
  */
 public class TestActiveMq {
-	public static int SUM = 10000;
+	public static int SUM = 6000;
 
-	@Test
 	public void test() {
 		ActivemqDispatcher ad = new ActivemqDispatcher();
 		ad.addDispatchTarget(new TestDispatchTarget());
@@ -25,14 +24,13 @@ public class TestActiveMq {
 
 		System.out.println("Start send msg " + new Date().toString());
 		for (int i = 0; i < SUM; i++) {
-			ad.receive(new TextMsg()
-					.setType(i)
-					.setValue(
-							"The percentage of range of collision avoidance if enabled"));
+			ad.receive(new TextMsg().setType(100)
+					.setMeta("PathId", "8201503261752102827674")
+					.setMeta("msgContent", "dzh" + i).setValue("[82446]"));
 		}
 
 		try {
-			Thread.sleep(60 * 1000);
+			Thread.sleep(3660 * 1000);
 		} catch (InterruptedException e) {
 		}
 		ad.close();

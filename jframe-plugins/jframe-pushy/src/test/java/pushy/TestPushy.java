@@ -54,7 +54,7 @@ public class TestPushy {
 		exeSvc = new ThreadPoolExecutor(1, Runtime.getRuntime()
 				.availableProcessors() + 1, 60L, TimeUnit.SECONDS,
 				new LinkedBlockingQueue<Runnable>());
-		eventGroup = new NioEventLoopGroup();
+		eventGroup = new NioEventLoopGroup(1);
 
 		PushManagerConfiguration conf = new PushManagerConfiguration();
 		conf.setConcurrentConnectionCount(PushyConf.PUSH_CONN_COUNT);
@@ -78,6 +78,8 @@ public class TestPushy {
 	@After
 	public void stop() {
 		pushy.stop();
+		eventGroup.shutdownGracefully();
+		exeSvc.shutdownNow();
 	}
 
 	@Test
@@ -86,7 +88,7 @@ public class TestPushy {
 			public void run() {
 				try {
 					System.out.println(new Date());
-					for (int i = 0; i < 10000; i++) {
+					for (int i = 0; i < 1000; i++) {
 						pushApple(token, i + "A", null);
 //						Thread.sleep(2);
 					}
@@ -98,35 +100,35 @@ public class TestPushy {
 
 		}.start();
 
-		new Thread() {
-			public void run() {
-				try {
-					System.out.println(new Date());
-					for (int i = 0; i < 10000; i++) {
-						pushApple(token, i + "B", null);
+//		new Thread() {
+//			public void run() {
+//				try {
+//					System.out.println(new Date());
+//					for (int i = 0; i < 10000; i++) {
+//						pushApple("1112222", i + "B", null);
 //						Thread.sleep(2);
-					}
-					System.out.println(new Date());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
+//					}
+//					System.out.println(new Date());
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}.start();
 
-		new Thread() {
-			public void run() {
-				try {
-					System.out.println(new Date());
-					for (int i = 0; i < 100; i++) {
-						pushApple(token, i + "C", null);
-//						Thread.sleep(2);
-					}
-					System.out.println(new Date());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
+//		new Thread() {
+//			public void run() {
+//				try {
+//					System.out.println(new Date());
+//					for (int i = 0; i < 100; i++) {
+//						pushApple(token, i + "C", null);
+////						Thread.sleep(2);
+//					}
+//					System.out.println(new Date());
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}.start();
 		// new Thread() {
 		// public void run() {
 		// try {

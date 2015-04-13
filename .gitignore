@@ -10,6 +10,7 @@
 .svn/
 target/
 .classpath
+**/.classpath
 jframe/jframe-release/jframe/lib/
 jframe/jframe-release/jframe/log/
 jframe/jframe-release/jframe/plugin/
