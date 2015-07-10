@@ -21,7 +21,8 @@
 		<module>jframe-jedis</module>
 		<module>jframe-httpclient</module>
     <module>jframe-mongodb-client</module>
-  </modules>
+    <module>jframe-netty-http</module>
+	</modules>
 	<build>
 		<plugins>
 			<plugin>

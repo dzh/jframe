@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dispatchers>
+	<dispatcher id="usr.caree">
+		<url-pattern>/usr/caree/.*</url-pattern>
+		<handler>dono.share.http.usr.UsrCareeHandler</handler>
+	</dispatcher>
+	<dispatcher id="usr.carer">
+		<url-pattern>/usr/carer/.*</url-pattern>
+		<handler>dono.share.http.usr.UsrCarerHandler</handler>
+	</dispatcher>
+	<dispatcher id="usr.common">
+		<url-pattern>/usr/common/.*</url-pattern>
+		<handler>dono.share.http.usr.UsrCommonHandler</handler>
+	</dispatcher>
+	<dispatcher id="order.caree">
+		<url-pattern>/order/caree/.*</url-pattern>
+		<handler>dono.share.http.order.OrderCareeHandler</handler>
+	</dispatcher>
+	<dispatcher id="order.carer">
+		<url-pattern>/order/carer/.*</url-pattern>
+		<handler>dono.share.http.order.OrderCarerHandler</handler>
+	</dispatcher>
+	<dispatcher id="order.common">
+		<url-pattern>/order/common/.*</url-pattern>
+		<handler>dono.share.http.order.OrderCommonHandler</handler>
+	</dispatcher>
+	<dispatcher id="msg.common">
+		<url-pattern>/msg/common/.*</url-pattern>
+		<handler>dono.share.http.msg.MsgCommonHandler</handler>
+	</dispatcher>
+	<dispatcher id="msg.sys">
+		<url-pattern>/msg/sys/.*</url-pattern>
+		<handler>dono.share.http.msg.MsgSysHandler</handler>
+	</dispatcher>
+	<dispatcher id="pay.back">
+		<url-pattern>/pay/back/.*</url-pattern>
+		<handler>dono.share.http.back.PayBackHandler</handler>
+	</dispatcher>
+	<dispatcher id="auth.carer">
+		<url-pattern>/auth/carer/.*</url-pattern>
+		<handler>dono.share.http.auth.AuthCarerHandler</handler>
+	</dispatcher>
+	<dispatcher id="auth.common">
+		<url-pattern>/auth/common/.*</url-pattern>
+		<handler>dono.share.http.auth.AuthCommonHandler</handler>
+	</dispatcher>
+	<dispatcher id="img.common.up">
+		<url-pattern>/img/common/up</url-pattern>
+		<handler>dono.share.http.img.ImageUploadHandler</handler>
+	</dispatcher>
+	<dispatcher id="img.down">
+		<url-pattern>/img/down/.*</url-pattern>
+		<handler>dono.share.http.img.ImageDownloadHandler</handler>
+	</dispatcher>
+	<dispatcher id="coupon.caree">
+		<url-pattern>/coupon/caree/.*</url-pattern>
+		<handler>dono.share.http.coupon.CouponCareeHandler</handler>
+	</dispatcher>
+	<dispatcher id="index">
+		<url-pattern>/index/rebuild/.*</url-pattern>
+		<handler>dono.share.http.conf.LuceneHandler</handler>
+	</dispatcher>
+	<dispatcher id="coupon.conf">
+		<url-pattern>/coupon/conf/.*</url-pattern>
+		<handler>dono.share.http.conf.CouponHandler</handler>
+	</dispatcher>
+	<dispatcher id="sms">
+		<url-pattern>/sms/conf/.*</url-pattern>
+		<handler>dono.share.http.conf.SmsSendHandler</handler>
+	</dispatcher>
+	<dispatcher id="msg.conf">
+		<url-pattern>/msg/conf/.*</url-pattern>
+		<handler>dono.share.http.conf.MsgHandler</handler>
+	</dispatcher>
+	<dispatcher id="usr.conf">
+		<url-pattern>/usr/conf/.*</url-pattern>
+		<handler>dono.share.http.conf.UsrConfHandler</handler>
+	</dispatcher>
+	<dispatcher id="coupon.game">
+		<url-pattern>/coupon/game/.*</url-pattern>
+		<handler>dono.share.http.coupon.CouponGameHandler</handler>
+	</dispatcher>
+	<dispatcher id="apple.conf">
+		<url-pattern>/apple/conf/.*</url-pattern>
+		<handler>dono.share.http.conf.AppleIDFAHandler</handler>
+	</dispatcher>
+	<dispatcher id="app.conf">
+		<url-pattern>/app/conf/.*</url-pattern>
+		<handler>dono.share.http.conf.AppConfHandler</handler>
+	</dispatcher>
+	<dispatcher id="dianru.ios">
+		<url-pattern>/dianru/ios/.*</url-pattern>
+		<handler>dono.share.http.dianru.DianruHandler</handler>
+	</dispatcher>
+	<dispatcher id="index.server">
+		<url-pattern>/index/server/.*</url-pattern>
+		<handler>dono.share.http.index.IndexServerHandler</handler>
+	</dispatcher>
+	<dispatcher id="stat.carer">
+		<url-pattern>/stat/carer/.*</url-pattern>
+		<handler>dono.share.http.stat.StatCarerHandler</handler>
+	</dispatcher>
+	<dispatcher id="stat.order">
+		<url-pattern>/stat/order/.*</url-pattern>
+		<handler>dono.share.http.stat.StatOrderHandler</handler>
+	</dispatcher>
+	<dispatcher id="domob.ios">
+		<url-pattern>/domob/ios/.*</url-pattern>
+		<handler>dono.share.http.domob.DomobHandler</handler>
+	</dispatcher>
+	<dispatcher id="youmi.ios">
+		<url-pattern>/youmi/ios/.*</url-pattern>
+		<handler>dono.share.http.youmi.YoumiHandler</handler>
+	</dispatcher>
+</dispatchers>
