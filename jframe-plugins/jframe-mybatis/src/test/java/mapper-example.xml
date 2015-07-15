@@ -90,5 +90,5 @@
 	<insert flushCache="true" />
 	<update flushCache="true" />
 	<delete flushCache="true" />
-	<cache-ref namespace="com.someone.application.data.SomeMapper"/>
+	<cache-ref namespace="com.someone.application.data.SomeMapper" />
 </mapper>

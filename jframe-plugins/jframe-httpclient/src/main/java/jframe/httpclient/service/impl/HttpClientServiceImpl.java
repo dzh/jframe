@@ -293,6 +293,8 @@ public class HttpClientServiceImpl implements HttpClientService {
 			HttpEntity entity = resp.getEntity();
 			Reader reader = new InputStreamReader(entity.getContent(),
 					ContentType.getOrDefault(entity).getCharset());
+			// TODO decode by mime-type
+			
 			return GSON.fromJson(reader, new TypeToken<T>() {
 			}.getType());
 		} finally {

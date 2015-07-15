@@ -22,6 +22,7 @@
 		<module>jframe-httpclient</module>
     <module>jframe-mongodb-client</module>
     <module>jframe-netty-http</module>
+    <module>jframe-yunpian</module>
 	</modules>
 	<build>
 		<plugins>

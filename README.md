@@ -34,7 +34,13 @@ You can also see log/*.log, or daemon.pid and app.pid generated in temp folder
 * Jframe's manual is jframe_manual_zh_CN.org in /jframe/doc/ directory.I edit it using Emacs's Org plug-in, and export a html version jframe_manual_zh_CN.html.
 * Online address [jframe_manual_zh_CN](https://github.com/dzh/jframe/blob/master/doc/jframe_manual_zh_CN.org)
 
-## Jframe Features
+## Question Contact
+<pre>
+jframe-dev@googlegroups.com  (u need join first)
+dzh_11@qq.com                (personal)
+</pre>
+
+## Jframe Feature
 * v1.0.0
    * Run on jdk1.5 or higher
    * Use slf4j+logback as logging framework
@@ -47,13 +53,19 @@ You can also see log/*.log, or daemon.pid and app.pid generated in temp folder
   * Add injecting feaure, include annotatiosn: `Injector, InjectPlugin, InjectService`. For example, `InjectPlugin` which injecting self-plugin instance into classes of the plugin
   * New options in the plugin.properties, `Plugin-Service, Import-Plugin, Import-class, Export-class`
   * New plugins
-    * jframe-mybatis
-    * jframe-datasource
+  		* jframe-mybatis
+    	* jframe-datasource
+* v1.2.0 developing
+	* Add plugin fragment feature, 
+	* New plugins
+		* jframe-yunpian
 
-## Question Contact
-<pre>
-jframe-dev@googlegroups.com  (u need join first)
-dzh_11@qq.com                (personal)
-</pre>
+## Jframe v2 Feature
+* v2.0.0 planning 
+	* Run on jdk1.8 or higher
+	* 
+
+
+
 
 

@@ -51,6 +51,7 @@ class MybatisServiceImpl implements MybatisService {
 			mybatis = new InputStreamReader(new FileInputStream(mcFile),
 					"utf-8");
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatis);
+			
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 		} finally {
