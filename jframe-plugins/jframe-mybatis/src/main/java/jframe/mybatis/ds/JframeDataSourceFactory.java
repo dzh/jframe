@@ -7,11 +7,9 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.annotation.Injector;
 import jframe.datasource.DataSourceService;
-import jframe.mybatis.MybatisPlugin;
 
 import org.apache.ibatis.datasource.DataSourceFactory;
 
@@ -22,9 +20,6 @@ import org.apache.ibatis.datasource.DataSourceFactory;
  */
 @Injector
 public class JframeDataSourceFactory implements DataSourceFactory {
-
-	@InjectPlugin
-	static MybatisPlugin plugin;
 
 	@InjectService(id = "jframe.service.datasource")
 	static DataSourceService dataSource;

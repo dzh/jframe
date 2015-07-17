@@ -3,6 +3,8 @@
  */
 package jframe.core.conf;
 
+import java.util.Map;
+
 import jframe.core.Frame;
 
 /**
@@ -48,5 +50,11 @@ public interface Config extends ConfigConstants {
 	String modifyConfig(String key, String value);
 
 	void clearConfig();
+
+	/**
+	 * @since 1.2.0
+	 * @return all config
+	 */
+	Map<String, String> getConfig();
 
 }

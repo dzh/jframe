@@ -90,4 +90,8 @@ public class DefConfig implements Config {
 		return _frame;
 	}
 
+	public Map<String, String> getConfig() {
+		return new HashMap<String, String>(_config);
+	}
+
 }

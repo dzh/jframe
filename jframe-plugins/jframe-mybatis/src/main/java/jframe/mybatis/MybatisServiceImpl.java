@@ -46,12 +46,12 @@ class MybatisServiceImpl implements MybatisService {
 			LOG.error("Not found mybatis-config, {}" + mcFile.getAbsolutePath());
 			return;
 		}
+
 		Reader mybatis = null;
 		try {
 			mybatis = new InputStreamReader(new FileInputStream(mcFile),
 					"utf-8");
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatis);
-			
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 		} finally {

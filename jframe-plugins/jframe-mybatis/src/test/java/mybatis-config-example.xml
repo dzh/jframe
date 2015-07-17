@@ -55,7 +55,7 @@
 		<package name="org.mybatis.example" />
 	</typeHandlers>
 
-	<environments default="development">
+	<environments default="runtime">
 		<environment id="runtime">
 			<transactionManager type="JDBC" />
 			<dataSource type="jframe.mybatis.ds.JframeDataSourceFactory">
