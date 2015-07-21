@@ -41,7 +41,7 @@ public class TestAndriodPush {
 		System.setProperty("gexin.rp.sdk.http.connection.timeout", "30000");
 		System.setProperty("gexin.rp.sdk.http.connection.pool.size", "100");
 		IGtPush push = new IGtPush(GetuiConf.HOST, GetuiConf.APPKEY,
-				GetuiConf.MASTER_SECRET, true);
+				GetuiConf.MASTER_SECRET);
 		getuiSvc = new GetuiServiceImpl();
 		getuiSvc.setPush(push);
 	}

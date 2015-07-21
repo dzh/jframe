@@ -58,7 +58,7 @@ public class GetuiServiceImpl implements GetuiService {
 			System.setProperty("gexin.rp.sdk.http.connection.pool.size",
 					GetuiConf.HTTP_CONN_COUNT);
 			push = new IGtPush(GetuiConf.HOST, GetuiConf.APPKEY,
-					GetuiConf.MASTER_SECRET, true);
+					GetuiConf.MASTER_SECRET);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			return;

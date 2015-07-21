@@ -35,6 +35,10 @@ public class TestMongoClient {
 		
 		mongoClient = new MongoClient();
 		// mongoClient.setOptions();
+		
+//		MongoClientURI connectionString = new MongoClientURI("mongodb://localhost:27017,localhost:27018,localhost:27019");
+//		MongoClient mongoClient = new MongoClient(connectionString);
+//		MongoDatabase database = mongoClient.getDatabase("mydb");
 	}
 
 	@Test

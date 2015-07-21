@@ -10,7 +10,7 @@ import jframe.core.plugin.annotation.Service;
  * @date Jul 6, 2015 3:44:16 PM
  * @since 1.0
  */
-@Service(clazz = "jframe.mongodb.client.service.impl.MongoClientServiceImpl", id = "jframe.service.mongodb.client")
+@Service(clazz = "jframe.mongodb.client.service.impl.MongoClientServiceImpl", id = "jframe.service.mongoclient")
 public interface MongoClientService {
 	
 	

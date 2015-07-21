@@ -6,7 +6,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.gexin.rp.sdk.base.uitls.MD5Util;
-import com.gexin.rp.sdk.http.utils.HttpUtil;
 
 public class GetPushMessageResultDemo {
 	//填写mastersecret
@@ -40,7 +39,8 @@ public class GetPushMessageResultDemo {
 	}
 
 	private static Map<String, Object> post(Map<String, Object> param) {
-		return HttpUtil.httpPostJSON("http://sdk.open.api.igexin.com/apiex.htm", param);
+		return null;
+//		return HttpUtil.httpPostJSON("http://sdk.open.api.igexin.com/apiex.htm", param);
 	}
 }
 
