@@ -107,8 +107,12 @@ public class YunpianServiceImpl implements YunpianService {
 			reqPara.put(YunpianConfig.Mobile, buf.toString());
 
 			try {
-				_http.send(httpid, path, HttpUtil.format(reqPara, charset),
-						null, HTTP_PARAS);
+				Map<String, String> rsp = _http.<HashMap<String, String>> send(
+						httpid, path, HttpUtil.format(reqPara, charset), null,
+						HTTP_PARAS);
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(rsp.toString());
+				}
 			} catch (Exception e) {
 				LOG.error(e.getMessage());
 				// TODO
