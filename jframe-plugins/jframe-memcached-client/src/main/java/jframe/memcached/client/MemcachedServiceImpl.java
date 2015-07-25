@@ -28,7 +28,7 @@ import com.whalin.MemCached.SockIOPool;
 @Injector
 public class MemcachedServiceImpl implements MemcachedService {
 
-	static final String confName = "file.memcached";
+	static final String FILE_CONF = "file.memcached";
 
 	static final Logger LOG = LoggerFactory
 			.getLogger(MemcachedServiceImpl.class);
@@ -63,7 +63,7 @@ public class MemcachedServiceImpl implements MemcachedService {
 	 */
 	@Start
 	public void start() {
-		String path = plugin.getConfig(confName, "");
+		String path = plugin.getConfig(FILE_CONF, "");
 		Properties _conf = MemcachedFactory.load(new File(path));
 		if (_conf == null) {
 			LOG.error("Not found memcached.file {}", path);

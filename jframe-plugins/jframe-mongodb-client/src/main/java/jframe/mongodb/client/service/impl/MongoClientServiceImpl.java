@@ -24,9 +24,8 @@ public class MongoClientServiceImpl implements MongoClientService {
 
 	@Start
 	void start() {
-
+		
 	}
-	
 	
 
 	@Stop

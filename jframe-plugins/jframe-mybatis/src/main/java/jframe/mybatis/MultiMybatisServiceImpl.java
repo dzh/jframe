@@ -12,9 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
 
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * @date Jul 17, 2015 1:57:11 PM
  * @since 1.0
  */
+@Injector
 public class MultiMybatisServiceImpl implements MultiMybatisService {
 
 	static Logger LOG = LoggerFactory.getLogger(MultiMybatisServiceImpl.class);
@@ -72,6 +75,7 @@ public class MultiMybatisServiceImpl implements MultiMybatisService {
 			return;
 		}
 		FILE_CHARSET = plugin.getConfig(MYBATIS_CHARSET, "utf-8");
+		Resources.setDefaultClassLoader(plugin.getPluginClassLoader());
 
 		fac = new HashMap<String, SqlSessionFactory>(envs.length, 1);
 		for (String id : envs) {
