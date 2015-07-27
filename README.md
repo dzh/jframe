@@ -49,16 +49,18 @@ dzh_11@qq.com                (personal)
    * Hot deployment plug-in system, and can control plug-in start/stop order
    * Communicate with each other via asynchronous message between plug-ins
 * v1.1.0
-  * Add plugin service feature, include annotations: `Service, InjectService, Start and Stop`
-  * Add injecting feaure, include annotatiosn: `Injector, InjectPlugin, InjectService`. For example, `InjectPlugin` which injecting self-plugin instance into classes of the plugin
+  * Add plugin service feature, include annotation: `Service, InjectService, Start and Stop`
+  * Add injecting feaure, include annotation: `Injector, InjectPlugin, InjectService`. For example, `InjectPlugin` which injecting self-plugin instance into classes of the plugin
   * New options in the plugin.properties, `Plugin-Service, Import-Plugin, Import-class, Export-class`
-  * New plugins
+  * New plugin
   		* jframe-mybatis
     	* jframe-datasource
 * v1.2.0 developing
 	* Add plugin fragment feature, 
-	* New plugins
+	* Fix hot deployment supporting service/fragment feature
+	* New plugin
 		* jframe-yunpian
+		* jframe-qiniu
 
 ## Jframe v2 Feature
 * v2.0.0 planning 

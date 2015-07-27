@@ -24,6 +24,7 @@
 		<module>jframe-mongodb-client</module>
 		<module>jframe-netty-http</module>
 		<module>jframe-yunpian</module>
+		<module>jframe-qiniu</module>
 	</modules>
 	<build>
 		<plugins>
@@ -148,12 +149,12 @@
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-core</artifactId>
-			<version>1.1.0</version>
+			<version>1.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-ext</artifactId>
-			<version>1.1.0</version>
+			<version>1.2.0</version>
 		</dependency>
 	</dependencies>
 </project>
