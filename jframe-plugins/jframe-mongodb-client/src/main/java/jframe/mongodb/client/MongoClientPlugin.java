@@ -12,4 +12,6 @@ import jframe.core.plugin.DefPlugin;
  */
 public class MongoClientPlugin extends DefPlugin {
 
+	
+	
 }

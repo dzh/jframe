@@ -66,7 +66,7 @@ class QiniuServiceImpl implements QiniuService {
 
 	@Stop
 	void stop() {
-
+		CONFIG = null;
 	}
 
 	/*

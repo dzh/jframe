@@ -40,7 +40,7 @@ jframe-dev@googlegroups.com  (u need join first)
 dzh_11@qq.com                (personal)
 </pre>
 
-## Jframe Feature
+## Jframe v1 Feature
 * v1.0.0
    * Run on jdk1.5 or higher
    * Use slf4j+logback as logging framework
@@ -58,14 +58,22 @@ dzh_11@qq.com                (personal)
 * v1.2.0 developing
 	* Add plugin fragment feature, 
 	* Fix hot deployment supporting service/fragment feature
+	* ActivemqDispatcher improvement
+		* Automatic reconnection(static:(tcp://host1:61616,tcp://host2:61616)
+		* Support both Publish/Subscribe and Product/Consume
 	* New plugin
 		* jframe-yunpian
 		* jframe-qiniu
+		* jframe-activemq
+		* jframe-activemq-client
+		* jframe-mongodb-client
 
 ## Jframe v2 Feature
 * v2.0.0 planning 
 	* Run on jdk1.8 or higher
-	* 
+	* Plugin mailbox
+	* Plugin jms
+	* Upload jframe to [maven](http://search.maven.org/#search%7Cga%7C1%7Cjframe)
 
 
 
