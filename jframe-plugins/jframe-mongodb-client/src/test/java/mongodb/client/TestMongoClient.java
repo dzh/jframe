@@ -13,7 +13,6 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -82,7 +81,6 @@ public class TestMongoClient {
 
 	}
 
-	@Test
 	public void testDriverStatus() {
 		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
 				CodecRegistries.fromCodecs(new UuidCodec(
