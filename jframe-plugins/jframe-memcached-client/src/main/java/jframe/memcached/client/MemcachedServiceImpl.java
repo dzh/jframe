@@ -83,7 +83,7 @@ public class MemcachedServiceImpl implements MemcachedService {
 		String pname = _conf.getProperty("mem.name");
 
 		SockIOPool _pool = SockIOPool.getInstance(pname);
-		String[] servers = _conf.getProperty("mem.servers").split(",");
+		String[] servers = _conf.getProperty("mem.servers").split("[,\\s+]");
 		String[] memServers = new String[servers.length];
 		Integer[] memWeights = new Integer[servers.length];
 		for (int i = 0; i < servers.length; i++) {
