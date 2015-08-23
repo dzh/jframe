@@ -17,19 +17,16 @@ import org.slf4j.LoggerFactory;
  * @date Sep 29, 2014 1:24:47 PM
  * @since 1.0
  */
-public class GetuiConf {
+public class GetuiConf implements ConfField {
 
 	static final Logger LOG = LoggerFactory.getLogger(GetuiConf.class);
+
+	static boolean init = false;
 
 	public static String APPID;
 	public static String APPKEY;
 	public static String MASTER_SECRET;
 	public static String HOST;
-
-	public static String HTTP_CONN_COUNT = "100";
-	public static String HTTP_CONN_TIMEOUT = "30000";
-
-	static boolean init = false;
 
 	public synchronized static void init(String file) throws Exception {
 		if (init)
@@ -43,12 +40,8 @@ public class GetuiConf {
 		init = true;
 	}
 
-	public static final String KEY_APPID = "app.id";
-	public static final String KEY_APPKEY = "app.key";
-	public static final String KEY_MASTER_SECRET = "master_secret";
-	public static final String KEY_HOST = "host";
-	public static final String KEY_HTTP_CONN_COUNT = "http.conn.count";
-	public static final String KEY_HTTP_CONN_TIMEOUT = "http.conn.timeout";
+	public static String HTTP_CONN_COUNT = "100";
+	public static String HTTP_CONN_TIMEOUT = "30000";
 
 	public synchronized static void init(InputStream is) throws IOException {
 		if (is == null)
