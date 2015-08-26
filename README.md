@@ -1,5 +1,5 @@
 jframe
-======
+================
 A Common Plugin Framework implemented by Java. Without complex configuration, you can use it now.
 
 ## Why do I develop it
@@ -31,8 +31,8 @@ You can also see log/*.log, or daemon.pid and app.pid generated in temp folder
 * `bin/jframe.sh stop` (shutdown.bat), to stop jframe.
 
 ## About Jframe Manual
-* Jframe's manual is jframe_manual_zh_CN.org in /jframe/doc/ directory.I edit it using Emacs's Org plug-in, and export a html version jframe_manual_zh_CN.html.
-* Online address [jframe_manual_zh_CN](https://github.com/dzh/jframe/blob/master/doc/jframe_manual_zh_CN.org)
+* Jframe's manual is jframe\_manual\_zh\_CN.org in /jframe/doc/ directory.I edit it using Emacs's Org plug-in, and export a html version jframe\_manual\_zh\_CN.html.
+* Online address [jframe\_manual\_zh\_CN](https://github.com/dzh/jframe/blob/master/doc/jframe_manual_zh_CN.org)
 
 ## Question Contact
 <pre>
@@ -58,15 +58,18 @@ dzh_11@qq.com                (personal)
 * v1.2.0 developing
 	* Add plugin fragment feature, 
 	* Fix hot deployment supporting service/fragment feature
+	* Rewrite bin/jframe.bat 
 	* ActivemqDispatcher improvement
 		* Automatic reconnection(static:(tcp://host1:61616,tcp://host2:61616)
-		* Support both Publish/Subscribe and Product/Consume
+		* Support Publish/Subscribe and Product/Consume
 	* New plugin
 		* jframe-yunpian
 		* jframe-qiniu
 		* jframe-activemq
 		* jframe-activemq-client
 		* jframe-mongodb-client
+		* jframe-http
+	* Add jframe-pay application(paying gateway), see [jframe\_pay\_manual\_zh\_CN](https://github.com/dzh/jframe/blob/master/doc/jframe_pay_manual_zh_CN.org) 
 
 ## Jframe v2 Feature
 * v2.0.0 planning 
