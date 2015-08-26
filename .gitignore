@@ -15,6 +15,15 @@ jframe/jframe-release/jframe/lib/
 jframe/jframe-release/jframe/log/
 jframe/jframe-release/jframe/plugin/
 jframe/jframe-release/jframe/temp/
-jframe-plugins/release/lib/
-jframe-plugins/release/plugin/
 jframe/jframe-release/jframe/conf/cache/
+
+
+jframe-plugin/release/lib/
+jframe-plugin/release/plugin/
+
+
+jframe-pay/release/jframe-pay/lib/
+jframe-pay/release/jframe-pay/plugin/
+jframe-pay/release/jframe-pay/temp/
+jframe-pay/release/jframe-pay/log/
+jframe-pay/release/jframe-pay/conf/cache/
