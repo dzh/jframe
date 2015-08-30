@@ -6,7 +6,6 @@ package jframe.pushy.impl;
 import java.io.File;
 import java.util.Date;
 
-import jframe.core.conf.Config;
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
@@ -61,13 +60,14 @@ public class PushyServiceImpl implements PushyService {
 			// eventGroup = new NioEventLoopGroup(1);
 
 			PushyConf.init(conf);
+
 			PushManagerConfiguration pushConf = new PushManagerConfiguration();
 			pushConf.setConcurrentConnectionCount(PushyConf.PUSH_CONN_COUNT);
 			pushManager = new PushManager<SimpleApnsPushNotification>(
 					getEnvironment(PushyConf.HOST, PushyConf.HOST_PORT,
 							PushyConf.FEEDBACK, PushyConf.FEEDBACK_PORT),
 					SSLContextUtil.createDefaultSSLContext(
-							plugin.getConfig(Config.APP_CONF) + "/"
+							plugin.getConfig("app.conf") + "/"
 									+ PushyConf.IOS_AUTH,
 							PushyConf.IOS_PASSWORD), null, null, null,
 					pushConf, "PushManager");

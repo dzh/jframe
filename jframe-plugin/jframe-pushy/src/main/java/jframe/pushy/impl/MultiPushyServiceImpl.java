@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import jframe.core.conf.VarHandler;
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
@@ -33,7 +34,7 @@ public class MultiPushyServiceImpl implements MultiPushyService {
 	static Logger LOG = LoggerFactory.getLogger(MultiPushyServiceImpl.class);
 
 	@InjectPlugin
-	static PushyPlugin plugin;
+	static PushyPlugin Plugin;
 
 	static String FILE_CONF = "file.pushy";
 
@@ -41,21 +42,32 @@ public class MultiPushyServiceImpl implements MultiPushyService {
 
 	@Start
 	void start() {
-		String conf = plugin.getConfig(FILE_CONF);
+		LOG.info("MultiPushyService is starting!");
+		String conf = Plugin.getConfig(FILE_CONF);
 		if (!new File(conf).exists()) {
 			LOG.error("Not found pushy config file {}", conf);
 			return;
 		}
 
 		try {
+			start(new FileInputStream(conf), new VarHandler(Plugin
+					.getPluginRef().getContext().getConfig()));
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+	}
+
+	private void start(InputStream is, VarHandler varHandler) {
+		try {
 			MultiPushyConf multiConf = new MultiPushyConf();
-			multiConf.init(new FileInputStream(conf));
+			multiConf.init(is);
+			multiConf.replace(varHandler);
 
 			String[] ids = multiConf.getGroupIds();
 			pushMap = new HashMap<String, PushManagerWrapper>(ids.length, 1);
 			for (String group : ids) {
-				PushManagerWrapper pm = new PushManagerWrapper();
-				pm.init(group, multiConf);
+				PushManagerWrapper pm = new PushManagerWrapper().init(group,
+						multiConf);
 				pm.start();
 				pushMap.put(group, pm);
 			}
@@ -64,38 +76,7 @@ public class MultiPushyServiceImpl implements MultiPushyService {
 			LOG.error(e.getMessage());
 			return;
 		}
-		LOG.info("PushyService start successfully!");
-
-		// pushManager.registerRejectedNotificationListener(listener);
-		// pushManager.registerFailedConnectionListener(listener)
-		// class MyRejectedNotificationListener implements
-		// RejectedNotificationListener<SimpleApnsPushNotification> {
-		//
-		// @Override
-		// public void handleRejectedNotification(
-		// final PushManager<? extends SimpleApnsPushNotification> pushManager,
-		// final SimpleApnsPushNotification notification,
-		// final RejectedNotificationReason reason) {
-
-		// System.out.format("%s was rejected with rejection reason %s\n",
-		// notification, reason);
-		// }
-		// }
-		// pushManager
-		// .registerRejectedNotificationListener(new
-		// MyRejectedNotificationListener());
-
-		// class MyFailedConnectionListener implements
-		// FailedConnectionListener<SimpleApnsPushNotification> {
-		// @Override
-		// public void handleFailedConnection(
-		// final PushManager<? extends SimpleApnsPushNotification> pushManager,
-		// final Throwable cause) {
-		// System.out.println(cause.getMessage());
-		// }
-		// }
-		// pushManager
-		// .registerFailedConnectionListener(new MyFailedConnectionListener());
+		LOG.info("MultiPushyService start successfully!");
 	}
 
 	@Stop
@@ -105,7 +86,7 @@ public class MultiPushyServiceImpl implements MultiPushyService {
 				p.stop();
 			}
 		}
-		plugin = null;
+		Plugin = null;
 	}
 
 	@Override
@@ -130,7 +111,10 @@ public class MultiPushyServiceImpl implements MultiPushyService {
 		}
 	}
 
-	public static void test(InputStream is) {
-
+	public static MultiPushyServiceImpl test(InputStream is,
+			VarHandler varHandler) {
+		MultiPushyServiceImpl pushy = new MultiPushyServiceImpl();
+		pushy.start(is, varHandler);
+		return pushy;
 	}
 }

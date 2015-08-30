@@ -30,16 +30,17 @@ public class PushManagerWrapper implements Fields {
 
 	private String group;
 
-	public void init(String group, MultiPushyConf conf) {
+	public PushManagerWrapper init(String group, MultiPushyConf conf) {
 		this.conf = conf;
 		this.group = group;
+		return this;
 	}
 
 	public void start() {
 		try {
 			PushManagerConfiguration pushConf = new PushManagerConfiguration();
 			int connCount = Integer.parseInt(conf.getConf(group,
-					conf.getConf(group, KEY_IOS_PASSWORD), "200"));
+					KEY_PUSH_CONN_COUNT, "100"));
 			pushConf.setConcurrentConnectionCount(connCount);
 
 			pushManager = new PushManager<SimpleApnsPushNotification>(
@@ -55,7 +56,6 @@ public class PushManagerWrapper implements Fields {
 			pushManager.start();
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
-			return;
 		}
 	}
 

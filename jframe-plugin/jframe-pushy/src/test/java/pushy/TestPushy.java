@@ -5,7 +5,6 @@ package pushy;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -39,7 +38,7 @@ public class TestPushy {
 
 	static String Img_Logo = "push.png";
 
-	String token = "3568a0158b669e1d1dd60c202d9431a72ddb77b2dc4f8156034099a98cd219e9";
+	String token = "70854405ac6b60b64bdc5338a2d8f4a55a683f63e786a872be42454f6731618d";
 
 	ExecutorService exeSvc;
 
@@ -49,6 +48,7 @@ public class TestPushy {
 	public void init() throws Exception {
 		PushyConf.init(Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("pushy/pushy.properties"));
+		System.out.println(PushyConf.IOS_AUTH);
 		System.out.println(PushyConf.IOS_PASSWORD);
 
 		exeSvc = new ThreadPoolExecutor(1, Runtime.getRuntime()
@@ -59,8 +59,10 @@ public class TestPushy {
 		PushManagerConfiguration conf = new PushManagerConfiguration();
 		conf.setConcurrentConnectionCount(PushyConf.PUSH_CONN_COUNT);
 		PushManager<SimpleApnsPushNotification> pushManager = new PushManager<SimpleApnsPushNotification>(
-				ApnsEnvironment.getProductionEnvironment(),
-				SSLContextUtil.createDefaultSSLContext(PushyConf.IOS_AUTH,
+				getEnvironment(PushyConf.HOST, PushyConf.HOST_PORT,
+						PushyConf.FEEDBACK, PushyConf.FEEDBACK_PORT),
+				SSLContextUtil.createDefaultSSLContext(
+						"/Users/dzh/temp/lech/rentercer.p12",
 						PushyConf.IOS_PASSWORD), eventGroup, null, null, conf,
 				"PushManager");
 		pushy = new PushyServiceImpl();
@@ -88,9 +90,9 @@ public class TestPushy {
 			public void run() {
 				try {
 					System.out.println(new Date());
-					for (int i = 0; i < 1000; i++) {
+					for (int i = 0; i < 100; i++) {
 						pushApple(token, i + "A", null);
-//						Thread.sleep(2);
+						// Thread.sleep(2);
 					}
 					System.out.println(new Date());
 				} catch (Exception e) {
@@ -100,35 +102,35 @@ public class TestPushy {
 
 		}.start();
 
-//		new Thread() {
-//			public void run() {
-//				try {
-//					System.out.println(new Date());
-//					for (int i = 0; i < 10000; i++) {
-//						pushApple("1112222", i + "B", null);
-//						Thread.sleep(2);
-//					}
-//					System.out.println(new Date());
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}.start();
+		// new Thread() {
+		// public void run() {
+		// try {
+		// System.out.println(new Date());
+		// for (int i = 0; i < 10000; i++) {
+		// pushApple("1112222", i + "B", null);
+		// Thread.sleep(2);
+		// }
+		// System.out.println(new Date());
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }.start();
 
-//		new Thread() {
-//			public void run() {
-//				try {
-//					System.out.println(new Date());
-//					for (int i = 0; i < 100; i++) {
-//						pushApple(token, i + "C", null);
-////						Thread.sleep(2);
-//					}
-//					System.out.println(new Date());
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}.start();
+		// new Thread() {
+		// public void run() {
+		// try {
+		// System.out.println(new Date());
+		// for (int i = 0; i < 100; i++) {
+		// pushApple(token, i + "C", null);
+		// // Thread.sleep(2);
+		// }
+		// System.out.println(new Date());
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }.start();
 		// new Thread() {
 		// public void run() {
 		// try {
@@ -155,12 +157,21 @@ public class TestPushy {
 		// payloadBuilder.setLaunchImage(Img_Logo);
 		payloadBuilder.setAlertBody(msg);
 		payloadBuilder.setSoundFileName("default");
-		payloadBuilder.setCategoryName("dzh");
+		// payloadBuilder.setCategoryName("dzh");
+		// payloadBuilder.addCustomProperty("title", "dzh1111");
 		// payloadBuilder.setBadgeNumber(badge);
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DAY_OF_YEAR, 1);
-		pushy.sendMessage(token,
-				payloadBuilder.buildWithDefaultMaximumLength(), c.getTime());
+		// Calendar c = Calendar.getInstance();
+		// c.add(Calendar.DAY_OF_YEAR, 1);
+
+		String alert = payloadBuilder.buildWithDefaultMaximumLength();
+		System.out.println(alert);
+		pushy.sendMessage(token, alert, null);
+	}
+
+	public static ApnsEnvironment getEnvironment(String host, String port,
+			String feedback, String fdPort) {
+		return new ApnsEnvironment(host, Integer.parseInt(port), feedback,
+				Integer.parseInt(fdPort));
 	}
 
 }
