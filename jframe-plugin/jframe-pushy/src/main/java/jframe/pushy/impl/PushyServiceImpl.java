@@ -3,14 +3,8 @@
  */
 package jframe.pushy.impl;
 
-import io.netty.channel.nio.NioEventLoopGroup;
-
 import java.io.File;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import jframe.core.conf.Config;
 import jframe.core.plugin.annotation.InjectPlugin;
@@ -48,9 +42,9 @@ public class PushyServiceImpl implements PushyService {
 
 	PushManager<SimpleApnsPushNotification> pushManager;
 
-	ExecutorService exeSvc;
+	// ExecutorService exeSvc;
 
-	NioEventLoopGroup eventGroup;
+	// NioEventLoopGroup eventGroup;
 
 	@Start
 	void start() {
@@ -61,10 +55,10 @@ public class PushyServiceImpl implements PushyService {
 		}
 
 		try {
-			exeSvc = new ThreadPoolExecutor(1, Runtime.getRuntime()
-					.availableProcessors() + 1, 60L, TimeUnit.SECONDS,
-					new LinkedBlockingQueue<Runnable>());
-			eventGroup = new NioEventLoopGroup(1);
+			// exeSvc = new ThreadPoolExecutor(1, Runtime.getRuntime()
+			// .availableProcessors() + 1, 60L, TimeUnit.SECONDS,
+			// new LinkedBlockingQueue<Runnable>());
+			// eventGroup = new NioEventLoopGroup(1);
 
 			PushyConf.init(conf);
 			PushManagerConfiguration pushConf = new PushManagerConfiguration();
@@ -75,7 +69,7 @@ public class PushyServiceImpl implements PushyService {
 					SSLContextUtil.createDefaultSSLContext(
 							plugin.getConfig(Config.APP_CONF) + "/"
 									+ PushyConf.IOS_AUTH,
-							PushyConf.IOS_PASSWORD), eventGroup, exeSvc, null,
+							PushyConf.IOS_PASSWORD), null, null, null,
 					pushConf, "PushManager");
 
 			pushManager.start();
@@ -138,17 +132,17 @@ public class PushyServiceImpl implements PushyService {
 			}
 		}
 
-		if (eventGroup != null) {
-			eventGroup.shutdownGracefully();
-		}
-		if (exeSvc != null) {
-			try {
-				exeSvc.shutdown();
-				exeSvc.awaitTermination(6, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				LOG.error(e.getMessage());
-			}
-		}
+		// if (eventGroup != null) {
+		// eventGroup.shutdownGracefully();
+		// }
+		// if (exeSvc != null) {
+		// try {
+		// exeSvc.shutdown();
+		// exeSvc.awaitTermination(6, TimeUnit.SECONDS);
+		// } catch (InterruptedException e) {
+		// LOG.error(e.getMessage());
+		// }
+		// }
 		plugin = null;
 	}
 

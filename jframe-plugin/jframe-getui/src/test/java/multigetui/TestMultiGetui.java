@@ -12,9 +12,11 @@ import jframe.getui.andriod.MultiGetuiServiceImpl;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import com.gexin.rp.sdk.base.ITemplate;
 import com.gexin.rp.sdk.template.NotificationTemplate;
+import com.gexin.rp.sdk.template.TransmissionTemplate;
 
 /**
  * @author dzh
@@ -25,7 +27,8 @@ public class TestMultiGetui {
 
 	MultiGetuiServiceImpl mgs;
 
-	String token = "1d1f41412bc5428128676c752c8ec0d6";
+	String usr_token = "c66ed5ca8693449c0076db224795ac76";
+	String dri_token = "03e6666fe4c2a431bf4689773288fb08";
 
 	static final Date ExpireTime = new Date(72 * 3600 * 1000);
 
@@ -43,10 +46,12 @@ public class TestMultiGetui {
 		mgs.stop();
 	}
 
+	@Test
 	public void testPush() {
 		try {
+			String token = usr_token;
 			pushAndriod("renter", token, "222", "11111111111111");
-			pushAndriod("driver", Arrays.asList(token), "333333",
+			pushAndriod("renter", Arrays.asList(token), "333333",
 					"444444444444");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,13 +60,13 @@ public class TestMultiGetui {
 
 	public void pushAndriod(String id, String token, String title, String msg)
 			throws Exception {
-		mgs.push2Single(id, newNotificationTemplate(id, title, msg), true,
+		mgs.push2Single(id, newTransmissionTemplate(id, title, msg), true,
 				ExpireTime.getTime(), token);
 	}
 
 	public void pushAndriod(String id, List<String> token, String title,
 			String msg) {
-		mgs.push2List(id, newNotificationTemplate(id, title, msg), true,
+		mgs.push2List(id, newTransmissionTemplate(id, title, msg), true,
 				ExpireTime.getTime(), token);
 	}
 
@@ -76,8 +81,23 @@ public class TestMultiGetui {
 		template.setIsRing(true);
 		template.setIsVibrate(true);
 		template.setIsClearable(true);
-		// template.setTransmissionType(1);
-		// template.setTransmissionContent(msg);
+//		template.setTransmissionType(1);
+		template.setTransmissionContent(msg);
+		return template;
+	}
+	public ITemplate newTransmissionTemplate(String id, String title, String msg) {
+		TransmissionTemplate template = new TransmissionTemplate();
+		template.setAppId(mgs.getConf(id, ConfField.KEY_APPID, ""));
+		template.setAppkey(mgs.getConf(id, ConfField.KEY_APPKEY, ""));
+//		template.setTitle(title);
+//		template.setText(msg);
+		// template.setLogo(Img_Logo);
+		// template.setLogoUrl("");
+//		template.setIsRing(true);
+//		template.setIsVibrate(true);
+//		template.setIsClearable(true);
+		template.setTransmissionType(1);
+		template.setTransmissionContent(msg);
 		return template;
 	}
 

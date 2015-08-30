@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * @date Sep 29, 2014 1:24:47 PM
  * @since 1.0
  */
-public class PushyConf {
+public class PushyConf implements Fields {
 
 	static final Logger LOG = LoggerFactory.getLogger(PushyConf.class);
 
@@ -41,14 +41,6 @@ public class PushyConf {
 		}
 		init = true;
 	}
-
-	public static final String KEY_IOS_AUTH = "ios.auth";
-	public static final String KEY_IOS_PASSWORD = "ios.password";
-	public static final String KEY_HOST = "host";
-	public static final String KEY_HOST_PORT = "host.port";
-	public static final String KEY_FEEDBACK = "feedback";
-	public static final String KEY_FEEDBACK_PORT = "feedback.port";
-	public static final String KEY_PUSH_CONN_COUNT = "push.conn.count";
 
 	public synchronized static void init(InputStream is) throws Exception {
 		try {

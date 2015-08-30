@@ -11,6 +11,7 @@
 	</properties>
 	<modules>
 		<module>release</module>
+		<module>jframe-activemq</module>
 		<module>jframe-clrfile</module>
 		<module>jframe-datasource</module>
 		<module>jframe-watch</module>
@@ -24,6 +25,7 @@
 		<module>jframe-mongodb-client</module>
 		<module>jframe-yunpian</module>
 		<module>jframe-qiniu</module>
+		<module>jframe-activemq-client</module>
 	</modules>
 	<build>
 		<plugins>

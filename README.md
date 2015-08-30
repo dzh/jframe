@@ -65,11 +65,11 @@ dzh_11@qq.com                (personal)
 	* New plugin
 		* jframe-yunpian
 		* jframe-qiniu
+		* jframe-mongodb-client
 		* jframe-activemq
 		* jframe-activemq-client
-		* jframe-mongodb-client
 		* jframe-http
-	* Add jframe-pay application(paying gateway), see [jframe\_pay\_manual\_zh\_CN](https://github.com/dzh/jframe/blob/master/doc/jframe_pay_manual_zh_CN.org) 
+	* Add jframe-pay application(pay gateway), see [jframe\_pay\_manual\_zh\_CN](https://github.com/dzh/jframe/blob/master/doc/jframe_pay_manual_zh_CN.org) 
 
 ## Jframe v2 Feature
 * v2.0.0 planning 

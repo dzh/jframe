@@ -54,4 +54,6 @@ public interface MultiGetuiService {
 	IPushResult push2List(String id, ITemplate data, boolean isOffline,
 			long offlineExpireTime, List<String> token);
 
+	String getConf(String id, String key);
+
 }

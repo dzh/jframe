@@ -160,6 +160,11 @@ public class MultiGetuiServiceImpl implements MultiGetuiService {
 		return mgc.getConf(id, key, defVal);
 	}
 
+	@Override
+	public String getConf(String id, String key) {
+		return mgc.getConf(id, key, "");
+	}
+
 	// public IPushResult push2App(ITemplate data, boolean isOffline,
 	// long offlineExpireTime) throws Exception {
 	//
