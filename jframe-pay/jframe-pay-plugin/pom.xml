@@ -7,4 +7,9 @@
   </parent>
   <artifactId>jframe-pay-plugin</artifactId>
   <packaging>pom</packaging>
+  <modules>
+  	<module>jframe-pay-ali</module>
+  	<module>jframe-pay-wx</module>
+  	<module>jframe-pay-upmp</module>
+  </modules>
 </project>

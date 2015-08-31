@@ -15,15 +15,12 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.ListDatabasesIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.result.UpdateResult;
 
 /**
  * @author dzh
@@ -70,14 +67,13 @@ public class TestMongoClient {
 	}
 
 	public void testCarStatus() {
-		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
-				CodecRegistries.fromCodecs(new UuidCodec(
-						UuidRepresentation.STANDARD)), MongoClient
-						.getDefaultCodecRegistry());
-
-		MongoDatabase rent = mongoClient.getDatabase("lech_rent")
-				.withCodecRegistry(codecRegistry);
-		MongoCollection<Document> status = rent.getCollection("car_status");
+//		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+//				CodecRegistries.fromCodecs(new UuidCodec(
+//						UuidRepresentation.STANDARD)), MongoClient
+//						.getDefaultCodecRegistry());
+//		MongoDatabase rent = mongoClient.getDatabase("lech_rent")
+//				.withCodecRegistry(codecRegistry);
+//		MongoCollection<Document> status = rent.getCollection("car_status");
 
 	}
 
@@ -119,9 +115,9 @@ public class TestMongoClient {
 		System.out.println(doc.get("car", Document.class));
 		// System.out.println(doc.get("loc", Document.class));
 
-		UpdateResult updateResult = status.updateOne(Filters.eq("mobile",
-				"18616020610"), new Document("$set", new Document("car",
-				new Document("no", "A00002"))));
+//		UpdateResult updateResult = status.updateOne(Filters.eq("mobile",
+//				"18616020610"), new Document("$set", new Document("car",
+//				new Document("no", "A00002"))));
 		doc = status.find(Filters.eq("mobile", "18616020610")).first();
 		System.out.println(doc.get("car", Document.class));
 
@@ -157,14 +153,14 @@ public class TestMongoClient {
 	}
 
 	public void testUsrStatus() {
-		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
-				CodecRegistries.fromCodecs(new UuidCodec(
-						UuidRepresentation.STANDARD)), MongoClient
-						.getDefaultCodecRegistry());
-
-		MongoDatabase rent = mongoClient.getDatabase("lech_rent")
-				.withCodecRegistry(codecRegistry);
-		MongoCollection<Document> status = rent.getCollection("usr_status");
+//		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+//				CodecRegistries.fromCodecs(new UuidCodec(
+//						UuidRepresentation.STANDARD)), MongoClient
+//						.getDefaultCodecRegistry());
+//
+//		MongoDatabase rent = mongoClient.getDatabase("lech_rent")
+//				.withCodecRegistry(codecRegistry);
+//		MongoCollection<Document> status = rent.getCollection("usr_status");
 
 	}
 
@@ -172,21 +168,21 @@ public class TestMongoClient {
 		// MongoDatabase db = mongoClient.getDatabase("mydb");
 		// db.getCollection("test");
 
-		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
-				CodecRegistries.fromCodecs(new UuidCodec(
-						UuidRepresentation.STANDARD)), MongoClient
-						.getDefaultCodecRegistry());
+		// CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+		// CodecRegistries.fromCodecs(new UuidCodec(
+		// UuidRepresentation.STANDARD)), MongoClient
+		//				.getDefaultCodecRegistry());
 		// globally
-		MongoClientOptions options = MongoClientOptions.builder()
-				.codecRegistry(codecRegistry).build();
-		MongoClient client = new MongoClient(new ServerAddress("127.0.0.1"),
-				options);
+//		MongoClientOptions options = MongoClientOptions.builder()
+//				.codecRegistry(codecRegistry).build();
+//		MongoClient client = new MongoClient(new ServerAddress("127.0.0.1"),
+//				options);
 		// or per database
-		MongoDatabase database = client.getDatabase("mydb").withCodecRegistry(
-				codecRegistry);
+//		MongoDatabase database = client.getDatabase("mydb").withCodecRegistry(
+//				codecRegistry);
 		// or per collection
-		MongoCollection<Document> collection = database.getCollection("mycoll")
-				.withCodecRegistry(codecRegistry);
+//		MongoCollection<Document> collection = database.getCollection("mycoll")
+//				.withCodecRegistry(codecRegistry);
 	}
 
 	@After

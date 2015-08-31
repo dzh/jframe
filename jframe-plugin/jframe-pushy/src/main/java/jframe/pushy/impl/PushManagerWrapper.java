@@ -66,7 +66,8 @@ public class PushManagerWrapper implements Fields {
 	public void stop() {
 		try {
 			if (pushManager != null) {
-				pushManager.shutdown();
+				// TODO
+				pushManager.shutdown(30 * 1000);
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

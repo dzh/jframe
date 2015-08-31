@@ -1,4 +1,3 @@
-
 #+STARTUP: showall
 
 #+TITLE: Jframe Manual
@@ -100,9 +99,20 @@ git clone https://github.com/dzh/jframe.git
 *** 调试守护进程(Main)
 
 *** 调试框架进程(FrameMain)
+- conf/vmargs或vmargs-win文件中，开启jvm远程调试
+#+START_EXAMPLE 
+-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=6666,server=y,suspend=n
+server＝y jvm作为调试服务端
+suspend=n jvm启动后直接运行，若y则jvm启动后挂起，在调试客户端连接后才继续执行
+address=6666 jvm调试服务端监听端口6666
+#+END_EXAMPLE
+- eclipse配置远程调试(以上面的配置为例)
+[[./images/eclipse-jframe-debug-remote.png]]
 
 
 ** 本地调试
+
+
 
 ** 使用jvisualvm
 - 性能监控配置

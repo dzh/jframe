@@ -142,6 +142,7 @@
 	<modules>
 		<module>jframe-pay-lib</module>
 		<module>jframe-pay-plugin</module>
+		<module>jframe-pay-client</module>
 	</modules>
 	<dependencies>
 		<dependency>

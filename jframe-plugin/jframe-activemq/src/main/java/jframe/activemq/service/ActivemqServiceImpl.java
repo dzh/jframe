@@ -15,14 +15,14 @@ import jframe.core.plugin.annotation.Stop;
  * @since 1.0
  */
 @Injector
-public class ActivemqServiceImpl implements ActivemqService {
+class ActivemqServiceImpl implements ActivemqService {
 
 	@InjectPlugin
 	static ActivemqPlugin Plugin;
 
 	@Start
 	void start() {
-		
+
 	}
 
 	@Stop
