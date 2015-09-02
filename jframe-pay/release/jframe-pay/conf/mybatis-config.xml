@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://61.153.100.20:4040/jframe_pay?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="pay" />
+		<property name="password" value="pay123" />
+		<property name="connectionProperties" value="druid.stat.slowSqlMillis=100" />
+	</properties>
+
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="true" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<!-- NONE, PARTIAL, FULL -->
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<!-- SIMPLE REUSE BATCH -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="10" />
+		<setting name="safeRowBoundsEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="false" />
+		<!-- SESSION | STATEMENT -->
+		<setting name="localCacheScope" value="SESSION" />
+		<!-- JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER -->
+		<setting name="jdbcTypeForNull" value="OTHER" />
+		<!-- A method name list separated by commas -->
+		<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+		<setting name="defaultScriptingLanguage"
+			value="org.apache.ibatis.scripting.xmltags.XMLLanguageDriver" />
+		<setting name="callSettersOnNulls" value="false" />
+		<!-- <setting name="logPrefix" value="jframe.mybatis" /> -->
+		<!-- SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING 
+			| NO_LOGGING -->
+		<setting name="logImpl" value="SLF4J" />
+		<!-- CGLIB | JAVASSIST -->
+		<setting name="proxyFactory" value="CGLIB" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="UsrAccount" type="jframe.pay.domain.dao.UsrAccount" />
+		<typeAlias alias="OrderDetail" type="jframe.pay.domain.dao.OrderDetail" />
+		<typeAlias alias="OrderAlipay" type="jframe.pay.domain.dao.OrderAlipay" />
+		<typeAlias alias="OrderWx" type="jframe.pay.domain.dao.OrderWx" />
+
+		<package name="jframe.pay.domain.dao" />
+	</typeAliases>
+
+	<!-- <typeHandlers> <package name="jframe.pay.domain.dao.mapper" /> </typeHandlers> -->
+
+	<environments default="run">
+		<environment id="run">
+			<transactionManager type="JDBC" />
+			<dataSource type="jframe.mybatis.ds.DruidDataSourceFactory">
+				<property name="driverClassName" value="${driverClassName}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<property name="initialSize" value="10" />
+				<property name="maxActive" value="200" />
+				<property name="maxWait" value="10000" />
+				<property name="timeBetweenEvictionRunsMillis" value="60000" />
+				<property name="minEvictableIdleTimeMillis" value="180000" />
+				<property name="testWhileIdle" value="false" />
+				<property name="testOnBorrow" value="false" />
+				<property name="testOnReturn" value="false" />
+				<property name="poolPreparedStatements" value="false" />
+				<property name="maxPoolPreparedStatementPerConnectionSize"
+					value="10" />
+				<property name="removeAbandoned" value="true" />
+				<property name="removeAbandonedTimeout" value="1800" />
+				<property name="logAbandoned" value="true" />
+				<property name="connectionProperties" value="${connectionProperties}" />
+			</dataSource>
+		</environment>
+		<environment id="run_ro1">
+			<transactionManager type="JDBC" />
+			<dataSource type="jframe.mybatis.ds.DruidDataSourceFactory">
+				<property name="driverClassName" value="${driverClassName}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<property name="initialSize" value="10" />
+				<property name="maxActive" value="200" />
+				<property name="maxWait" value="10000" />
+				<property name="timeBetweenEvictionRunsMillis" value="60000" />
+				<property name="minEvictableIdleTimeMillis" value="180000" />
+				<property name="testWhileIdle" value="false" />
+				<property name="testOnBorrow" value="false" />
+				<property name="testOnReturn" value="false" />
+				<property name="poolPreparedStatements" value="false" />
+				<property name="maxPoolPreparedStatementPerConnectionSize"
+					value="10" />
+				<property name="removeAbandoned" value="true" />
+				<property name="removeAbandonedTimeout" value="1800" />
+				<property name="logAbandoned" value="true" />
+				<property name="connectionProperties" value="${connectionProperties}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="jframe/pay/domain/dao/mapper/UsrMapper.xml" />
+		<mapper resource="jframe/pay/domain/dao/mapper/OrderMapper.xml" />
+	</mappers>
+</configuration>

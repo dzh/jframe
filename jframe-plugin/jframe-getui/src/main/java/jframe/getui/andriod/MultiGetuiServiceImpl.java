@@ -76,6 +76,7 @@ public class MultiGetuiServiceImpl implements MultiGetuiService {
 		String[] ids = mgc.getGroupIds();
 		pushMap = new HashMap<String, IGtPush>(ids.length, 1);
 		for (String id : ids) {
+			// TODO
 			System.setProperty("gexin.rp.sdk.http.connection.timeout",
 					mgc.getConf(id, ConfField.KEY_HTTP_CONN_TIMEOUT, "10000"));
 			System.setProperty("gexin.rp.sdk.http.connection.pool.size",

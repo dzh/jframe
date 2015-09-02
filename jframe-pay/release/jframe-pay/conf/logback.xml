@@ -23,7 +23,7 @@
 			</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>5MB</maxFileSize>
+				<maxFileSize>2MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
 		<encoder>
@@ -32,14 +32,36 @@
 		</encoder>
 	</appender>
 
+	<appender name="FILE.APNS"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/apns-${byDay}.txt</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/log-%d{yyyy-MM-dd}.%i.txt
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>2MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
 	<logger name="jframe" additivity="true">
 		<appender-ref ref="FILE" />
 	</logger>
-	<logger name="dono" additivity="true">
+	<logger name="lech" additivity="true">
 		<appender-ref ref="FILE" />
 	</logger>
+	<logger name="lech.rent.apns" additivity="false">
+		<appender-ref ref="FILE.APNS" />
+	</logger>
+
 
 	<root level="info">
-		<!-- <appender-ref ref="STDOUT" /> -->
+
 	</root>
 </configuration>

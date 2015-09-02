@@ -243,9 +243,14 @@ public class HttpClientServiceImpl implements HttpClientService {
 			LOG.debug("HttpClientServiceImpl.send {} {}", id, data);
 		}
 
-		HttpHost target = new HttpHost(HttpClientConfig.getConf(id,
-				HttpClientConfig.IP), Integer.parseInt(HttpClientConfig
-				.getConf(id, HttpClientConfig.PORT)),
+		//
+		String ip = paras != null && paras.containsKey("ip") ? paras.get("ip")
+				: HttpClientConfig.getConf(id, HttpClientConfig.IP);
+		String port = paras != null && paras.containsKey("port") ? paras
+				.get("port") : HttpClientConfig.getConf(id,
+				HttpClientConfig.PORT);
+
+		HttpHost target = new HttpHost(ip, Integer.parseInt(port),
 				HttpHost.DEFAULT_SCHEME_NAME);
 
 		HttpRequestBase request;
@@ -294,7 +299,7 @@ public class HttpClientServiceImpl implements HttpClientService {
 			Reader reader = new InputStreamReader(entity.getContent(),
 					ContentType.getOrDefault(entity).getCharset());
 			// TODO decode by mime-type
-			
+
 			return GSON.fromJson(reader, new TypeToken<T>() {
 			}.getType());
 		} finally {

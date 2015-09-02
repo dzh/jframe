@@ -79,7 +79,8 @@
 							<excludeTransitive>false</excludeTransitive>
 							<includeScope>compile</includeScope>
 							<excludeScope>provided</excludeScope>
-							<excludeArtifactIds>junit,slf4j-simple</excludeArtifactIds>
+							<excludeArtifactIds>junit,slf4j-simple,jframe-httpclient,jframe-memcached-client,
+								jframe-mybatis,jframe-pay-alipay,jframe-pay-dao</excludeArtifactIds>
 						</configuration>
 					</execution>
 					<execution>
@@ -89,7 +90,7 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${session.executionRootDirectory}/release/dono-pay/plugin/</outputDirectory>
+							<outputDirectory>${session.executionRootDirectory}/release/jframe-pay/plugin/</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<excludeTransitive>true</excludeTransitive>
@@ -171,6 +172,16 @@
 			<groupId>cn</groupId>
 			<artifactId>jframe-ext</artifactId>
 			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4</version>
 		</dependency>
 	</dependencies>
 </project>

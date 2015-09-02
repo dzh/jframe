@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jframe.pay.domain.dao.mapper.UsrMapper">
+
+	<resultMap id="usrAccountResultMap" type="UsrAccount">
+		<id property="account" column="account" />
+		<result property="amount" column="amount" />
+		<result property="email" column="email" />
+		<result property="mobile" column="mobile" />
+		<result property="name" column="name" />
+		<result property="passwd" column="passwd" />
+		<result property="realname" column="realname" />
+		<result property="sex" column="sex" />
+		<result property="type" column="type" />
+	</resultMap>
+
+
+	<select id="selectUsrAccount" parameterType="string"
+		resultMap="usrAccountResultMap">
+		select * from usr_account where account = #{account}
+	</select>
+
+	<insert id="insertUsrAccount" parameterType="UsrAccount">
+		insert into
+		usr_account
+		(account,
+		<if test="amount != null">amount,</if>
+		<if test="email != null">email,</if>
+		mobile,
+		<if test="name != null">name,</if>
+		<if test="passwd != null">passwd,</if>
+		<if test="realname != null">realname,</if>
+		<if test="sex != null">sex,</if>
+		<if test="type != null">type,</if>
+		create_time)
+		values
+		(#{account},
+		<if test="amount != null">#{amount},</if>
+		<if test="email != null">#{email},</if>
+		mobile,
+		<if test="name != null">#{name},</if>
+		<if test="passwd != null">#{passwd},</if>
+		<if test="realname != null">#{realname},</if>
+		<if test="sex != null">#{sex},</if>
+		<if test="type != null">#{type},</if>
+		now())
+	</insert>
+
+	<update id="updateUsrAccount" parameterType="UsrAccount">
+		update usr_account
+		<set>
+			<if test="amount != null">amount,</if>
+			<if test="email != null">email,</if>
+			<if test="mobile != null">mobile,</if>
+			<if test="name != null">name,</if>
+			<if test="passwd != null">passwd,</if>
+			<if test="realname != null">realname,</if>
+			<if test="sex != null">sex,</if>
+			<if test="type != null">type</if>
+		</set>
+		where account = #{account}
+	</update>
+
+</mapper>

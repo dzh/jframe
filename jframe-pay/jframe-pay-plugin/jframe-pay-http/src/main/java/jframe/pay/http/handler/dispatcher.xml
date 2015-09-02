@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dispatchers>
+	<dispatcher id="pay.usr">
+		<url-pattern>/pay/usr/.*</url-pattern>
+		<handler>lech.rent.http.image.ImageUploadHandler</handler>
+	</dispatcher>
+
+	<dispatcher id="pay.ord">
+		<url-pattern>/pay/ord/.*</url-pattern>
+		<handler>lech.rent.http.image.ImageDownloadHandler</handler>
+	</dispatcher>
+
+
+	<dispatcher id="void">
+		<url-pattern>/.*</url-pattern>
+		<handler>lech.rent.http.handler.VoidHandler</handler>
+	</dispatcher>
+</dispatchers>
