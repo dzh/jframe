@@ -77,7 +77,7 @@ class AlipayServiceImpl implements AlipayService, Fields {
 			throws Exception {
 		// check req
 		if (HttpUtil.mustReq(req, F_payType, F_payGroup, F_payNo, F_transType,
-				F_payAmount, F_account).size() > 0) {
+				F_payAmount).size() > 0) {
 			RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_MISS_PARA);
 			return;
 		}
@@ -88,7 +88,8 @@ class AlipayServiceImpl implements AlipayService, Fields {
 		}
 
 		OrderAlipay od = new OrderAlipay();
-		od.account = req.get(F_account);
+		if (req.containsKey(F_account))
+			od.account = req.get(F_account);
 		od.backUrl = req.get(F_backUrl);
 		od.orderCreateTime = new Date().getTime();
 		od.orderNo = IDUtil.genOrderNo();

@@ -86,7 +86,8 @@
 	<insert id="insertOrderAlipay" parameterType="OrderAlipay">
 		insert into
 		order_alipay
-		(account,
+		(
+		<if test="account != null">account,</if>
 		<if test="backUrl != null">back_url,</if>
 		<if test="buyerEmail != null">buyer_email,</if>
 		<if test="buyerId != null">buyer_id,</if>

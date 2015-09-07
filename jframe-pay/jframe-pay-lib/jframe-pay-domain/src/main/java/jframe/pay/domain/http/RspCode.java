@@ -47,7 +47,8 @@ public enum RspCode {
 			"交易失败"), FAIL_SESSION_TIMEOUT("603", "会话超时"), FAIL_ORDER("604",
 			"无效订单"), FAIL_PAY_REPEAT("605", "重复支付"), FAIL_CARD_ERROR("606",
 			"银行卡信息错误"), FAIL_ORIGINAL_AMOUNT_ERROR("607", "原始金额错误"), FAIL_AMOUNT_OVER(
-			"608", "交易金额超限"), FAIL_MS_VCODE("609", "短信验证码错误"),
+			"608", "交易金额超限"), FAIL_MS_VCODE("609", "短信验证码错误"), FAIL_ORDER_NOT_FOUND(
+			"610", "没有找到订单"),
 	/****************************** 安全相关 *************************************/
 	FAIL_SIGN_NOT_FOUND("900", "非法请求"), FAIL_SIGN_ERROR("901", "请求验证失败"), FAIL_ALIPAY_BACK_SIGN_ERROR(
 			"902", "支付宝返回验签失败"), FAIL_ALIPAY_BACK_UNKOWN_STATUS_ERROR("903",

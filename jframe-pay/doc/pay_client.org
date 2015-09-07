@@ -1,0 +1,15 @@
+#+STARTUP: showall
+#+author: dzh
+#+email: 120803528@qq.com
+
+* PayClient说明
+
+
+* 使用
+** 作为jframe服务使用
+ 
+
+** 在其他框架中调用
+
+* 异步 TODO
+

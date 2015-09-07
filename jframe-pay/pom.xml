@@ -80,7 +80,7 @@
 							<includeScope>compile</includeScope>
 							<excludeScope>provided</excludeScope>
 							<excludeArtifactIds>junit,slf4j-simple,jframe-httpclient,jframe-memcached-client,
-								jframe-mybatis,jframe-pay-alipay,jframe-pay-dao</excludeArtifactIds>
+								jframe-mybatis,jframe-pay-alipay,jframe-pay-dao,jframe-pay-upmp,jframe-pay-wx,jframe-pay-http</excludeArtifactIds>
 						</configuration>
 					</execution>
 					<execution>
@@ -144,6 +144,7 @@
 		<module>jframe-pay-lib</module>
 		<module>jframe-pay-plugin</module>
 		<module>jframe-pay-client</module>
+		<module>release</module>
 	</modules>
 	<dependencies>
 		<dependency>

@@ -10,6 +10,16 @@ package jframe.pay.domain;
  */
 public interface Fields {
 
+	String F_passwd = "passwd";
+
+	String F_sex = "sex";
+
+	String F_realname = "realname";
+
+	String F_email = "email";
+
+	String F_name = "name";
+
 	String F_rspCode = "rspCode";
 
 	String F_rspDesc = "rspDesc";
@@ -65,7 +75,7 @@ public interface Fields {
 	String F_payDesc = "payDesc";
 
 	String F_orderNo = "orderNo";
-
+	
 	String F_payStatus = "payStatus";
 
 	String F_payDetail = "payDetail";

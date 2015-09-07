@@ -10,4 +10,6 @@ package jframe.pay.client.core;
  */
 public class PayClient {
 	
+	
+	
 }

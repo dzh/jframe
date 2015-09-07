@@ -40,7 +40,7 @@
 			| NO_LOGGING -->
 		<setting name="logImpl" value="SLF4J" />
 		<!-- CGLIB | JAVASSIST -->
-		<setting name="proxyFactory" value="CGLIB" />
+		<setting name="proxyFactory" value="JAVASSIST" />
 	</settings>
 
 	<typeAliases>

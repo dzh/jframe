@@ -37,7 +37,7 @@ public class UsrHandler extends PayHandler {
 			svc.qryu(req, rsp);
 		} else {
 			RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_REQOP);
-			throw new PayException("Not found");
+			throw new PayException("Not found " + reqOp);
 		}
 	}
 

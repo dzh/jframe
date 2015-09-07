@@ -1,6 +1,6 @@
 #+STARTUP: showall
 #+author: dzh
-#+email: 120803528@qq.com
+#+email: dzh_11@qq.com
 
 * 接口说明
 ** 接口规范
@@ -48,6 +48,7 @@
 | name     | str  |        |
 | sex      | int  |        |
 | email    | str  |        |
+| mobile   | str  |        |
 - rsp
 #+BEGIN_EXAMPLE
 {

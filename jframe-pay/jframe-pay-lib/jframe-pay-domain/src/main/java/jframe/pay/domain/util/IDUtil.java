@@ -81,6 +81,24 @@ public class IDUtil {
 		return buf.toString();
 	}
 
+	public static String genUsrAccount() {
+		StringBuilder buf = new StringBuilder();
+
+		Calendar calc = Calendar.getInstance();
+		// buf.append(calc.get(Calendar.ZONE_OFFSET) / 3600000);
+
+		DateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
+		buf.append(fmt.format(calc.getTime()));
+		buf.append((int) (Math.random() * 10));
+		buf.append((int) (Math.random() * 10));
+		buf.append((int) (Math.random() * 10));
+		buf.append((int) (Math.random() * 10));
+		buf.append((int) (Math.random() * 10));
+		buf.append((int) (Math.random() * 10));
+
+		return buf.toString();
+	}
+
 	public static String genPayNo() {
 		StringBuilder buf = new StringBuilder();
 
@@ -98,7 +116,7 @@ public class IDUtil {
 
 		return buf.toString();
 	}
-	
+
 	public static String genPayGroupNo() {
 		StringBuilder buf = new StringBuilder();
 

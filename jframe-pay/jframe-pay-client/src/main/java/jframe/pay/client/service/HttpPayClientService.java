@@ -63,9 +63,7 @@ class HttpPayClientService implements PayClientService, Fields {
 
 	@Override
 	public Map<String, Object> usr(Map<String, String> req) throws Exception {
-
 		// TODO check
-
 		return HttpClient.send(HttpClient_ID, Prefix_usr + req.get(F_reqOp),
 				HttpUtil.format(req, "utf-8"), null, HTTP_PARAS);
 	}

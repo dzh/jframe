@@ -33,6 +33,8 @@ public class OrderHandler extends PayHandler {
 			svc.consume(req, rsp);
 		} else if (ReqOp.QRYOD.code.equals(reqOp)) {
 			svc.qryod(req, rsp);
+		} else if (ReqOp.ALIBACK.code.equals(reqOp)) {
+			svc.aliback(req, rsp);
 		} else {
 			RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_REQOP);
 			throw new PayException("Not found");
