@@ -24,7 +24,8 @@
 		<result property="payCurrency" column="pay_currency" />
 		<result property="payDesc" column="pay_desc" />
 		<result property="payGroup" column="pay_group" />
-		<result property="payTimeout" column="pay_timeout" />
+		<result property="payTimeout" column="pay_timeout"
+			typeHandler="jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler" />
 		<result property="sellerEmail" column="seller_email" />
 		<result property="sellerId" column="seller_id" />
 		<result property="subject" column="subject" />
@@ -111,7 +112,8 @@
 		<if test="transType != null">trans_type,</if>
 		create_time)
 		values
-		(#{account},
+		(
+		<if test="account != null">#{account},</if>
 		<if test="backUrl != null">#{backUrl},</if>
 		<if test="buyerEmail != null">#{buyerEmail},</if>
 		<if test="buyerId != null">#{buyerId},</if>
@@ -142,6 +144,7 @@
 	<update id="updateOrderAlipay" parameterType="OrderAlipay">
 		update `order_alipay`
 		<set>
+			<if test="orderNo != null">order_no=#{orderNo},</if>
 			<if test="backUrl != null">back_url=#{backUrl},</if>
 			<if test="buyerEmail != null">buyer_email=#{buyerEmail},</if>
 			<if test="buyerId != null">buyer_id=#{buyerId},</if>
@@ -159,6 +162,7 @@
 			<if test="payTimeout != null">pay_timeout=#{payTimeout,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
 			</if>
 			<if test="sellerId != null">seller_id=#{sellerId},</if>
+			<if test="sellerEmail != null">seller_email=#{sellerEmail},</if>
 			<if test="subject != null">subject=#{subject},</if>
 			<if test="tradeStatus != null">trade_status=#{tradeStatus},</if>
 			<if test="transType != null">trans_type=#{transType}</if>

@@ -20,7 +20,7 @@ public class AlipayConfig {
 	public static final String APP_ID = "app.id";
 	public static final String PRIVATE_KEY = "private.key";
 	public static final String PUBLIC_KEY = "public.key";
-	public static final String INPUT_CHARSET = "input.charset";
+	public static final String INPUT_CHARSET = "input_charset";
 
 	public static final String IT_B_PAY = "it_b_pay";
 
@@ -39,7 +39,7 @@ public class AlipayConfig {
 	}
 
 	public synchronized static String getConf(String key) {
-		return config.getConf("pch", key);
+		return config.getConf("lech", key);
 	}
 
 	public static String getSignType() {

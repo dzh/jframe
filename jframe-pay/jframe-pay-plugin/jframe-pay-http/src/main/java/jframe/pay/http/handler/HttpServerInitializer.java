@@ -24,55 +24,55 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
 
-	static Logger LOG = LoggerFactory.getLogger(HttpServerInitializer.class);
+    static Logger LOG = LoggerFactory.getLogger(HttpServerInitializer.class);
 
-	private SslContext sslCtx;
+    private SslContext sslCtx;
 
-	private HttpReqDispatcher reqDis = new HttpReqDispatcher();
+    private HttpReqDispatcher reqDis = new HttpReqDispatcher();
 
-	public HttpServerInitializer() {
-		this(null);
-	}
+    public HttpServerInitializer() {
+        this(null);
+    }
 
-	public HttpServerInitializer(SslContext sslCtx) {
-		this.sslCtx = sslCtx;
-	}
+    public HttpServerInitializer(SslContext sslCtx) {
+        this.sslCtx = sslCtx;
+    }
 
-	@Override
-	public void initChannel(SocketChannel ch) {
-		ChannelPipeline p = ch.pipeline();
-		// p.addLast("log", new LoggingHandler(LogLevel.ERROR));
+    @Override
+    public void initChannel(SocketChannel ch) {
+        ChannelPipeline p = ch.pipeline();
+        // p.addLast("log", new LoggingHandler(LogLevel.ERROR));
 
-		if (sslCtx != null) {
-			p.addLast(sslCtx.newHandler(ch.alloc()));
-		}
-		p.addLast(new HttpRequestDecoder());
-		p.addLast(new HttpResponseEncoder());
-		p.addLast("http compressor", new HttpContentCompressor());
-		// p.addLast(new HttpObjectAggregator(1048576));
-		p.addLast("http dispatcher", reqDis);
-		p.addLast("idleStateHandler", new IdleStateHandler(10, 10, 0));
-		p.addLast("heartbeatHandler", new HeartbeatHandler());
-	}
+        if (sslCtx != null) {
+            p.addLast(sslCtx.newHandler(ch.alloc()));
+        }
+        p.addLast(new HttpRequestDecoder());
+        p.addLast(new HttpResponseEncoder());
+        p.addLast("http compressor", new HttpContentCompressor());
+        // p.addLast(new HttpObjectAggregator(1048576));
+        p.addLast("http dispatcher", reqDis);
+        p.addLast("idleStateHandler", new IdleStateHandler(30, 10, 0));
+        p.addLast("heartbeatHandler", new HeartbeatHandler());
+    }
 
-	@Sharable
-	public class HeartbeatHandler extends ChannelDuplexHandler {
-		@Override
-		public void userEventTriggered(ChannelHandlerContext ctx, Object evt)
-				throws Exception {
-			if (evt instanceof IdleStateEvent) {
-				IdleStateEvent e = (IdleStateEvent) evt;
-				if (e.state() == IdleState.ALL_IDLE) {
-					ctx.close();
-					LOG.info("close ALL_IDLE {}", evt.toString());
-				} else if (e.state() == IdleState.READER_IDLE) {
-					ctx.close();
-					LOG.info("close READER_IDLE {}", evt.toString());
-				} else if (e.state() == IdleState.WRITER_IDLE) {
-					ctx.close();
-					LOG.info("close WRITER_IDLE {}", evt.toString());
-				}
-			}
-		}
-	}
+    @Sharable
+    public class HeartbeatHandler extends ChannelDuplexHandler {
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt)
+                throws Exception {
+            if (evt instanceof IdleStateEvent) {
+                IdleStateEvent e = (IdleStateEvent) evt;
+                if (e.state() == IdleState.ALL_IDLE) {
+                    ctx.close();
+                    LOG.info("close ALL_IDLE {}", evt.toString());
+                } else if (e.state() == IdleState.READER_IDLE) {
+                    ctx.close();
+                    LOG.info("close READER_IDLE {}", evt.toString());
+                } else if (e.state() == IdleState.WRITER_IDLE) {
+                    ctx.close();
+                    LOG.info("close WRITER_IDLE {}", evt.toString());
+                }
+            }
+        }
+    }
 }

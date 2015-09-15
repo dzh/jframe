@@ -2,17 +2,17 @@
 <dispatchers>
 	<dispatcher id="pay.usr">
 		<url-pattern>/pay/usr/.*</url-pattern>
-		<handler>lech.rent.http.image.ImageUploadHandler</handler>
+		<handler>jframe.pay.http.usr.UsrHandler</handler>
 	</dispatcher>
 
 	<dispatcher id="pay.ord">
 		<url-pattern>/pay/ord/.*</url-pattern>
-		<handler>lech.rent.http.image.ImageDownloadHandler</handler>
+		<handler>jframe.pay.http.ord.OrderHandler</handler>
 	</dispatcher>
 
 
 	<dispatcher id="void">
 		<url-pattern>/.*</url-pattern>
-		<handler>lech.rent.http.handler.VoidHandler</handler>
+		<handler>jframe.pay.http.handler.VoidHandler</handler>
 	</dispatcher>
 </dispatchers>

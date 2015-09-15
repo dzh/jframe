@@ -11,7 +11,6 @@
 	<modules>
 		<module>jframe-pay-alipay</module>
 		<module>jframe-pay-wx</module>
-		<module>jframe-pay-upmp</module>
 		<module>jframe-pay-http</module>
 		<module>jframe-pay-dao</module>
 		<module>jframe-pay-task</module>

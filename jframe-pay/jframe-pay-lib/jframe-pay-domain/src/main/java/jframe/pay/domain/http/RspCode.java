@@ -44,9 +44,9 @@ public enum RspCode {
 	/***************************** UPMP相关错误 **********************************/
 
 	FAIL_REQ("600", "请求报文错误"), FAIL_SIGN("601", "签名验证失败"), FAIL_TRAD("602",
-			"交易失败"), FAIL_SESSION_TIMEOUT("603", "会话超时"), FAIL_ORDER("604",
-			"无效订单"), FAIL_PAY_REPEAT("605", "重复支付"), FAIL_CARD_ERROR("606",
-			"银行卡信息错误"), FAIL_ORIGINAL_AMOUNT_ERROR("607", "原始金额错误"), FAIL_AMOUNT_OVER(
+			"交易失败"), FAIL_SESSION_TIMEOUT("603", "会话超时"), FAIL_ORDER_STATUS(
+			"604", "订单状态错误"), FAIL_PAY_REPEAT("605", "重复支付"), FAIL_CARD_ERROR(
+			"606", "银行卡信息错误"), FAIL_ORIGINAL_AMOUNT_ERROR("607", "原始金额错误"), FAIL_AMOUNT_OVER(
 			"608", "交易金额超限"), FAIL_MS_VCODE("609", "短信验证码错误"), FAIL_ORDER_NOT_FOUND(
 			"610", "没有找到订单"),
 	/****************************** 安全相关 *************************************/

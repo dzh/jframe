@@ -54,6 +54,14 @@ public class HttpUtil {
 						&& ObjectUtil.notEmpty(req.get(key)));
 	}
 
+	public static boolean anyEq(String val, String... vals) {
+		if (ObjectUtil.isEmpty(val)) {
+			return false;
+		}
+
+		return Arrays.stream(vals).anyMatch(v -> v.equals(vals));
+	}
+
 	public final static String format(Map<String, String> paras, String charset) {
 		List<NameValuePair> paramList = new ArrayList<NameValuePair>(paras
 				.keySet().size());

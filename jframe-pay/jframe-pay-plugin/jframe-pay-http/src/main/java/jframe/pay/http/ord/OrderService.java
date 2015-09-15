@@ -35,7 +35,7 @@ public class OrderService extends CommonService {
 			throws Exception {
 		// check req
 		if (HttpUtil.mustReq(req, F_payType, F_payGroup, F_payNo, F_transType,
-				F_payAmount, F_account).size() > 0) {
+				F_payAmount, F_payDesc).size() > 0) {
 			RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_MISS_PARA);
 			return;
 		}

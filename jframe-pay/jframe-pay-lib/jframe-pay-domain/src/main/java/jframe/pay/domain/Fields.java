@@ -10,82 +10,84 @@ package jframe.pay.domain;
  */
 public interface Fields {
 
-	String F_passwd = "passwd";
+    String F_passwd = "passwd";
 
-	String F_sex = "sex";
+    String F_sex = "sex";
 
-	String F_realname = "realname";
+    String F_realname = "realname";
 
-	String F_email = "email";
+    String F_email = "email";
 
-	String F_name = "name";
+    String F_no = "no";
 
-	String F_rspCode = "rspCode";
+    String F_name = "name";
 
-	String F_rspDesc = "rspDesc";
+    String F_rspCode = "rspCode";
 
-	String F_imgUrl = "imgUrl";
+    String F_rspDesc = "rspDesc";
 
-	String F_mobile = "mobile";
+    String F_imgUrl = "imgUrl";
 
-	String F_newMobile = "newMobile";
+    String F_mobile = "mobile";
 
-	String F_loginTime = "loginTime";
+    String F_newMobile = "newMobile";
 
-	String F_logoutTime = "logoutTime";
+    String F_loginTime = "loginTime";
 
-	String F_vcode = "vcode";
+    String F_logoutTime = "logoutTime";
 
-	String F_devId = "devId";
+    String F_vcode = "vcode";
 
-	String F_reqOp = "reqOp";
+    String F_devId = "devId";
 
-	String F_od = "od";
+    String F_reqOp = "reqOp";
 
-	String F_devType = "devType";
+    String F_od = "od";
 
-	String F_devToken = "devToken";
+    String F_devType = "devType";
 
-	String F_lon = "lon";
+    String F_devToken = "devToken";
 
-	String F_lat = "lat";
+    String F_lon = "lon";
 
-	String F_usrImg = "usrImg";
+    String F_lat = "lat";
 
-	String F_type = "type";
+    String F_usrImg = "usrImg";
 
-	String F_imgUsr = "imgUsr";
+    String F_type = "type";
 
-	String F_filter = "filter";
+    String F_imgUsr = "imgUsr";
 
-	String F_error = "error";
+    String F_filter = "filter";
 
-	String F_payType = "payType";
+    String F_error = "error";
 
-	String F_payGroup = "payGroup";
+    String F_payType = "payType";
 
-	String F_payNo = "payNo";
+    String F_payGroup = "payGroup";
 
-	String F_transType = "transType";
+    String F_payNo = "payNo";
 
-	String F_payAmount = "payAmount";
+    String F_transType = "transType";
 
-	String F_payCurrency = "payCurrency";
+    String F_payAmount = "payAmount";
 
-	String F_payDesc = "payDesc";
+    String F_payCurrency = "payCurrency";
 
-	String F_orderNo = "orderNo";
-	
-	String F_payStatus = "payStatus";
+    String F_payDesc = "payDesc";
 
-	String F_payDetail = "payDetail";
+    String F_orderNo = "orderNo";
 
-	String F_payTimeout = "payTimeout";
+    String F_payStatus = "payStatus";
 
-	String F_backUrl = "backUrl";
+    String F_payDetail = "payDetail";
 
-	String F_account = "account";
+    String F_payTimeout = "payTimeout";
 
-	String F_merReserved = "merReserved";
+    String F_backUrl = "backUrl";
+
+    String F_account = "account";
+
+    String F_merReserved = "merReserved";
 
 }
