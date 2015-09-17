@@ -10,6 +10,8 @@ package jframe.pay.domain;
  */
 public interface Fields {
 
+    String F_token = "token";
+
     String F_passwd = "passwd";
 
     String F_sex = "sex";
@@ -64,11 +66,18 @@ public interface Fields {
 
     String F_payType = "payType";
 
+    String F_miss = "miss";
+
     String F_payGroup = "payGroup";
 
     String F_payNo = "payNo";
 
     String F_transType = "transType";
+
+    /**
+     * wx need
+     */
+    String F_remoteIp = "remoteIp";
 
     String F_payAmount = "payAmount";
 
@@ -79,6 +88,8 @@ public interface Fields {
     String F_orderNo = "orderNo";
 
     String F_payStatus = "payStatus";
+
+    String F_pay_info = "pay_info";
 
     String F_payDetail = "payDetail";
 

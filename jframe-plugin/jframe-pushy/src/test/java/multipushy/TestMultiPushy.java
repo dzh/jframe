@@ -27,7 +27,7 @@ public class TestMultiPushy {
 	MultiPushyServiceImpl mgs;
 
 	String usr_token = "70854405ac6b60b64bdc5338a2d8f4a55a683f63e786a872be42454f6731618d";
-	String driver_token = "644737130b7d6dde50c1cf1e6fe6bb8be81f728d4b51fc357e3706e431bea213";
+	String driver_token = "70854405ac6b60b64bdc5338a2d8f4a55a683f63e786a872be42454f6731618d";
 
 	@Before
 	public void init() {

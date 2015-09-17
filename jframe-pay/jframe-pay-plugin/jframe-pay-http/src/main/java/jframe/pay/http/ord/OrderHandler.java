@@ -17,28 +17,35 @@ import jframe.pay.http.handler.PayHandler;
  */
 public class OrderHandler extends PayHandler {
 
-	static final OrderService svc = new OrderService();
+    static final OrderService svc = new OrderService();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.pay.http.handler.PayHandler#doService(java.util.Map,
-	 * java.util.Map)
-	 */
-	@Override
-	protected void doService(Map<String, String> req, Map<String, Object> rsp)
-			throws Exception {
-		String reqOp = getReqOp();
-		if (ReqOp.CONSUME.code.equals(reqOp)) {
-			svc.consume(req, rsp);
-		} else if (ReqOp.QRYOD.code.equals(reqOp)) {
-			svc.qryod(req, rsp);
-		} else if (ReqOp.ALIBACK.code.equals(reqOp)) {
-			svc.aliback(req, rsp);
-		} else {
-			RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_REQOP);
-			throw new PayException("Not found");
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.pay.http.handler.PayHandler#doService(java.util.Map,
+     * java.util.Map)
+     */
+    @Override
+    protected void doService(Map<String, String> req, Map<String, Object> rsp)
+            throws Exception {
+        String reqOp = getReqOp();
+        if (ReqOp.CONSUME.code.equals(reqOp)) {
+            svc.consume(req, rsp);
+        } else if (ReqOp.QRYOD.code.equals(reqOp)) {
+            svc.qryod(req, rsp);
+        } else if (ReqOp.ALIBACK.code.equals(reqOp)) {
+            svc.aliback(req, rsp);
+        } else if (ReqOp.WXBACK.code.equals(reqOp)) {
+            getPara().forEach((k, v) -> {
+                if (!v.isEmpty()) {
+                    req.put(k, v.get(0));
+                }
+            });
+            svc.wxback(req, rsp);
+        } else {
+            RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_REQOP);
+            throw new PayException("Not found");
+        }
+    }
 
 }

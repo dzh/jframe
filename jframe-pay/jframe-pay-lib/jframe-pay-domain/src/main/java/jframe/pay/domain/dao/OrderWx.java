@@ -8,74 +8,48 @@ package jframe.pay.domain.dao;
  * @date Sep 2, 2015 2:13:17 AM
  * @since 1.0
  */
-public class OrderWx {
+public class OrderWx extends OrderBase {
 
-	public String payNo;
+    public String errcode;
 
-	public String payGroup;
+    public String errmsg;
 
-	public String transType;
+    public String transactionId;
 
-	public Long payAmount;
+    public String outRefundNo;
 
-	public String payCurrency;
+    public Integer refundFee;
 
-	public String payDesc;
+    public Integer refundType;
 
-	public Long payTimeout;
+    public String refundId;
 
-	public String backUrl;
+    public Integer refundChannel;
 
-	public String account;
+    public Integer refundStatus;
 
-	public String orderNo;
+    public String recvUserId;
 
-	public String payStatus;
+    public String recvUserName;
 
-	public Long orderFinishTime;
+    public Integer tradeMode;
 
-	public Long orderCreateTime;
+    public String payInfo;
 
-	public String respCode;
+    public String bankType;
 
-	public String respDesc;
+    public String bankBillNo;
 
-	public String transactionId;
+    public String notifyId;
 
-	public String outRefundNo;
+    public String timeEnd;
 
-	public Integer refundFee;
+    public Integer transportFee;
 
-	public Integer refundType;
+    public Integer productFee;
 
-	public String refundId;
+    public Integer discount;
 
-	public Integer refundChannel;
-
-	public Integer refundStatus;
-
-	public String recvUserId;
-
-	public String recvUserName;
-
-	public Integer tradeMode;
-
-	public String payInfo;
-
-	public String bankType;
-
-	public String bankBillNo;
-
-	public String notifyId;
-
-	public String timeEnd;
-
-	public Integer transportFee;
-
-	public Integer productFee;
-
-	public Integer discount;
-
-	public String buyerAlias;
+    public String buyerAlias;
 
 }

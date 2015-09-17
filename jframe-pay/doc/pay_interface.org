@@ -9,6 +9,7 @@
 
 #+END_EXAMPLE
 - '*'表示必要请求参数
+- '*'[W|A|U],分别表示微信|支付宝|银联必要参数
 
 ** 类型说明
 | 类型      | 值 |
@@ -86,9 +87,11 @@
 | payDetail   | json | 支付明细，List<PayDetail>的json格式,详细的支付信息                                     |
 | payTimeout  | long | 订单超时时间，默认1小时                                                                |
 | backUrl     | str  | 订单是否达成的异步通知地址                                                             |
-| account*    | str  | 订单支付账户                                                                           |
-| transType*  | int  | 消费类型                                                                                   |
+| account     | str  | 订单支付账户                                                                           |
+| transType*  | int  | 消费类型                                                                               |
 | merReserved | str  | 可选参数，支付支持的卡类型，'{cardType=01}'-借记卡，'{cardType=02}'-信用卡，不填都支持 |
+| devType*W   | int  | DevType, 微信支付必须参数                                                              |
+| remoteIp*W  | str  | 手机用户Ip                                                                                 |
 - 同步返回
 #+BEGIN_EXAMPLE
 {

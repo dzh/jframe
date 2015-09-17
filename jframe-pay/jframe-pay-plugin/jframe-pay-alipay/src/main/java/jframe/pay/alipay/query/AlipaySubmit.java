@@ -8,6 +8,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import jframe.pay.alipay.AlipayConfig;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
@@ -15,7 +17,6 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alipay.config.AlipayConfig;
 import com.alipay.sign.MD5;
 import com.alipay.util.HttpUtil;
 

@@ -15,6 +15,7 @@ import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
 import jframe.httpclient.service.HttpClientService;
+import jframe.pay.alipay.AlipayConfig;
 import jframe.pay.alipay.AlipayPlugin;
 import jframe.pay.alipay.domain.TradeStatus;
 import jframe.pay.dao.service.PayDaoService;
@@ -26,11 +27,11 @@ import jframe.pay.domain.dao.OrderAlipay;
 import jframe.pay.domain.http.RspCode;
 import jframe.pay.domain.util.HttpUtil;
 import jframe.pay.domain.util.IDUtil;
+import jframe.pay.domain.util.ObjectUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alipay.config.AlipayConfig;
 import com.alipay.util.OrderUtil;
 
 /**
@@ -62,6 +63,8 @@ class AlipayServiceImpl implements AlipayService, Fields {
     @Start
     public void start() {
         try {
+            AlipayConfig.GroupID = Plugin.getConfig("groupid.alipay",
+                    AlipayConfig.GroupID);
             AlipayConfig.init(Plugin.getConfig("file.alipay"));
         } catch (Exception e) {
             LOG.error("Load alipay error {}", e.getMessage());
@@ -290,7 +293,7 @@ class AlipayServiceImpl implements AlipayService, Fields {
         // flowId);
         // resp.put(UsrFields.F_respCode, URespCode.SUCCESS.code);
 
-        if (od.backUrl != null) {
+        if (ObjectUtil.notEmpty(od.backUrl)) {
             postBack(od);
         }
     }

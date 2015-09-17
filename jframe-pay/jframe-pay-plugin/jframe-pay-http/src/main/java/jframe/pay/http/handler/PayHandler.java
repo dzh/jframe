@@ -44,12 +44,10 @@ public abstract class PayHandler extends SafeHandler {
             }
         }
         if (LOG.isDebugEnabled()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(
-                        "remoteIp->{} reqOp->{} invokeTime->{}ms req->{} rsp->{}",
-                        getRemoteIp(), getReqOp(), System.currentTimeMillis()
-                                - start, req, rsp);
-            }
+            LOG.debug(
+                    "remoteIp->{} reqOp->{} invokeTime->{}ms req->{} rsp->{}",
+                    getRemoteIp(), getReqOp(), System.currentTimeMillis()
+                            - start, req, rsp);
         }
     }
 

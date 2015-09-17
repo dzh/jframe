@@ -13,18 +13,20 @@ import jframe.pay.domain.dao.OrderWx;
  */
 public interface OrderDao {
 
-	void insertOrderAlipay(OrderAlipay od);
+    void insertOrderAlipay(OrderAlipay od);
 
-	OrderAlipay selectOrderAlipay(String payNo);
+    OrderAlipay selectOrderAlipay(String payNo);
 
-	OrderAlipay selectOrderAlipayWithOrderNo(String orderNo);
+    OrderAlipay selectOrderAlipayWithOrderNo(String orderNo);
 
-	int updateOrderAlipay(OrderAlipay od);
+    int updateOrderAlipay(OrderAlipay od);
 
-	void insertOrderWx(OrderWx od);
+    void insertOrderWx(OrderWx od);
 
-	OrderWx selectOrderWx(String payNo);
+    OrderWx selectOrderWx(String payNo);
 
-	int updateOrderWx(OrderWx od);
+    OrderWx selectOrderWxWithOrderNo(String orderNo);
+
+    int updateOrderWx(OrderWx od);
 
 }

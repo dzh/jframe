@@ -7,9 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import jframe.pay.alipay.AlipayConfig;
 import jframe.pay.domain.Fields;
-
-import com.alipay.config.AlipayConfig;
 
 /**
  * @author dzh

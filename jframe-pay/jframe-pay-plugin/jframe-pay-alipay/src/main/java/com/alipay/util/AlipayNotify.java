@@ -7,10 +7,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+import jframe.pay.alipay.AlipayConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alipay.config.AlipayConfig;
 import com.alipay.sign.RSA;
 
 /* *

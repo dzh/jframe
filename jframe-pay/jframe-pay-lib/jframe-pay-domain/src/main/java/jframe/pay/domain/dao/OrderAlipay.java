@@ -8,50 +8,24 @@ package jframe.pay.domain.dao;
  * @date Sep 1, 2015 8:56:19 PM
  * @since 1.0
  */
-public class OrderAlipay {
+public class OrderAlipay extends OrderBase {
 
-	public String payNo;
+    public Long notifyTime;
 
-	public String payGroup;
+    public String notifyType;
 
-	public String transType;
+    public String notifyId;
 
-	public Long payAmount;
+    public String subject;
 
-	public String payCurrency;
+    public String tradeStatus;
 
-	public String payDesc;
+    public String sellerId;
 
-	public Long payTimeout;
+    public String sellerEmail;
 
-	public String backUrl;
+    public String buyerId;
 
-	public String account;
-
-	public String orderNo;
-
-	public String payStatus;
-
-	public Long orderFinishTime;
-
-	public Long orderCreateTime;
-
-	public Long notifyTime;
-
-	public String notifyType;
-
-	public String notifyId;
-
-	public String subject;
-
-	public String tradeStatus;
-
-	public String sellerId;
-
-	public String sellerEmail;
-
-	public String buyerId;
-
-	public String buyerEmail;
+    public String buyerEmail;
 
 }
