@@ -4,14 +4,19 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSONException;
+
 import jframe.pay.wx.http.client.TenpayHttpClient;
 import jframe.pay.wx.http.util.ConstantUtil;
 import jframe.pay.wx.http.util.JsonUtil;
 import jframe.pay.wx.http.util.Sha1Util;
 
-import com.alibaba.fastjson.JSONException;
-
 public class PrepayIdRequestHandler extends RequestHandler {
+
+    static Logger LOG = LoggerFactory.getLogger(PrepayIdRequestHandler.class);
 
     public PrepayIdRequestHandler() {
         super();
@@ -61,8 +66,7 @@ public class PrepayIdRequestHandler extends RequestHandler {
         params += "}";
 
         String requestUrl = super.getGateUrl();
-        this.setDebugInfo(this.getDebugInfo() + "\r\n" + "requestUrl:"
-                + requestUrl);
+        this.setDebugInfo(this.getDebugInfo() + "\r\n" + "requestUrl:" + requestUrl);
         TenpayHttpClient httpClient = new TenpayHttpClient();
         httpClient.setReqContent(requestUrl);
         String resContent = "";
@@ -72,9 +76,10 @@ public class PrepayIdRequestHandler extends RequestHandler {
             if (2 == resContent.indexOf("prepayid")) {
                 prepayid = JsonUtil.getJsonValue(resContent, "prepayid");
             }
-            this.setDebugInfo(this.getDebugInfo() + "\r\n" + "resContent:"
-                    + resContent);
+            this.setDebugInfo(this.getDebugInfo() + "\r\n" + "resContent:" + resContent);
         }
+        if (LOG.isDebugEnabled())
+            LOG.debug("sendPrepay debugInfo -> {}", this.getDebugInfo());
         return prepayid;
     }
 

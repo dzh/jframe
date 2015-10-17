@@ -177,8 +177,7 @@ public class RequestHandler {
             Map.Entry entry = (Map.Entry) it.next();
             String k = (String) entry.getKey();
             String v = (String) entry.getValue();
-            if (null != v && !"".equals(v) && !"sign".equals(k)
-                    && !"key".equals(k)) {
+            if (null != v && !"".equals(v) && !"sign".equals(k) && !"key".equals(k)) {
                 sb.append(k + "=" + v + "&");
             }
         }
@@ -193,7 +192,6 @@ public class RequestHandler {
 
         // debug信息
         this.setDebugInfo(sb.toString() + " => sign:" + sign);
-
     }
 
     /**

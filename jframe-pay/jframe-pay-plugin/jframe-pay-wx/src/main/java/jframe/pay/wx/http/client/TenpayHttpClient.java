@@ -18,6 +18,9 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jframe.pay.wx.http.util.HttpClientUtil;
 
 /**
@@ -39,6 +42,8 @@ import jframe.pay.wx.http.util.HttpClientUtil;
  * 
  */
 public class TenpayHttpClient {
+
+    static Logger LOG = LoggerFactory.getLogger(TenpayHttpClient.class);
 
     private static final String USER_AGENT_VALUE = "Mozilla/4.0 (compatible; MSIE 6.0; Windows XP)";
 
@@ -92,7 +97,7 @@ public class TenpayHttpClient {
         this.timeOut = 30;// 30秒
 
         this.responseCode = 0;
-        this.charset = "GBK";
+        this.charset = "UTF-8";
 
         this.inputStream = null;
     }
@@ -138,9 +143,10 @@ public class TenpayHttpClient {
     public String getResContent() {
         try {
             this.doResponse();
-        } catch (IOException e) {
+        } catch (Exception e) {
             this.errInfo = e.getMessage();
             // return "";
+            LOG.error(e.getMessage());
         }
 
         return this.resContent;
@@ -208,18 +214,9 @@ public class TenpayHttpClient {
         try {
             this.callHttps();
             isRet = true;
-        } catch (UnrecoverableKeyException e) {
+        } catch (Exception e) {
             this.errInfo = e.getMessage();
-        } catch (KeyManagementException e) {
-            this.errInfo = e.getMessage();
-        } catch (CertificateException e) {
-            this.errInfo = e.getMessage();
-        } catch (KeyStoreException e) {
-            this.errInfo = e.getMessage();
-        } catch (NoSuchAlgorithmException e) {
-            this.errInfo = e.getMessage();
-        } catch (IOException e) {
-            this.errInfo = e.getMessage();
+            LOG.error(e.getMessage());
         }
 
         return isRet;
@@ -227,13 +224,11 @@ public class TenpayHttpClient {
     }
 
     protected void callHttp() throws IOException {
-
         if ("POST".equals(this.method.toUpperCase())) {
             String url = HttpClientUtil.getURL(this.reqContent);
             String queryString = HttpClientUtil.getQueryString(this.reqContent);
             byte[] postData = queryString.getBytes(this.charset);
             this.httpPostMethod(url, postData);
-
             return;
         }
 
@@ -241,24 +236,19 @@ public class TenpayHttpClient {
 
     }
 
-    protected void callHttps() throws IOException, CertificateException,
-            KeyStoreException, NoSuchAlgorithmException,
+    protected void callHttps() throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException,
             UnrecoverableKeyException, KeyManagementException {
-
         // ca目录
         String caPath = this.caFile.getParent();
 
-        File jksCAFile = new File(caPath + "/"
-                + TenpayHttpClient.JKS_CA_FILENAME);
+        File jksCAFile = new File(caPath + "/" + TenpayHttpClient.JKS_CA_FILENAME);
         if (!jksCAFile.isFile()) {
-            X509Certificate cert = (X509Certificate) HttpClientUtil
-                    .getCertificate(this.caFile);
+            X509Certificate cert = (X509Certificate) HttpClientUtil.getCertificate(this.caFile);
 
             FileOutputStream out = new FileOutputStream(jksCAFile);
 
             // store jks file
-            HttpClientUtil.storeCACert(cert, TenpayHttpClient.JKS_CA_ALIAS,
-                    TenpayHttpClient.JKS_CA_PASSWORD, out);
+            HttpClientUtil.storeCACert(cert, TenpayHttpClient.JKS_CA_ALIAS, TenpayHttpClient.JKS_CA_PASSWORD, out);
 
             out.close();
 
@@ -267,8 +257,8 @@ public class TenpayHttpClient {
         FileInputStream trustStream = new FileInputStream(jksCAFile);
         FileInputStream keyStream = new FileInputStream(this.certFile);
 
-        SSLContext sslContext = HttpClientUtil.getSSLContext(trustStream,
-                TenpayHttpClient.JKS_CA_PASSWORD, keyStream, this.certPasswd);
+        SSLContext sslContext = HttpClientUtil.getSSLContext(trustStream, TenpayHttpClient.JKS_CA_PASSWORD, keyStream,
+                this.certPasswd);
 
         // 关闭流
         keyStream.close();
@@ -295,8 +285,8 @@ public class TenpayHttpClient {
             postData = postdata.getBytes(this.charset);
             this.httpPostMethod(url, postData);
             flag = true;
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
         }
         return flag;
     }
@@ -308,8 +298,7 @@ public class TenpayHttpClient {
      * @param postData
      * @throws IOException
      */
-    protected void httpPostMethod(String url, byte[] postData)
-            throws IOException {
+    protected void httpPostMethod(String url, byte[] postData) throws IOException {
 
         HttpURLConnection conn = HttpClientUtil.getHttpURLConnection(url);
 
@@ -324,8 +313,7 @@ public class TenpayHttpClient {
      */
     protected void httpGetMethod(String url) throws IOException {
 
-        HttpURLConnection httpConnection = HttpClientUtil
-                .getHttpURLConnection(url);
+        HttpURLConnection httpConnection = HttpClientUtil.getHttpURLConnection(url);
 
         this.setHttpRequest(httpConnection);
 
@@ -344,8 +332,7 @@ public class TenpayHttpClient {
      * @param sslContext
      * @throws IOException
      */
-    protected void httpsGetMethod(String url, SSLContext sslContext)
-            throws IOException {
+    protected void httpsGetMethod(String url, SSLContext sslContext) throws IOException {
 
         SSLSocketFactory sf = sslContext.getSocketFactory();
 
@@ -357,8 +344,7 @@ public class TenpayHttpClient {
 
     }
 
-    protected void httpsPostMethod(String url, byte[] postData,
-            SSLContext sslContext) throws IOException {
+    protected void httpsPostMethod(String url, byte[] postData, SSLContext sslContext) throws IOException {
 
         SSLSocketFactory sf = sslContext.getSocketFactory();
 
@@ -381,8 +367,7 @@ public class TenpayHttpClient {
         httpConnection.setConnectTimeout(this.timeOut * 1000);
 
         // User-Agent
-        httpConnection.setRequestProperty("User-Agent",
-                TenpayHttpClient.USER_AGENT_VALUE);
+        httpConnection.setRequestProperty("User-Agent", TenpayHttpClient.USER_AGENT_VALUE);
 
         // 不使用缓存
         httpConnection.setUseCaches(false);
@@ -405,8 +390,7 @@ public class TenpayHttpClient {
         }
 
         // 获取应答内容
-        this.resContent = HttpClientUtil.InputStreamTOString(this.inputStream,
-                this.charset);
+        this.resContent = HttpClientUtil.InputStreamTOString(this.inputStream, this.charset);
 
         // 关闭输入流
         this.inputStream.close();
@@ -420,8 +404,7 @@ public class TenpayHttpClient {
      * @param postData
      * @throws IOException
      */
-    protected void doPost(HttpURLConnection conn, byte[] postData)
-            throws IOException {
+    protected void doPost(HttpURLConnection conn, byte[] postData) throws IOException {
 
         // 以post方式通信
         conn.setRequestMethod("POST");
@@ -430,11 +413,9 @@ public class TenpayHttpClient {
         this.setHttpRequest(conn);
 
         // Content-Type
-        conn.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-        try (BufferedOutputStream out = new BufferedOutputStream(
-                conn.getOutputStream())) {
+        try (BufferedOutputStream out = new BufferedOutputStream(conn.getOutputStream())) {
             final int len = 1024; // 1KB
             HttpClientUtil.doOutput(out, postData, len);
             // 关闭流

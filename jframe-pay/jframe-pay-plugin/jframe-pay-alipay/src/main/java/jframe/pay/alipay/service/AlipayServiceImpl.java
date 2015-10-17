@@ -54,17 +54,16 @@ class AlipayServiceImpl implements AlipayService, Fields {
     static HttpClientService HttpClient;
 
     static Map<String, String> HTTP_PARAS = new HashMap<String, String>(1, 1);
+
     static {
-        HTTP_PARAS.put(HttpClientService.P_MIMETYPE,
-                "application/x-www-form-urlencoded");
+        HTTP_PARAS.put(HttpClientService.P_MIMETYPE, "application/x-www-form-urlencoded");
         // HTTP_PARAS.put(HttpClientService.P_METHOD, "post");
     }
 
     @Start
     public void start() {
         try {
-            AlipayConfig.GroupID = Plugin.getConfig("groupid.alipay",
-                    AlipayConfig.GroupID);
+            AlipayConfig.GroupID = Plugin.getConfig("groupid.alipay", AlipayConfig.GroupID);
             AlipayConfig.init(Plugin.getConfig("file.alipay"));
         } catch (Exception e) {
             LOG.error("Load alipay error {}", e.getMessage());
@@ -77,11 +76,9 @@ class AlipayServiceImpl implements AlipayService, Fields {
     }
 
     @Override
-    public void pay(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    public void pay(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         // check req
-        if (HttpUtil.mustReq(req, F_payType, F_payGroup, F_payNo, F_transType,
-                F_payAmount, F_payDesc).size() > 0) {
+        if (HttpUtil.mustReq(req, F_payType, F_payGroup, F_payNo, F_transType, F_payAmount, F_payDesc).size() > 0) {
             RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_MISS_PARA);
             return;
         }
@@ -90,8 +87,7 @@ class AlipayServiceImpl implements AlipayService, Fields {
             RspCode.setRspCode(rsp, RspCode.FAIL_DB_Conn);
             return;
         }
-        Optional<OrderAlipay> od = Optional.ofNullable(PayDao
-                .selectOrderAlipay(req.get(F_payNo)));
+        Optional<OrderAlipay> od = Optional.ofNullable(PayDao.selectOrderAlipay(req.get(F_payNo)));
         if (od.isPresent()) {
             payUpdate(od.get(), req, rsp);
         } else {
@@ -130,8 +126,8 @@ class AlipayServiceImpl implements AlipayService, Fields {
         String odinfo = OrderUtil.buildOrderInfo(req);
         rsp.put(F_od, OrderUtil.genPayInfo(odinfo));
 
-        Map<String, String> map = new HashMap<>();
-        map.put("out_trade_no", req.get(F_orderNo));
+        // Map<String, String> map = new HashMap<>();
+        // map.put("out_trade_no", req.get(F_orderNo));
 
         // insert task TODO
         // Task t = createTask(TaskType.ALI_QUERY_C_PAY.type,
@@ -140,10 +136,8 @@ class AlipayServiceImpl implements AlipayService, Fields {
         // TaskDao.insertTask_Order(conn, t);
     }
 
-    private void payUpdate(OrderAlipay od, Map<String, String> req,
-            Map<String, Object> rsp) {
-        if (HttpUtil.anyEq(od.payStatus, PayStatus.C_PAY_SUC.code,
-                PayStatus.C_PAY_TIMEOUT.code)) {
+    private void payUpdate(OrderAlipay od, Map<String, String> req, Map<String, Object> rsp) {
+        if (HttpUtil.anyEq(od.payStatus, PayStatus.C_PAY_SUC.code, PayStatus.C_PAY_TIMEOUT.code)) {
             RspCode.setRspCode(rsp, RspCode.FAIL_ORDER_STATUS);
             return;
         }
@@ -168,16 +162,18 @@ class AlipayServiceImpl implements AlipayService, Fields {
         }
         // pay info
         String odinfo = OrderUtil.buildOrderInfo(req);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("odinfo -> {}", odinfo);
+        }
         rsp.put(F_od, OrderUtil.genPayInfo(odinfo));
 
-        Map<String, String> map = new HashMap<>();
-        map.put("out_trade_no", req.get(F_orderNo));
+        // Map<String, String> map = new HashMap<>();
+        // map.put("out_trade_no", req.get(F_orderNo));
         // insert task TODO
     }
 
     @Override
-    public void payBack(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    public void payBack(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         // String out_trade_no = req.get("out_trade_no");
         // 支付宝交易号
         // String trade_no = req.get("trade_no");
@@ -216,22 +212,18 @@ class AlipayServiceImpl implements AlipayService, Fields {
                 // 交易创建
                 // doWaitPay(req, resp);
             } else {
-                RspCode.setRspCode(rsp,
-                        RspCode.FAIL_ALIPAY_BACK_UNKOWN_STATUS_ERROR);
+                RspCode.setRspCode(rsp, RspCode.FAIL_ALIPAY_BACK_UNKOWN_STATUS_ERROR);
             }
             return;
         }
         RspCode.setRspCode(rsp, RspCode.FAIL_ALIPAY_BACK_SIGN_ERROR);
     }
 
-    private void doWaitPay(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    private void doWaitPay(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         String orderNo = req.get("out_trade_no");
-        OrderAlipay od = PayDao.selectOrderAlipayWithOrderNo(req
-                .get("out_trade_no"));
+        OrderAlipay od = PayDao.selectOrderAlipayWithOrderNo(req.get("out_trade_no"));
         if (od == null)
-            throw new Exception("OrderAlipay is not found, orderNo ->"
-                    + orderNo);
+            throw new Exception("OrderAlipay is not found, orderNo ->" + orderNo);
         if (PayStatus.C_PAY_PROC.code.equals(od.payStatus)) {
             RspCode.setRspCode(rsp, RspCode.SUCCESS);
             return;
@@ -251,13 +243,11 @@ class AlipayServiceImpl implements AlipayService, Fields {
         // AlipayDao.updateOrder_Back(conn, req, orderStatus, "", flowId);
     }
 
-    private void doSuccess(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    private void doSuccess(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         String orderNo = req.get("out_trade_no");
         OrderAlipay od = PayDao.selectOrderAlipayWithOrderNo(orderNo);
         if (od == null)
-            throw new Exception("OrderAlipay is not found, orderNo ->"
-                    + orderNo);
+            throw new Exception("OrderAlipay is not found, orderNo ->" + orderNo);
 
         if (PayStatus.C_PAY_SUC.code.equals(od.payStatus)) {
             RspCode.setRspCode(rsp, RspCode.SUCCESS);
@@ -358,13 +348,12 @@ class AlipayServiceImpl implements AlipayService, Fields {
             Map<String, String> paras = new HashMap<>(HTTP_PARAS);
             paras.put("ip", url.getHost());
             paras.put("port", String.valueOf(port));
-            Map<String, String> rsp = HttpClient
-                    .<HashMap<String, String>> send("payback", url.getPath(),
-                            HttpUtil.format(map, "utf-8"), null, paras);
+            Map<String, String> rsp = HttpClient.<HashMap<String, String>> send("payback", url.getPath(),
+                    HttpUtil.format(map, "utf-8"), null, paras);
             Long packTime = System.currentTimeMillis();
             if (LOG.isDebugEnabled())
-                LOG.debug("orderNo=" + order.orderNo + " postBack" + new Date()
-                        + " use time=" + (packTime - packtime) + " rsp=" + rsp);
+                LOG.debug("orderNo=" + order.orderNo + " postBack" + new Date() + " use time=" + (packTime - packtime)
+                        + " rsp=" + rsp);
             if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
                 succ = true;
             } else {
@@ -401,8 +390,7 @@ class AlipayServiceImpl implements AlipayService, Fields {
     // }
 
     @Override
-    public void clientPayBack(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    public void clientPayBack(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         // check req
         if (HttpUtil.mustReq(req, F_payNo).size() > 0) {
             RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_MISS_PARA);

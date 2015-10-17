@@ -13,8 +13,8 @@ import jframe.pay.domain.Fields;
 public interface WxFields extends Fields {
 
     /**
-	 * 
-	 */
+     * 
+     */
     String F_bank_type = "bank_type";
 
     String F_bank_billno = "bank_billno";
@@ -41,9 +41,15 @@ public interface WxFields extends Fields {
 
     String F_appid = "appid";
 
+    String F_mch_id = "mch_id";
+
     String F_appkey = "appkey";
 
     String F_noncestr = "noncestr";
+
+    String F_nonce_str = "nonce_str";
+
+    String F_trade_type = "trade_type";
 
     String F_package = "package";
 
@@ -82,6 +88,9 @@ public interface WxFields extends Fields {
      */
     String V_Success = "Success";
 
+    String F_return_code = "return_code";
+    String F_return_msg = "return_msg";
+    String F_prepay_id = "prepay_id";
     /**
      * 异步响应失败
      */

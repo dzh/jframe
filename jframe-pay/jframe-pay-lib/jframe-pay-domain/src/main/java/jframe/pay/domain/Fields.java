@@ -85,6 +85,12 @@ public interface Fields {
 
     String F_payDesc = "payDesc";
 
+    String F_trade_type = "trade_type";
+
+    String F_return_code = "return_code";
+
+    String F_return_msg = "return_msg";
+
     String F_orderNo = "orderNo";
 
     String F_payStatus = "payStatus";

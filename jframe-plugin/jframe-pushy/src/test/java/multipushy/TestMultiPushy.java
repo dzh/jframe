@@ -26,8 +26,8 @@ public class TestMultiPushy {
 
 	MultiPushyServiceImpl mgs;
 
-	String usr_token = "70854405ac6b60b64bdc5338a2d8f4a55a683f63e786a872be42454f6731618d";
-	String driver_token = "70854405ac6b60b64bdc5338a2d8f4a55a683f63e786a872be42454f6731618d";
+	String usr_token = "7fcd13fa6ad29f50355e4234dae5c52e963c07dd5d09d598468db19fedbc7813";
+	String driver_token = "7fcd13fa6ad29f50355e4234dae5c52e963c07dd5d09d598468db19fedbc7813";
 
 	@Before
 	public void init() {
@@ -55,12 +55,12 @@ public class TestMultiPushy {
 			mgs.sendMessage(id, token, newPayload("33333", 0, null)
 					.buildWithDefaultMaximumLength());
 
-			mgs.sendMessage(id1, token1, newPayload("44444", 0, null)
-					.buildWithDefaultMaximumLength());
-			mgs.sendMessage(id1, token1, newPayload("55555", 0, null)
-					.buildWithDefaultMaximumLength());
-			mgs.sendMessage(id1, token1, newPayload("66666", 0, null)
-					.buildWithDefaultMaximumLength());
+            mgs.sendMessage(id1, token1, newPayload("44444", 0, null)
+                    .buildWithDefaultMaximumLength());
+            mgs.sendMessage(id1, token1, newPayload("55555", 0, null)
+                    .buildWithDefaultMaximumLength());
+            mgs.sendMessage(id1, token1, newPayload("66666", 0, null)
+                    .buildWithDefaultMaximumLength());
 		} catch (Exception e) {
 		}
 

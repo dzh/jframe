@@ -21,8 +21,7 @@ public abstract class PayHandler extends SafeHandler {
     public static final Logger LOG = LoggerFactory.getLogger(PayHandler.class);
 
     @Override
-    public void service(Map<String, String> req, Map<String, Object> rsp)
-            throws PayException {
+    public void service(Map<String, String> req, Map<String, Object> rsp) throws PayException {
         super.service(req, rsp);
 
         long start = System.currentTimeMillis();
@@ -37,26 +36,22 @@ public abstract class PayHandler extends SafeHandler {
                 RspCode.setRspCode(rsp, RspCode.FAIL_NET);
             }
 
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e.getCause());
 
             if (isDebug()) {
                 rsp.put(Fields.F_error, e.getMessage());
             }
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug(
-                    "remoteIp->{} reqOp->{} invokeTime->{}ms req->{} rsp->{}",
-                    getRemoteIp(), getReqOp(), System.currentTimeMillis()
-                            - start, req, rsp);
+            LOG.debug("remoteIp->{} reqOp->{} invokeTime->{}ms req->{} rsp->{}", getRemoteIp(), getReqOp(),
+                    System.currentTimeMillis() - start, req, rsp);
         }
     }
 
-    protected abstract void doService(Map<String, String> req,
-            Map<String, Object> rsp) throws Exception;
+    protected abstract void doService(Map<String, String> req, Map<String, Object> rsp) throws Exception;
 
     public boolean isDebug() {
-        return "true".equals(Plugin.getConfig("jframe.debug", "false")) ? true
-                : false;
+        return "true".equals(Plugin.getConfig("jframe.debug", "false")) ? true : false;
     }
 
 }

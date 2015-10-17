@@ -26,8 +26,7 @@ public class OrderHandler extends PayHandler {
      * java.util.Map)
      */
     @Override
-    protected void doService(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    protected void doService(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         String reqOp = getReqOp();
         if (ReqOp.CONSUME.code.equals(reqOp)) {
             svc.consume(req, rsp);

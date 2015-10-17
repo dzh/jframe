@@ -144,7 +144,7 @@
 		<if test="notifyId != null">notify_id=#{notifyId},</if>
 		<if test="outRefundNo != null">out_refund_no=#{outRefundNo},</if>
 		<if test="payInfo != null">pay_info=#{payInfo},</if>
-		<if test="productFee != null">product_fee=#{prodectFee},</if>
+		<if test="productFee != null">product_fee=#{productFee},</if>
 		<if test="recvUserId != null">recv_user_id=#{recvUserId},</if>
 		<if test="recvUserName != null">recv_user_name=#{recvUserName},</if>
 		<if test="refundChannel != null">refund_channel=#{refundChannel},</if>
@@ -153,11 +153,10 @@
 		<if test="refundStatus != null">refund_status=#{refundStatus},</if>
 		<if test="refundType != null">refund_type=#{refundType},</if>
 		<if test="timeEnd != null">time_end=#{timeEnd},</if>
-		<if test="tradeMode != null">trade_mode=#{tradeMode},
-		</if>
+		<if test="tradeMode != null">trade_mode=#{tradeMode},</if>
 		<if test="transactionId != null">transaction_id=#{transactionId},</if>
 		<if test="transportFee != null">transport_fee=#{transprtFee},</if>
-		#{payNo},now(),now()
+		#{payNo},now(),now())
 	</insert>
 
 	<update id="updateOrderWx" parameterType="OrderWx">

@@ -32,9 +32,9 @@ class HttpPayClientService implements PayClientService, Fields {
     static String Prefix_usr = "/pay/usr/";
 
     static Map<String, String> HTTP_PARAS = new HashMap<String, String>(1, 1);
+
     static {
-        HTTP_PARAS.put(HttpClientService.P_MIMETYPE,
-                "application/x-www-form-urlencoded");
+        HTTP_PARAS.put(HttpClientService.P_MIMETYPE, "application/x-www-form-urlencoded");
         // HTTP_PARAS.put(HttpClientService.P_METHOD, "post");
     }
 
@@ -58,15 +58,15 @@ class HttpPayClientService implements PayClientService, Fields {
 
         // TODO check
 
-        return HttpClient.send(HttpClient_ID, Prefix_ord + req.get(F_reqOp),
-                HttpUtil.format(req, "utf-8"), null, HTTP_PARAS);
+        return HttpClient.send(HttpClient_ID, Prefix_ord + req.get(F_reqOp), HttpUtil.format(req, "utf-8"), null,
+                HTTP_PARAS);
     }
 
     @Override
     public Map<String, Object> usr(Map<String, String> req) throws Exception {
         // TODO check
-        return HttpClient.send(HttpClient_ID, Prefix_usr + req.get(F_reqOp),
-                HttpUtil.format(req, "utf-8"), null, HTTP_PARAS);
+        return HttpClient.send(HttpClient_ID, Prefix_usr + req.get(F_reqOp), HttpUtil.format(req, "utf-8"), null,
+                HTTP_PARAS);
     }
 
 }

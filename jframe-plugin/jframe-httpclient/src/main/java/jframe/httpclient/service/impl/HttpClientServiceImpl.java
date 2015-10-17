@@ -8,14 +8,6 @@ import java.io.Reader;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
-import jframe.httpclient.HttpClientConfig;
-import jframe.httpclient.HttpClientPlugin;
-import jframe.httpclient.service.HttpClientService;
-
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -46,6 +38,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
+import jframe.core.plugin.annotation.Start;
+import jframe.core.plugin.annotation.Stop;
+import jframe.httpclient.HttpClientConfig;
+import jframe.httpclient.HttpClientPlugin;
+import jframe.httpclient.service.HttpClientService;
+
 /**
  * 
  * @author dzh
@@ -55,389 +55,357 @@ import com.google.gson.reflect.TypeToken;
 @Injector
 public class HttpClientServiceImpl implements HttpClientService {
 
-	HttpClientServiceImpl() {
+    HttpClientServiceImpl() {
 
-	}
+    }
 
-	static Logger LOG = LoggerFactory.getLogger(HttpClientServiceImpl.class);
+    static Logger LOG = LoggerFactory.getLogger(HttpClientServiceImpl.class);
 
-	static String FILE_CONF = "file.httpclient";
+    static String FILE_CONF = "file.httpclient";
 
-	private CloseableHttpClient httpClient;
+    private CloseableHttpClient httpClient;
 
-	private IdleConnectionMonitorThread IdleConnectionMonitorThread;
+    private IdleConnectionMonitorThread IdleConnectionMonitorThread;
 
-	@InjectPlugin
-	static HttpClientPlugin plugin;
+    @InjectPlugin
+    static HttpClientPlugin plugin;
 
-	static RequestConfig requestConfig;
+    static RequestConfig requestConfig;
 
-	@Start
-	public void start() {
-		try {
-			HttpClientConfig.init(plugin.getConfig(FILE_CONF));
-			requestConfig = RequestConfig
-					.custom()
-					.setSocketTimeout(
-							Integer.parseInt(HttpClientConfig.getConf(null,
-									HttpClientConfig.HTTP_SO_TIMEOUT, "6000")))
-					.setConnectTimeout(
-							Integer.parseInt(HttpClientConfig.getConf(null,
-									HttpClientConfig.HTTP_CONN_TIMEOUT, "3000")))
-					.build();
+    @Start
+    public void start() {
+        try {
+            HttpClientConfig.init(plugin.getConfig(FILE_CONF));
+            requestConfig = RequestConfig.custom()
+                    .setSocketTimeout(
+                            Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_SO_TIMEOUT, "6000")))
+                    .setConnectTimeout(Integer
+                            .parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_CONN_TIMEOUT, "3000")))
+                    .build();
 
-			// SSLContext sslContext = SSLContexts.createSystemDefault();
-			// SSLConnectionSocketFactory sslsf = new
-			// SSLConnectionSocketFactory(
-			// sslContext,
-			// SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
-			// KeyStore myTrustStore = <...>
-			// SSLContext sslContext = SSLContexts.custom()
-			// .useTLS()
-			// .loadTrustMaterial(myTrustStore)
-			// .build();
-			// SSLConnectionSocketFactory sslsf = new
-			// SSLConnectionSocketFactory(sslContext);
-			// ConnectionSocketFactory plainsf = <...>
-			// LayeredConnectionSocketFactory sslsf = <...>
-			// Registry<ConnectionSocketFactory> r =
-			// RegistryBuilder.<ConnectionSocketFactory>create()
-			// .register("http", plainsf)
-			// .register("https", sslsf)
-			// .build();
-			// HttpClientConnectionManager cm = new
-			// PoolingHttpClientConnectionManager(r);
+            // SSLContext sslContext = SSLContexts.createSystemDefault();
+            // SSLConnectionSocketFactory sslsf = new
+            // SSLConnectionSocketFactory(
+            // sslContext,
+            // SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            // KeyStore myTrustStore = <...>
+            // SSLContext sslContext = SSLContexts.custom()
+            // .useTLS()
+            // .loadTrustMaterial(myTrustStore)
+            // .build();
+            // SSLConnectionSocketFactory sslsf = new
+            // SSLConnectionSocketFactory(sslContext);
+            // ConnectionSocketFactory plainsf = <...>
+            // LayeredConnectionSocketFactory sslsf = <...>
+            // Registry<ConnectionSocketFactory> r =
+            // RegistryBuilder.<ConnectionSocketFactory>create()
+            // .register("http", plainsf)
+            // .register("https", sslsf)
+            // .build();
+            // HttpClientConnectionManager cm = new
+            // PoolingHttpClientConnectionManager(r);
 
-			PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-			cm.setMaxTotal(Integer.parseInt(HttpClientConfig.getConf(null,
-					HttpClientConfig.HTTP_MAX_CONN, "200")));
-			cm.setDefaultMaxPerRoute(Integer.parseInt(HttpClientConfig.getConf(
-					null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+            cm.setMaxTotal(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN, "200")));
+            cm.setDefaultMaxPerRoute(
+                    Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
 
-			for (String host : HttpClientConfig.getHosts()) {
-				String maxConn = HttpClientConfig.getConf(host,
-						HttpClientConfig.HTTP_MAX_CONN, null);
-				if (null == maxConn) {
-					continue;
-				}
-				HttpHost localhost = new HttpHost(HttpClientConfig.getConf(
-						host, HttpClientConfig.IP),
-						Integer.parseInt(HttpClientConfig.getConf(host,
-								HttpClientConfig.PORT, "80")));
-				cm.setMaxPerRoute(new HttpRoute(localhost),
-						Integer.parseInt(maxConn));
-			}
+            for (String host : HttpClientConfig.getHosts()) {
+                String maxConn = HttpClientConfig.getConf(host, HttpClientConfig.HTTP_MAX_CONN, null);
+                if (null == maxConn) {
+                    continue;
+                }
+                HttpHost localhost = new HttpHost(HttpClientConfig.getConf(host, HttpClientConfig.IP),
+                        Integer.parseInt(HttpClientConfig.getConf(host, HttpClientConfig.PORT, "80")));
+                cm.setMaxPerRoute(new HttpRoute(localhost), Integer.parseInt(maxConn));
+            }
 
-			// _httpClient.getParams().setIntParameter("http.socket.timeout",
-			// 5000);
+            // _httpClient.getParams().setIntParameter("http.socket.timeout",
+            // 5000);
 
-			ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
-				public long getKeepAliveDuration(HttpResponse response,
-						HttpContext context) {
-					// Honor 'keep-alive' header
-					HeaderElementIterator it = new BasicHeaderElementIterator(
-							response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-					while (it.hasNext()) {
-						HeaderElement he = it.nextElement();
-						String param = he.getName();
-						String value = he.getValue();
-						if (value != null && param.equalsIgnoreCase("timeout")) {
-							try {
-								return Long.parseLong(value) * 1000;
-							} catch (NumberFormatException ignore) {
-							}
-						}
-					}
+            ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
+                public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+                    // Honor 'keep-alive' header
+                    HeaderElementIterator it = new BasicHeaderElementIterator(
+                            response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                    while (it.hasNext()) {
+                        HeaderElement he = it.nextElement();
+                        String param = he.getName();
+                        String value = he.getValue();
+                        if (value != null && param.equalsIgnoreCase("timeout")) {
+                            try {
+                                return Long.parseLong(value) * 1000;
+                            } catch (NumberFormatException ignore) {
+                            }
+                        }
+                    }
 
-					String keepAlive = null;
-					HttpHost target = (HttpHost) context
-							.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
-					for (String host : HttpClientConfig.getHosts()) {
-						String ip = HttpClientConfig.getConf(host,
-								HttpClientConfig.IP, "0");
-						if (target.getHostName().equals(ip)) {
-							keepAlive = HttpClientConfig.getConf(host,
-									HttpClientConfig.HTTP_KEEP_ALIVE, null);
-							break;
-						}
-					}
+                    String keepAlive = null;
+                    HttpHost target = (HttpHost) context.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
+                    for (String host : HttpClientConfig.getHosts()) {
+                        String ip = HttpClientConfig.getConf(host, HttpClientConfig.IP, "0");
+                        if (target.getHostName().equals(ip)) {
+                            keepAlive = HttpClientConfig.getConf(host, HttpClientConfig.HTTP_KEEP_ALIVE, null);
+                            break;
+                        }
+                    }
 
-					if (keepAlive == null) {
-						keepAlive = HttpClientConfig.getConf(null,
-								HttpClientConfig.HTTP_KEEP_ALIVE, "10");
-					}
-					return Integer.parseInt(keepAlive) * 1000;
-				}
+                    if (keepAlive == null) {
+                        keepAlive = HttpClientConfig.getConf(null, HttpClientConfig.HTTP_KEEP_ALIVE, "10");
+                    }
+                    return Integer.parseInt(keepAlive) * 1000;
+                }
 
-			};
-			httpClient = HttpClients.custom().setConnectionManager(cm)
-					.setKeepAliveStrategy(myStrategy).build();
+            };
+            httpClient = HttpClients.custom().setConnectionManager(cm).setKeepAliveStrategy(myStrategy).build();
 
-			IdleConnectionMonitorThread = new IdleConnectionMonitorThread(cm);
-			IdleConnectionMonitorThread.start();
-		} catch (Exception e) {
-			LOG.error("HttpClientServiceImpl init error {}!", e.getMessage());
-		}
-	}
+            IdleConnectionMonitorThread = new IdleConnectionMonitorThread(cm);
+            IdleConnectionMonitorThread.start();
+        } catch (Exception e) {
+            LOG.error("HttpClientServiceImpl init error {}!", e.getMessage());
+        }
+    }
 
-	@Stop
-	public void stop() {
-		if (IdleConnectionMonitorThread != null) {
-			IdleConnectionMonitorThread.shutdown();
-		}
+    @Stop
+    public void stop() {
+        if (IdleConnectionMonitorThread != null) {
+            IdleConnectionMonitorThread.shutdown();
+        }
 
-		if (httpClient != null)
-			try {
-				httpClient.close();
-			} catch (Exception e) {
-				LOG.error(e.getMessage());
-			}
-		LOG.info("HttpClientServiceImpl closed!");
-	}
+        if (httpClient != null)
+            try {
+                httpClient.close();
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
+            }
+        LOG.info("HttpClientServiceImpl closed!");
+    }
 
-	public static class IdleConnectionMonitorThread extends Thread {
+    public static class IdleConnectionMonitorThread extends Thread {
 
-		private final HttpClientConnectionManager connMgr;
-		private volatile boolean shutdown;
+        private final HttpClientConnectionManager connMgr;
+        private volatile boolean shutdown;
 
-		public IdleConnectionMonitorThread(HttpClientConnectionManager connMgr) {
-			super();
-			this.connMgr = connMgr;
-		}
+        public IdleConnectionMonitorThread(HttpClientConnectionManager connMgr) {
+            super();
+            this.connMgr = connMgr;
+        }
 
-		@Override
-		public void run() {
-			try {
-				while (!shutdown) {
-					synchronized (this) {
-						wait(5000); // TODO
-						// Close expired connections
-						connMgr.closeExpiredConnections();
-						// Optionally, close connections
-						// that have been idle longer than 30 sec
-						connMgr.closeIdleConnections(Integer
-								.parseInt(HttpClientConfig.getConf(null,
-										HttpClientConfig.HTTP_IDLE_CONN_CLOSE,
-										"30")), TimeUnit.SECONDS);
-					}
-				}
-			} catch (InterruptedException ex) {
-				LOG.error(ex.getMessage());
-			}
-		}
+        @Override
+        public void run() {
+            try {
+                while (!shutdown) {
+                    synchronized (this) {
+                        wait(5000); // TODO
+                        // Close expired connections
+                        connMgr.closeExpiredConnections();
+                        // Optionally, close connections
+                        // that have been idle longer than 30 sec
+                        connMgr.closeIdleConnections(
+                                Integer.parseInt(
+                                        HttpClientConfig.getConf(null, HttpClientConfig.HTTP_IDLE_CONN_CLOSE, "30")),
+                                TimeUnit.SECONDS);
+                    }
+                }
+            } catch (InterruptedException ex) {
+                LOG.error(ex.getMessage());
+            }
+        }
 
-		public void shutdown() {
-			shutdown = true;
-			synchronized (this) {
-				notifyAll();
-			}
-		}
+        public void shutdown() {
+            shutdown = true;
+            synchronized (this) {
+                notifyAll();
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public <T> T send(String id, String path, String data,
-			Map<String, String> headers, Map<String, String> paras)
-			throws Exception {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("HttpClientServiceImpl.send {} {}", id, data);
-		}
+    @Override
+    public <T> T send(String id, String path, String data, Map<String, String> headers, Map<String, String> paras)
+            throws Exception {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("HttpClientServiceImpl.send {} {}", id, data);
+        }
 
-		//
-		String ip = paras != null && paras.containsKey("ip") ? paras.get("ip")
-				: HttpClientConfig.getConf(id, HttpClientConfig.IP);
-		String port = paras != null && paras.containsKey("port") ? paras
-				.get("port") : HttpClientConfig.getConf(id,
-				HttpClientConfig.PORT);
+        //
+        String ip = paras != null && paras.containsKey("ip") ? paras.get("ip")
+                : HttpClientConfig.getConf(id, HttpClientConfig.IP);
+        String port = paras != null && paras.containsKey("port") ? paras.get("port")
+                : HttpClientConfig.getConf(id, HttpClientConfig.PORT);
 
-		HttpHost target = new HttpHost(ip, Integer.parseInt(port),
-				HttpHost.DEFAULT_SCHEME_NAME);
+        HttpHost target = new HttpHost(ip, Integer.parseInt(port), HttpHost.DEFAULT_SCHEME_NAME);
 
-		HttpRequestBase request;
-		String mehtod = HttpClientConfig.getConf(id,
-				HttpClientConfig.HTTP_METHOD, HttpClientConfig.M_POST);
-		if (HttpClientConfig.M_GET.equals(mehtod)) {
-			request = new HttpGet(target.toURI() + path + "?" + data);
-		} else {
-			request = new HttpPost(target.toURI() + path);
-			String mimeType = paras == null ? "text/plain" : paras
-					.get(P_MIMETYPE);
-			((HttpPost) request).setEntity(new StringEntity(data, ContentType
-					.create(mimeType, HttpClientConfig.getConf(id,
-							HttpClientConfig.HTTP_CHARSET))));
-		}
-		request.setConfig(requestConfig);
+        HttpRequestBase request;
+        String mehtod = HttpClientConfig.getConf(id, HttpClientConfig.HTTP_METHOD, HttpClientConfig.M_POST);
+        if (HttpClientConfig.M_GET.equals(mehtod)) {
+            request = new HttpGet(target.toURI() + path + "?" + data);
+        } else {
+            request = new HttpPost(target.toURI() + path);
+            String mimeType = paras == null ? "text/plain" : paras.get(P_MIMETYPE);
+            ((HttpPost) request).setEntity(new StringEntity(data,
+                    ContentType.create(mimeType, HttpClientConfig.getConf(id, HttpClientConfig.HTTP_CHARSET))));
+        }
+        request.setConfig(requestConfig);
 
-		if (headers != null) {
-			for (String key : headers.keySet()) {
-				request.addHeader(key, headers.get(key));
-			}
-		}
+        if (headers != null) {
+            for (String key : headers.keySet()) {
+                request.addHeader(key, headers.get(key));
+            }
+        }
 
-		CloseableHttpResponse resp = null;
-		try {
-			// ResponseHandler<String> responseHandler = new
-			// ResponseHandler<String>() {
-			//
-			// @Override
-			// public String handleResponse(
-			// final HttpResponse response) throws ClientProtocolException,
-			// IOException {
-			// int status = response.getStatusLine().getStatusCode();
-			// if (status >= 200 && status < 300) {
-			// HttpEntity entity = response.getEntity();
-			// return entity != null ? EntityUtils.toString(entity) : null;
-			// } else {
-			// throw new ClientProtocolException("Unexpected response status: "
-			// + status);
-			// }
-			// }
-			//
-			// };
-			resp = httpClient.execute(request);
-			HttpEntity entity = resp.getEntity();
-			Reader reader = new InputStreamReader(entity.getContent(),
-					ContentType.getOrDefault(entity).getCharset());
-			// TODO decode by mime-type
+        CloseableHttpResponse resp = null;
+        try {
+            // ResponseHandler<String> responseHandler = new
+            // ResponseHandler<String>() {
+            //
+            // @Override
+            // public String handleResponse(
+            // final HttpResponse response) throws ClientProtocolException,
+            // IOException {
+            // int status = response.getStatusLine().getStatusCode();
+            // if (status >= 200 && status < 300) {
+            // HttpEntity entity = response.getEntity();
+            // return entity != null ? EntityUtils.toString(entity) : null;
+            // } else {
+            // throw new ClientProtocolException("Unexpected response status: "
+            // + status);
+            // }
+            // }
+            //
+            // };
+            resp = httpClient.execute(request);
+            HttpEntity entity = resp.getEntity();
 
-			return GSON.fromJson(reader, new TypeToken<T>() {
-			}.getType());
-		} finally {
-			if (resp != null) {
-				EntityUtils.consume(resp.getEntity());
-			}
-		}
-	}
+            Reader reader = new InputStreamReader(entity.getContent(), ContentType.getOrDefault(entity).getCharset());
+            // TODO decode by mime-type
 
-	static final Gson GSON = new GsonBuilder().create();
+            return GSON.fromJson(reader, new TypeToken<T>() {
+            }.getType());
+        } finally {
+            if (resp != null) {
+                EntityUtils.consume(resp.getEntity());
+            }
+        }
+    }
 
-	//
-	// public static final String toJson(Object obj) {
-	// return gson.toJson(obj);
-	// }
-	//
-	// public static final <T> T fromJson(String json, Class<T> clazz) {
-	// return gson.fromJson(json, clazz);
-	// }
+    static final Gson GSON = new GsonBuilder().create();
 
-	@Override
-	public <T> T sendGroup(String gid, String path, String data,
-			Map<String, String> headers, Map<String, String> paras)
-			throws Exception {
-		throw new Exception("");
-	}
+    //
+    // public static final String toJson(Object obj) {
+    // return gson.toJson(obj);
+    // }
+    //
+    // public static final <T> T fromJson(String json, Class<T> clazz) {
+    // return gson.fromJson(json, clazz);
+    // }
 
-	@Override
-	public <T> T sendRandom(String path, String data,
-			Map<String, String> headers, Map<String, String> paras)
-			throws Exception {
-		throw new Exception("");
-	}
+    @Override
+    public <T> T sendGroup(String gid, String path, String data, Map<String, String> headers, Map<String, String> paras)
+            throws Exception {
+        throw new Exception("");
+    }
 
-	@Override
-	public <T> T sendAll(String path, String data, Map<String, String> headers,
-			Map<String, String> paras) throws Exception {
-		throw new Exception("");
-	}
+    @Override
+    public <T> T sendRandom(String path, String data, Map<String, String> headers, Map<String, String> paras)
+            throws Exception {
+        throw new Exception("");
+    }
 
-	public static HttpClientService testHttpClient(String httpclient) {
-		try {
-			HttpClientConfig.init(httpclient);
-			// SSLContext sslContext = SSLContexts.createSystemDefault();
-			// SSLConnectionSocketFactory sslsf = new
-			// SSLConnectionSocketFactory(
-			// sslContext,
-			// SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
-			// KeyStore myTrustStore = <...>
-			// SSLContext sslContext = SSLContexts.custom()
-			// .useTLS()
-			// .loadTrustMaterial(myTrustStore)
-			// .build();
-			// SSLConnectionSocketFactory sslsf = new
-			// SSLConnectionSocketFactory(sslContext);
-			// ConnectionSocketFactory plainsf = <...>
-			// LayeredConnectionSocketFactory sslsf = <...>
-			// Registry<ConnectionSocketFactory> r =
-			// RegistryBuilder.<ConnectionSocketFactory>create()
-			// .register("http", plainsf)
-			// .register("https", sslsf)
-			// .build();
-			// HttpClientConnectionManager cm = new
-			// PoolingHttpClientConnectionManager(r);
+    @Override
+    public <T> T sendAll(String path, String data, Map<String, String> headers, Map<String, String> paras)
+            throws Exception {
+        throw new Exception("");
+    }
 
-			PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-			cm.setMaxTotal(Integer.parseInt(HttpClientConfig.getConf(null,
-					HttpClientConfig.HTTP_MAX_CONN, "200")));
-			cm.setDefaultMaxPerRoute(Integer.parseInt(HttpClientConfig.getConf(
-					null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
+    public static HttpClientService testHttpClient(String httpclient) {
+        try {
+            HttpClientConfig.init(httpclient);
+            // SSLContext sslContext = SSLContexts.createSystemDefault();
+            // SSLConnectionSocketFactory sslsf = new
+            // SSLConnectionSocketFactory(
+            // sslContext,
+            // SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            // KeyStore myTrustStore = <...>
+            // SSLContext sslContext = SSLContexts.custom()
+            // .useTLS()
+            // .loadTrustMaterial(myTrustStore)
+            // .build();
+            // SSLConnectionSocketFactory sslsf = new
+            // SSLConnectionSocketFactory(sslContext);
+            // ConnectionSocketFactory plainsf = <...>
+            // LayeredConnectionSocketFactory sslsf = <...>
+            // Registry<ConnectionSocketFactory> r =
+            // RegistryBuilder.<ConnectionSocketFactory>create()
+            // .register("http", plainsf)
+            // .register("https", sslsf)
+            // .build();
+            // HttpClientConnectionManager cm = new
+            // PoolingHttpClientConnectionManager(r);
 
-			for (String host : HttpClientConfig.getHosts()) {
-				String maxConn = HttpClientConfig.getConf(host,
-						HttpClientConfig.HTTP_MAX_CONN, null);
-				if (null == maxConn) {
-					continue;
-				}
-				HttpHost localhost = new HttpHost(HttpClientConfig.getConf(
-						host, HttpClientConfig.IP),
-						Integer.parseInt(HttpClientConfig.getConf(host,
-								HttpClientConfig.PORT, "80")));
-				cm.setMaxPerRoute(new HttpRoute(localhost),
-						Integer.parseInt(maxConn));
-			}
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+            cm.setMaxTotal(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN, "200")));
+            cm.setDefaultMaxPerRoute(
+                    Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
 
-			// _httpClient.getParams().setIntParameter("http.socket.timeout",
-			// 5000);
+            for (String host : HttpClientConfig.getHosts()) {
+                String maxConn = HttpClientConfig.getConf(host, HttpClientConfig.HTTP_MAX_CONN, null);
+                if (null == maxConn) {
+                    continue;
+                }
+                HttpHost localhost = new HttpHost(HttpClientConfig.getConf(host, HttpClientConfig.IP),
+                        Integer.parseInt(HttpClientConfig.getConf(host, HttpClientConfig.PORT, "80")));
+                cm.setMaxPerRoute(new HttpRoute(localhost), Integer.parseInt(maxConn));
+            }
 
-			ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
-				public long getKeepAliveDuration(HttpResponse response,
-						HttpContext context) {
-					// Honor 'keep-alive' header
-					HeaderElementIterator it = new BasicHeaderElementIterator(
-							response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-					while (it.hasNext()) {
-						HeaderElement he = it.nextElement();
-						String param = he.getName();
-						String value = he.getValue();
-						if (value != null && param.equalsIgnoreCase("timeout")) {
-							try {
-								return Long.parseLong(value) * 1000;
-							} catch (NumberFormatException ignore) {
-							}
-						}
-					}
+            // _httpClient.getParams().setIntParameter("http.socket.timeout",
+            // 5000);
 
-					String keepAlive = null;
-					HttpHost target = (HttpHost) context
-							.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
-					for (String host : HttpClientConfig.getHosts()) {
-						String ip = HttpClientConfig.getConf(host,
-								HttpClientConfig.IP, "0");
-						if (target.getHostName().equals(ip)) {
-							keepAlive = HttpClientConfig.getConf(host,
-									HttpClientConfig.HTTP_KEEP_ALIVE, null);
-							break;
-						}
-					}
+            ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
+                public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+                    // Honor 'keep-alive' header
+                    HeaderElementIterator it = new BasicHeaderElementIterator(
+                            response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                    while (it.hasNext()) {
+                        HeaderElement he = it.nextElement();
+                        String param = he.getName();
+                        String value = he.getValue();
+                        if (value != null && param.equalsIgnoreCase("timeout")) {
+                            try {
+                                return Long.parseLong(value) * 1000;
+                            } catch (NumberFormatException ignore) {
+                            }
+                        }
+                    }
 
-					if (keepAlive == null) {
-						keepAlive = HttpClientConfig.getConf(null,
-								HttpClientConfig.HTTP_KEEP_ALIVE, "10");
-					}
-					return Integer.parseInt(keepAlive) * 1000;
-				}
+                    String keepAlive = null;
+                    HttpHost target = (HttpHost) context.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
+                    for (String host : HttpClientConfig.getHosts()) {
+                        String ip = HttpClientConfig.getConf(host, HttpClientConfig.IP, "0");
+                        if (target.getHostName().equals(ip)) {
+                            keepAlive = HttpClientConfig.getConf(host, HttpClientConfig.HTTP_KEEP_ALIVE, null);
+                            break;
+                        }
+                    }
 
-			};
-			// httpClient = HttpClients.custom().setConnectionManager(cm)
-			// .setKeepAliveStrategy(myStrategy).build();
-			//
-			// IdleConnectionMonitorThread = new IdleConnectionMonitorThread(
-			// cm);
-			// IdleConnectionMonitorThread.start();
-		} catch (Exception e) {
-			LOG.error("HttpClientServiceImpl init error {}!", e.getMessage());
-		}
-		// return this;
-		return null;
-	}
+                    if (keepAlive == null) {
+                        keepAlive = HttpClientConfig.getConf(null, HttpClientConfig.HTTP_KEEP_ALIVE, "10");
+                    }
+                    return Integer.parseInt(keepAlive) * 1000;
+                }
+
+            };
+            // httpClient = HttpClients.custom().setConnectionManager(cm)
+            // .setKeepAliveStrategy(myStrategy).build();
+            //
+            // IdleConnectionMonitorThread = new IdleConnectionMonitorThread(
+            // cm);
+            // IdleConnectionMonitorThread.start();
+        } catch (Exception e) {
+            LOG.error("HttpClientServiceImpl init error {}!", e.getMessage());
+        }
+        // return this;
+        return null;
+    }
 
 }

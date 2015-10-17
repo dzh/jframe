@@ -4,6 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
+
 import jframe.pay.domain.DevType;
 import jframe.pay.domain.PayException;
 import jframe.pay.domain.dao.OrderWx;
@@ -16,11 +21,6 @@ import jframe.pay.wx.http.RequestHandler;
 import jframe.pay.wx.http.ResponseHandler;
 import jframe.pay.wx.http.util.WxCore;
 import jframe.pay.wx.http.util.WxUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
 
 /**
  * 微信接口方法
@@ -39,27 +39,21 @@ public class WxService implements WxFields {
      * @param req
      * @return
      */
-    public static boolean genPrePay(Map<String, String> req,
-            Map<String, Object> rsp) throws Exception {
+    public static boolean genPrePay(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         String out_trade_no = WxUtil.genTradeNo();
+        req.put(WxFields.F_orderNo, out_trade_no);
         // 设置package订单参数
         PackageRequestHandler packageReqHandler = new PackageRequestHandler(); // 生成package的请求类
         packageReqHandler.setKey(WxConfig.getConf(WxConfig.KEY_PARTNER_KEY));
         packageReqHandler.setParameter(WxFields.F_bank_type, "WX");// 银行渠道
-        packageReqHandler.setParameter(WxFields.F_body,
-                req.get(WxFields.F_payDesc)); // 商品描述
-        packageReqHandler.setParameter(WxFields.F_notify_url,
-                WxConfig.getConf(WxConfig.KEY_NOTIFY_URL)); // 接收财付通通知的URL
-        packageReqHandler.setParameter(WxFields.F_partner,
-                WxConfig.getConf(WxConfig.KEY_PARTNER)); // 商户号
+        packageReqHandler.setParameter(WxFields.F_body, req.get(WxFields.F_payDesc)); // 商品描述
+        packageReqHandler.setParameter(WxFields.F_notify_url, WxConfig.getConf(WxConfig.KEY_NOTIFY_URL)); // 接收财付通通知的URL
+        packageReqHandler.setParameter(WxFields.F_partner, WxConfig.getConf(WxConfig.KEY_PARTNER)); // 商户号
         packageReqHandler.setParameter(WxFields.F_out_trade_no, out_trade_no); // 商家订单号
-        packageReqHandler.setParameter(WxFields.F_total_fee,
-                req.get(WxFields.F_payAmount)); // 商品金额,以分为单位
-        packageReqHandler.setParameter(WxFields.F_spbill_create_ip,
-                req.get(WxFields.F_remoteIp)); // 订单生成的机器IP，指用户浏览器端IP
+        packageReqHandler.setParameter(WxFields.F_total_fee, req.get(WxFields.F_payAmount)); // 商品金额,以分为单位
+        packageReqHandler.setParameter(WxFields.F_spbill_create_ip, req.get(WxFields.F_remoteIp)); // 订单生成的机器IP，指用户浏览器端IP
         packageReqHandler.setParameter(WxFields.F_fee_type, "1"); // 币种，1人民币 66
-        packageReqHandler.setParameter(WxFields.F_input_charset,
-                WxConfig.getConf(WxConfig.KEY_CHARSET)); // 字符编码
+        packageReqHandler.setParameter(WxFields.F_input_charset, WxConfig.getConf(WxConfig.KEY_CHARSET)); // 字符编码
         // 获取package包
         String packageValue = packageReqHandler.getRequestURL();
 
@@ -68,10 +62,8 @@ public class WxService implements WxFields {
         String timestamp = WxUtil.getTimeStamp();
         // 获取prepayid的请求类
         PrepayIdRequestHandler prepayReqHandler = new PrepayIdRequestHandler();
-        prepayReqHandler.setParameter(WxFields.F_appid,
-                WxConfig.getConf(WxConfig.KEY_APP_ID));
-        prepayReqHandler.setParameter(WxFields.F_appkey,
-                WxConfig.getConf(WxConfig.KEY_APP_KEY));
+        prepayReqHandler.setParameter(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID));
+        prepayReqHandler.setParameter(WxFields.F_appkey, WxConfig.getConf(WxConfig.KEY_APP_KEY));
         prepayReqHandler.setParameter(WxFields.F_noncestr, noncestr);
         prepayReqHandler.setParameter(WxFields.F_package, packageValue);
         prepayReqHandler.setParameter(WxFields.F_timestamp, timestamp);
@@ -81,10 +73,8 @@ public class WxService implements WxFields {
         String sign = prepayReqHandler.createSHA1Sign();
         // 增加非参与签名的额外参数
         prepayReqHandler.setParameter(WxFields.F_app_signature, sign);
-        prepayReqHandler.setParameter(WxFields.F_sign_method,
-                WxConfig.getConf(WxConfig.KEY_SIGN_METHOD));
-        String gateUrl = WxConfig.getConf(WxConfig.KEY_GATE_URL)
-                + "?access_token=" + req.get(WxFields.F_token);
+        prepayReqHandler.setParameter(WxFields.F_sign_method, WxConfig.getConf(WxConfig.KEY_SIGN_METHOD));
+        String gateUrl = WxConfig.getConf(WxConfig.KEY_GATE_URL) + "?access_token=" + req.get(WxFields.F_token);
         prepayReqHandler.setGateUrl(gateUrl);
 
         // 获取prepayId
@@ -92,32 +82,24 @@ public class WxService implements WxFields {
         if (null != prepayid && !"".equals(prepayid)) {
             // packageValue = "Sign=" + packageValue; 返回客户端支付参数的请求类
             ClientRequestHandler clientHandler = new ClientRequestHandler();
-            clientHandler.setParameter(WxFields.F_appid,
-                    WxConfig.getConf(WxConfig.KEY_APP_ID));
-            clientHandler.setParameter(WxFields.F_appkey,
-                    WxConfig.getConf(WxConfig.KEY_APP_KEY));
+            clientHandler.setParameter(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID));
+            clientHandler.setParameter(WxFields.F_appkey, WxConfig.getConf(WxConfig.KEY_APP_KEY));
             clientHandler.setParameter(WxFields.F_noncestr, noncestr);
             if (req.get(WxFields.F_devType).equals(DevType.ANDRIOD.toString())) {
-                clientHandler.setParameter(WxFields.F_package, "Sign="
-                        + packageValue);
-            } else if (req.get(WxFields.F_devType).equals(
-                    DevType.IOS.toString())) {
+                clientHandler.setParameter(WxFields.F_package, "Sign=" + packageValue);
+            } else if (req.get(WxFields.F_devType).equals(DevType.IOS.toString())) {
                 clientHandler.setParameter(WxFields.F_package, "Sign=WXPay");
             } else {
-                throw new PayException("Invalid devType -> "
-                        + req.get(WxFields.F_devType) + "when genPrePay");
+                throw new PayException("Invalid devType -> " + req.get(WxFields.F_devType) + "when genPrePay");
             }
-            clientHandler.setParameter(WxFields.F_partnerid,
-                    WxConfig.getConf(WxConfig.KEY_PARTNER));
+            clientHandler.setParameter(WxFields.F_partnerid, WxConfig.getConf(WxConfig.KEY_PARTNER));
             clientHandler.setParameter(WxFields.F_prepayid, prepayid);
             clientHandler.setParameter(WxFields.F_timestamp, timestamp);
             sign = clientHandler.createSHA1Sign();
 
-            // TODO 从安全角度是否存手机本地
             // 这些是手机端需要的参数
             rsp.put(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID));
-            rsp.put(WxFields.F_partnerid,
-                    WxConfig.getConf(WxConfig.KEY_PARTNER));
+            rsp.put(WxFields.F_partnerid, WxConfig.getConf(WxConfig.KEY_PARTNER));
             rsp.put(WxFields.F_prepayid, prepayid);
             rsp.put(WxFields.F_noncestr, noncestr);
             rsp.put(WxFields.F_timestamp, timestamp);
@@ -130,8 +112,7 @@ public class WxService implements WxFields {
         return false;
     }
 
-    public static boolean backPay(Map<String, String> req,
-            Map<String, Object> rsp) {
+    public static boolean backPay(Map<String, String> req, Map<String, Object> rsp) {
         // 创建支付应答对象
         ResponseHandler resHandler = new ResponseHandler(req);
         resHandler.setKey(WxConfig.getConf(WxConfig.KEY_PARTNER_KEY));
@@ -150,8 +131,7 @@ public class WxService implements WxFields {
             queryReq.init();
             queryReq.setKey(WxConfig.getConf(WxConfig.KEY_PARTNER_KEY));
             queryReq.setGateUrl("https://gw.tenpay.com/gateway/verifynotifyid.xml");
-            queryReq.setParameter(WxFields.F_partner,
-                    WxConfig.getConf(WxConfig.KEY_PARTNER));
+            queryReq.setParameter(WxFields.F_partner, WxConfig.getConf(WxConfig.KEY_PARTNER));
             queryReq.setParameter("notify_id", notify_id);
 
             // 通信对象
@@ -181,11 +161,10 @@ public class WxService implements WxFields {
                 String trade_state = queryRes.getParameter("trade_state");
                 String trade_mode = queryRes.getParameter("trade_mode");
                 // 判断签名及结果
-                if (queryRes.isTenpaySign() && "0".equals(retcode)
-                        && "0".equals(trade_state) && "1".equals(trade_mode)) {
+                if (queryRes.isTenpaySign() && "0".equals(retcode) && "0".equals(trade_state)
+                        && "1".equals(trade_mode)) {
                     rsp.put(WxFields.F_result, WxFields.V_Success);
-                    rsp.put(WxFields.F_transactionId,
-                            queryRes.getParameter("transaction_id"));
+                    rsp.put(WxFields.F_transactionId, queryRes.getParameter("transaction_id"));
                     return true;
                 } else {
                     // 错误时，返回结果未签名，记录retcode、retmsg看失败详情。
@@ -239,16 +218,13 @@ public class WxService implements WxFields {
         PackageRequestHandler packageReqHandler = new PackageRequestHandler();
         packageReqHandler.setKey(WxConfig.getConf(WxConfig.KEY_PARTNER_KEY));
         packageReqHandler.setParameter(WxFields.F_out_trade_no, orderNo);
-        packageReqHandler.setParameter(WxFields.F_partner,
-                WxConfig.getConf(WxConfig.KEY_PARTNER));
+        packageReqHandler.setParameter(WxFields.F_partner, WxConfig.getConf(WxConfig.KEY_PARTNER));
         String packageValue = packageReqHandler.getRequestURL();
 
         // app_signature
         PrepayIdRequestHandler reqHandler = new PrepayIdRequestHandler();
-        reqHandler.setParameter(WxFields.F_appid,
-                WxConfig.getConf(WxConfig.KEY_APP_ID));
-        reqHandler.setParameter(WxFields.F_appkey,
-                WxConfig.getConf(WxConfig.KEY_APP_KEY));
+        reqHandler.setParameter(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID));
+        reqHandler.setParameter(WxFields.F_appkey, WxConfig.getConf(WxConfig.KEY_APP_KEY));
         reqHandler.setParameter(WxFields.F_package, packageValue);
         // yyyyMMddHHmmss
         reqHandler.setParameter(WxFields.F_timestamp, timestamp);
@@ -265,9 +241,8 @@ public class WxService implements WxFields {
         // 通信对象
         TenpayHttpClient httpClient = new TenpayHttpClient();
         httpClient.setTimeOut(5);
-        httpClient.callHttpPost(
-                "https://api.weixin.qq.com/pay/orderquery?access_token="
-                        + token, JSON.toJSONString(postData));
+        httpClient.callHttpPost("https://api.weixin.qq.com/pay/orderquery?access_token=" + token,
+                JSON.toJSONString(postData));
         return httpClient.getResContent();
     }
 
@@ -294,8 +269,7 @@ public class WxService implements WxFields {
      * @return
      * @throws Exception
      */
-    public static boolean refund(OrderWx pay, Map<String, String> rspMap)
-            throws Exception {
+    public static boolean refund(OrderWx pay, Map<String, String> rspMap) throws Exception {
         String out_refund_no = WxUtil.genTradeNo();
         rspMap.put("out_refund_no", out_refund_no);
 
@@ -317,8 +291,7 @@ public class WxService implements WxFields {
         // -----------------------------
         reqHandler.init();
         reqHandler.setKey(key);
-        reqHandler
-                .setGateUrl("https://mch.tenpay.com/refundapi/gateway/refund.xml");
+        reqHandler.setGateUrl("https://mch.tenpay.com/refundapi/gateway/refund.xml");
 
         // -----------------------------
         // 设置接口参数
@@ -380,14 +353,11 @@ public class WxService implements WxFields {
                 return true;
             } else {
                 // 错误时，返回结果未签名，记录retcode、retmsg看失败详情。
-                rspMap.put(WxFields.F_rspCode,
-                        resHandler.getParameter("retcode"));
-                rspMap.put(WxFields.F_rspDesc,
-                        resHandler.getParameter("retmsg"));
+                rspMap.put(WxFields.F_rspCode, resHandler.getParameter("retcode"));
+                rspMap.put(WxFields.F_rspDesc, resHandler.getParameter("retmsg"));
             }
         } else {
-            LOG.error("后台调用通信失败 http rspCode->{} errInfo->{}",
-                    httpClient.getResponseCode(), httpClient.getErrInfo());
+            LOG.error("后台调用通信失败 http rspCode->{} errInfo->{}", httpClient.getResponseCode(), httpClient.getErrInfo());
             // 有可能因为网络原因，请求已经处理，但未收到应答。
         }
 
