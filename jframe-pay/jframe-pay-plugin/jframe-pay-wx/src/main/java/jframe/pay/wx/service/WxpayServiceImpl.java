@@ -77,13 +77,13 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
         }
 
         // String token = WxUtil.getToken();
-        // TODO 判断有效性的方式 pakcageValue如何设置
+        // // TODO 判断有效性的方式 pakcageValue如何设置
         // if (ObjectUtil.isEmpty(token)) {
         // RspCode.setRspCode(rsp, RspCode.FAIL_TOKEN);
         // return;
         // }
-
         // req.put(F_token, String.valueOf(token));
+
         if (WxServiceNew.genPrePay(req, rsp)) {
             OrderWx od = PayDao.selectOrderWx(req.get(F_payNo));
             boolean insert = false;

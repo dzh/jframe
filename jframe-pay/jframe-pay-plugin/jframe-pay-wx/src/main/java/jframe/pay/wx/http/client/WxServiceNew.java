@@ -42,7 +42,6 @@ public class WxServiceNew {
     public static boolean genPrePay(Map<String, String> req, Map<String, Object> rsp) {
         try {
             String url = String.format("https://api.mch.weixin.qq.com/pay/unifiedorder");
-            String nonceStr = genNonceStr();
             String orderNo = genOutTradNo();
             req.put(WxFields.F_orderNo, orderNo);
 
@@ -50,7 +49,7 @@ public class WxServiceNew {
             packageParams.add(new BasicNameValuePair(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID)));
             packageParams.add(new BasicNameValuePair(WxFields.F_body, req.get(WxFields.F_payDesc)));
             packageParams.add(new BasicNameValuePair(WxFields.F_mch_id, WxConfig.getConf(WxConfig.KEY_PARTNER)));
-            packageParams.add(new BasicNameValuePair(WxFields.F_nonce_str, nonceStr));
+            packageParams.add(new BasicNameValuePair(WxFields.F_nonce_str, genNonceStr()));
             packageParams.add(new BasicNameValuePair(WxFields.F_notify_url, WxConfig.getConf(WxConfig.KEY_NOTIFY_URL)));
             packageParams.add(new BasicNameValuePair(WxFields.F_out_trade_no, orderNo));
             packageParams.add(new BasicNameValuePair(WxFields.F_spbill_create_ip, req.get(WxFields.F_remoteIp)));
@@ -76,10 +75,23 @@ public class WxServiceNew {
                     rsp.put(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID));
                     rsp.put(WxFields.F_partnerid, WxConfig.getConf(WxConfig.KEY_PARTNER));
                     rsp.put(WxFields.F_prepayid, xml.get(WxFields.F_prepay_id));
-                    rsp.put(WxFields.F_noncestr, xml.get(WxFields.F_nonce_str));
+                    String nonceStr = genNonceStr();
+                    rsp.put(WxFields.F_noncestr, nonceStr);
                     rsp.put(WxFields.F_package, "Sign=WXPay");
-                    rsp.put(WxFields.F_timestamp, genTimeStamp());
-                    rsp.put(WxFields.F_sign, xml.get(WxFields.F_sign));
+                    String timeStamp = String.valueOf(genTimeStamp());
+                    rsp.put(WxFields.F_timestamp, timeStamp);
+
+                    // app sign
+                    List<NameValuePair> signParams = new LinkedList<NameValuePair>();
+                    signParams.add(new BasicNameValuePair(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID)));
+                    signParams.add(new BasicNameValuePair(WxFields.F_noncestr, nonceStr));
+                    signParams.add(new BasicNameValuePair(WxFields.F_package, "Sign=WXPay"));
+                    signParams
+                            .add(new BasicNameValuePair(WxFields.F_partnerid, WxConfig.getConf(WxConfig.KEY_PARTNER)));
+                    signParams.add(new BasicNameValuePair(WxFields.F_prepayid, xml.get(WxFields.F_prepay_id)));
+                    signParams.add(new BasicNameValuePair(WxFields.F_timestamp, timeStamp));
+                    rsp.put(WxFields.F_sign, genAppSign(signParams));
+
                     // rsp.put(WxFields.F_trade_type,
                     // xml.get(WxFields.F_trade_type));
                     return true;
@@ -89,6 +101,22 @@ public class WxServiceNew {
             LOG.error(e.getMessage());
         }
         return false;
+    }
+
+    private static String genAppSign(List<NameValuePair> params) throws Exception {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < params.size(); i++) {
+            sb.append(params.get(i).getName());
+            sb.append('=');
+            sb.append(params.get(i).getValue());
+            sb.append('&');
+        }
+        sb.append("key=");
+        sb.append(WxConfig.getConf(WxConfig.KEY_APP_KEY));
+
+        String appSign = getMessageDigest(sb.toString().getBytes("UTF-8")).toUpperCase();
+        return appSign;
     }
 
     public static Map<String, String> decodeXml(String content) throws Exception {
@@ -123,9 +151,9 @@ public class WxServiceNew {
             sb.append('&');
         }
         sb.append("key=");
-        sb.append(WxConfig.getConf(WxConfig.KEY_APP_SECRET));
+        sb.append(WxConfig.getConf(WxConfig.KEY_APP_KEY));
 
-        String packageSign = getMessageDigest(sb.toString().getBytes("utf-8")).toUpperCase();
+        String packageSign = getMessageDigest(sb.toString().getBytes("UTF-8")).toUpperCase();
 
         // String packageSign = MD5Util.MD5Encode(sb.toString(),
         // "").toUpperCase();

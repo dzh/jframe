@@ -30,32 +30,23 @@ class MysqlPayDaoService implements PayDaoService {
 
     @Override
     public void insertUsrAccount(UsrAccount usr) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN).openSession()) {
-            session.insert(
-                    "jframe.pay.domain.dao.mapper.UsrMapper.insertUsrAccount",
-                    usr);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            session.insert("jframe.pay.domain.dao.mapper.UsrMapper.insertUsrAccount", usr);
             session.commit();
         }
     }
 
     @Override
     public UsrAccount selectUsrAccount(String account) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN_RO1).openSession()) {
-            return session.selectOne(
-                    "jframe.pay.domain.dao.mapper.UsrMapper.selectUsrAccount",
-                    account);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
+            return session.selectOne("jframe.pay.domain.dao.mapper.UsrMapper.selectUsrAccount", account);
         }
     }
 
     @Override
     public int updateUsrAccount(UsrAccount usr) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN).openSession()) {
-            int sum = session.update(
-                    "jframe.pay.domain.dao.mapper.UsrMapper.updateUsrAccount",
-                    usr);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            int sum = session.update("jframe.pay.domain.dao.mapper.UsrMapper.updateUsrAccount", usr);
             session.commit();
             return sum;
         }
@@ -63,33 +54,23 @@ class MysqlPayDaoService implements PayDaoService {
 
     @Override
     public void insertOrderAlipay(OrderAlipay od) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN).openSession()) {
-            session.insert(
-                    "jframe.pay.domain.dao.mapper.OrderMapper.insertOrderAlipay",
-                    od);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            session.insert("jframe.pay.domain.dao.mapper.OrderMapper.insertOrderAlipay", od);
             session.commit();
         }
     }
 
     @Override
     public OrderAlipay selectOrderAlipay(String payNo) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN_RO1).openSession()) {
-            return session
-                    .selectOne(
-                            "jframe.pay.domain.dao.mapper.OrderMapper.selectOrderAlipay",
-                            payNo);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
+            return session.selectOne("jframe.pay.domain.dao.mapper.OrderMapper.selectOrderAlipay", payNo);
         }
     }
 
     @Override
     public int updateOrderAlipay(OrderAlipay od) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN).openSession()) {
-            int sum = session
-                    .update("jframe.pay.domain.dao.mapper.OrderMapper.updateOrderAlipay",
-                            od);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            int sum = session.update("jframe.pay.domain.dao.mapper.OrderMapper.updateOrderAlipay", od);
             session.commit();
             return sum;
         }
@@ -97,43 +78,30 @@ class MysqlPayDaoService implements PayDaoService {
 
     @Override
     public OrderAlipay selectOrderAlipayWithOrderNo(String orderNo) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN_RO1).openSession()) {
-            return session
-                    .selectOne(
-                            "jframe.pay.domain.dao.mapper.OrderMapper.selectOrderAlipayWithOrderNo",
-                            orderNo);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
+            return session.selectOne("jframe.pay.domain.dao.mapper.OrderMapper.selectOrderAlipayWithOrderNo", orderNo);
         }
     }
 
     @Override
     public void insertOrderWx(OrderWx od) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN).openSession()) {
-            session.insert(
-                    "jframe.pay.domain.dao.mapper.OrderMapper.insertOrderWx",
-                    od);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            session.insert("jframe.pay.domain.dao.mapper.OrderMapper.insertOrderWx", od);
             session.commit();
         }
     }
 
     @Override
     public OrderWx selectOrderWx(String payNo) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN_RO1).openSession()) {
-            return session.selectOne(
-                    "jframe.pay.domain.dao.mapper.OrderMapper.selectOrderWx",
-                    payNo);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
+            return session.selectOne("jframe.pay.domain.dao.mapper.OrderMapper.selectOrderWx", payNo);
         }
     }
 
     @Override
     public int updateOrderWx(OrderWx od) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN).openSession()) {
-            int sum = session.update(
-                    "jframe.pay.domain.dao.mapper.OrderMapper.updateOrderWx",
-                    od);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            int sum = session.update("jframe.pay.domain.dao.mapper.OrderMapper.updateOrderWx", od);
             session.commit();
             return sum;
         }
@@ -141,12 +109,8 @@ class MysqlPayDaoService implements PayDaoService {
 
     @Override
     public OrderWx selectOrderWxWithOrderNo(String orderNo) {
-        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(
-                Environment.RUN_RO1).openSession()) {
-            return session
-                    .selectOne(
-                            "jframe.pay.domain.dao.mapper.OrderMapper.selectOrderWxWithOrderNo",
-                            orderNo);
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
+            return session.selectOne("jframe.pay.domain.dao.mapper.OrderMapper.selectOrderWxWithOrderNo", orderNo);
         }
     }
 

@@ -55,27 +55,39 @@ dzh_11@qq.com                (personal)
   * New plugin
   		* jframe-mybatis
     	* jframe-datasource
-* v1.2.0 developing
-	* Add plugin fragment feature, 
-	* Fix hot deployment supporting service/fragment feature
-	* Rewrite bin/jframe.bat 
-	* ActivemqDispatcher improvement
+* v1.2.0 deving
+	* TODO Add plugin fragment feature, 
+	* TODO Fix hot deployment supporting service/fragment feature
+	* TODO Rewrite bin/jframe.bat 
+	* TODO ActivemqDispatcher improvement
 		* Automatic reconnection(static:(tcp://host1:61616,tcp://host2:61616)
 		* Support Publish/Subscribe and Product/Consume
 	* New plugin
 		* jframe-yunpian
 		* jframe-qiniu
 		* jframe-mongodb-client
-		* jframe-activemq
-		* jframe-activemq-client
-		* jframe-http
+		* TODO jframe-activemq
+		* TODO jframe-activemq-client
+		* TODO jframe-http
 	* Add jframe-pay application(pay gateway), see [jframe\_pay\_manual\_zh\_CN](https://github.com/dzh/jframe/tree/master/jframe-pay/doc/jframe_pay_manual_zh_CN.org) 
 
 ## Jframe v2 Feature
-* v2.0.0 planning 
+* v2.0.0 plan 
 	* Run on jdk1.8 or higher
-	* Plugin mailbox
-	* Plugin jms
+	* JframeDaemon Threads
+		* Plugind 
+	* PluginClassloader Feature
+	* Dispatcher Feature
+	* Message Feature
+		* mailbax
+		* FinalMsg and PoolMsg
+		* persistence then resend
+	* Plugin Feature
+		* scala plugin
+		* clojure plugin
+	* New Plugin
+		* jframe-monitor
+		
 	* Upload jframe to [maven](http://search.maven.org/#search%7Cga%7C1%7Cjframe)
 
 

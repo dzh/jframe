@@ -43,7 +43,7 @@ git clone https://github.com/dzh/jframe.git
 ** 运行环境
 - oracle jdk1.5以上
 - 支持linux、windows
-- Eclipse4.2(我的版本)+Maven插件+git插件
+- Eclipse+Maven插件+git插件
 ** 构建启动
 - 将clone到本地目录里的jframe项目导入到eclipse里
 #+CAPTION: Eclipse里jframe框架项目结构
@@ -57,11 +57,20 @@ git clone https://github.com/dzh/jframe.git
 ** config.properties
 ** vmargs[-win]
 
-* 编写Plugin
+* Plugin
 ** 插件示例
 ** 开发插件
 ** 插件使用技巧
 *** 插件间交互~Policy
+
+*** 插件间交互~Message
+- 消息类型
+  - 所有实现jframe.core.msg.Msg的类都可以作为插件间交流的消息
+  - 
+- 发送消息
+  -
+- 接收消息
+  -
 
 *** 插件间交互~Service
 - 插件服务特性说明
@@ -75,9 +84,22 @@ git clone https://github.com/dzh/jframe.git
   - 定义服务 plugin.properties里`Plugin-Service`，服务间用空格分隔(默认作为Export-Class导出)
 - 使用插件服务
   - 导入插件接口 plugin.properties里`Import-Class`，服务间用空格分隔
-  - 注入服务 InjectService(id='服务唯一ID')，使用服务的类必须加Injector
-- 示例插件 jframe-example-pluign,jframe-example-plugin2
+  - 注入服务 @InjectService(id='服务唯一ID')，使用服务的类必须加@Injector
+- 示例插件服务
+#+BEGIN_EXAMPLE
+
+
+#+END_EXAMPLE
+
+
+*** Policy vs Message vs Service
+- Policy 消息共享
+- Message 异步编程 
+- Service 同步编程
+
 *** 获取配置更新
+
+
 
 ** 插件注解说明
 *** 插件相关
@@ -92,6 +114,7 @@ git clone https://github.com/dzh/jframe.git
 - @Injector 说明类使用注入功能，类没有这个注解的则下面的注解无效
 - @InjectPlugin  注入插件示例
 - @InjectService 注入服务
+
 
 * 调试/性能
 
