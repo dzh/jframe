@@ -64,13 +64,25 @@ git clone https://github.com/dzh/jframe.git
 *** 插件间交互~Policy
 
 *** 插件间交互~Message
-- 消息类型
-  - 所有实现jframe.core.msg.Msg的类都可以作为插件间交流的消息
-  - 
+- 消息说明
+  - 所有实现jframe.core.msg.Msg的类都可以作为插件间交流的消息 继承PluginMsg实现自己的Msg 常用TextMsg
+  - Msg结构
+    - type int 消息类型 插件根据type读取自己感兴趣的Msg
+    - meta 存储辅助数据 可以视为一个map数据结构
+    - value 消息内容 可选 可以用meta方式
 - 发送消息
-  -
+  - Plugin必须继承自PluginSender或PluginSenderRecver
+  - plugin.send(Msg<?> msg) 发送消息
+  /注: 插件里的类都可以使用@InjectPlugin将插件实体注入 /
 - 接收消息
-  -
+  - Plugin必须继承自PluginRecver或PluginSenderRecver
+  - 订阅感兴趣的消息
+    - Plugin注解@Message(msgTypes = {MsgType}) 
+    - 重写interestMsg(Msg<?> msg) 若返回true标示接收这个消息 
+    /注: 使用注解方式时, 注意@Message的其他选项设置和父类注解内容保持一致 /
+  - plugin.doRecvMsg(Msg<?> msg) 接收消息
+- 总结
+Message机制实现异步调度, 解藕系统部件间的依赖, 实现可插拔的灵活功能调度 
 
 *** 插件间交互~Service
 - 插件服务特性说明
@@ -83,8 +95,10 @@ git clone https://github.com/dzh/jframe.git
   - 编写服务实现类 接口和实现目前要求在同一个插件内
   - 定义服务 plugin.properties里`Plugin-Service`，服务间用空格分隔(默认作为Export-Class导出)
 - 使用插件服务
-  - 导入插件接口 plugin.properties里`Import-Class`，服务间用空格分隔
+  - 导入服务接口 plugin.properties里`Import-Class`，服务间用空格分隔
   - 注入服务 @InjectService(id='服务唯一ID')，使用服务的类必须加@Injector
+- 总结
+Service机制实现同步调度, 
 - 示例插件服务
 #+BEGIN_EXAMPLE
 
@@ -112,8 +126,10 @@ git clone https://github.com/dzh/jframe.git
 - @Stop    服务示例卸载时执行
 *** 注入
 - @Injector 说明类使用注入功能，类没有这个注解的则下面的注解无效
-- @InjectPlugin  注入插件示例
+- @InjectPlugin  注入插件实例
 - @InjectService 注入服务
+
+
 
 
 * 调试/性能
@@ -151,6 +167,11 @@ address=6666 jvm调试服务端监听端口6666
 ** jframe-upg
 
 ** jframe-rcp
+
+* 高级主题
+** 管理jframe
+
+** 扩展jframe
 
 * 源码分析
 

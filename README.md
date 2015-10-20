@@ -79,6 +79,7 @@ dzh_11@qq.com                (personal)
 	* PluginClassloader Feature
 	* Dispatcher Feature
 	* Message Feature
+		* uuid 
 		* mailbax
 		* FinalMsg and PoolMsg
 		* persistence then resend
@@ -86,8 +87,9 @@ dzh_11@qq.com                (personal)
 		* scala plugin
 		* clojure plugin
 	* New Plugin
-		* jframe-monitor
-		
+		* jframe-monitor jframe runtime information
+	* upgrade plugin from Jframev1	
+	* eclipse-jframe-plugin
 	* Upload jframe to [maven](http://search.maven.org/#search%7Cga%7C1%7Cjframe)
 
 

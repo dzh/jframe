@@ -25,97 +25,94 @@ import jframe.core.plugin.annotation.MsgSend;
  */
 public class DispatchSourceHandler implements InvocationHandler {
 
-	private static final String M_Send = "send";
+    private static final String M_Send = "send";
 
-	private static final String M_AddDispatch = "addDispatch";
+    private static final String M_AddDispatch = "addDispatch";
 
-	private static final String M_RemoveDispatch = "removeDispatch";
+    private static final String M_RemoveDispatch = "removeDispatch";
 
-	private PluginRef _ref;
+    private PluginRef _ref;
 
-	/**
-	 * method cache
-	 */
-	private Map<String, WeakReference<Method>> _mc = new WeakHashMap<String, WeakReference<Method>>(
-			6);
+    /**
+     * method cache
+     */
+    private Map<String, WeakReference<Method>> _mc = new WeakHashMap<String, WeakReference<Method>>(6);
 
-	public DispatchSourceHandler(PluginRef ref) {
-		if (ref == null) {
-			throw new NullPointerException("PluginRef is null");
-		}
-		this._ref = ref;
-	}
+    public DispatchSourceHandler(PluginRef ref) {
+        if (ref == null) {
+            throw new NullPointerException("PluginRef is null");
+        }
+        this._ref = ref;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
-	 * java.lang.reflect.Method, java.lang.Object[])
-	 */
-	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
-		Plugin p = _ref.getPlugin();
-		if (p == null) // "p==null" is impossible
-			return null;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
+     * java.lang.reflect.Method, java.lang.Object[])
+     */
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Plugin p = _ref.getPlugin();
+        if (p == null) // "p==null" is impossible
+            return null;
 
-		if (method.equals(DispatchSource.class.getDeclaredMethod(M_Send,
-				new Class[] { Msg.class }))) {
-			Method cm = getCacheMethod(M_Send);
-			if (cm != null)
-				return cm.invoke(p, args);
+        if (method.equals(DispatchSource.class.getDeclaredMethod(M_Send, new Class[] { Msg.class }))) {
+            Method cm = getCacheMethod(M_Send);
+            if (cm != null)
+                return cm.invoke(p, args);
 
-			Class<?> clazz = p.getClass();
-			do {
-				for (Method m : p.getClass().getDeclaredMethods()) {
-					if (m.getAnnotation(MsgSend.class) != null) {
-						m.setAccessible(true);
-						putCacheMethod(M_Send, m);
-						return m.invoke(p, args);
-					}
-				}
-			} while ((clazz = clazz.getSuperclass()) != null);
-		} else if (method.equals(DispatchSource.class.getDeclaredMethod(
-				M_AddDispatch, new Class[] { Dispatcher.class }))) {
-			Method cm = getCacheMethod(M_AddDispatch);
-			if (cm != null)
-				return cm.invoke(p, args);
+            Class<?> clazz = p.getClass();
+            do {
+                for (Method m : p.getClass().getDeclaredMethods()) {
+                    if (m.getAnnotation(MsgSend.class) != null) {
+                        m.setAccessible(true);
+                        putCacheMethod(M_Send, m);
+                        return m.invoke(p, args);
+                    }
+                }
+            } while ((clazz = clazz.getSuperclass()) != null);
+        } else if (method
+                .equals(DispatchSource.class.getDeclaredMethod(M_AddDispatch, new Class[] { Dispatcher.class }))) {
+            Method cm = getCacheMethod(M_AddDispatch);
+            if (cm != null)
+                return cm.invoke(p, args);
 
-			Class<?> clazz = p.getClass();
-			do {
-				for (Method m : clazz.getDeclaredMethods()) {
-					if (m.getAnnotation(DispatchAdd.class) != null) {
-						m.setAccessible(true);
-						putCacheMethod(M_Send, m);
-						return m.invoke(p, args);
-					}
-				}
-			} while ((clazz = clazz.getSuperclass()) != null);
-		} else if (method.equals(DispatchSource.class.getDeclaredMethod(
-				M_RemoveDispatch, new Class[] { Dispatcher.class }))) {
-			Method cm = getCacheMethod(M_RemoveDispatch);
-			if (cm != null)
-				return cm.invoke(p, args);
+            Class<?> clazz = p.getClass();
+            do {
+                for (Method m : clazz.getDeclaredMethods()) {
+                    if (m.getAnnotation(DispatchAdd.class) != null) {
+                        m.setAccessible(true);
+                        putCacheMethod(M_Send, m);
+                        return m.invoke(p, args);
+                    }
+                }
+            } while ((clazz = clazz.getSuperclass()) != null);
+        } else if (method
+                .equals(DispatchSource.class.getDeclaredMethod(M_RemoveDispatch, new Class[] { Dispatcher.class }))) {
+            Method cm = getCacheMethod(M_RemoveDispatch);
+            if (cm != null)
+                return cm.invoke(p, args);
 
-			Class<?> clazz = p.getClass();
-			do {
-				for (Method m : clazz.getDeclaredMethods()) {
-					if (m.getAnnotation(DispatchRemove.class) != null) {
-						m.setAccessible(true);
-						putCacheMethod(M_Send, m);
-						return m.invoke(p, args);
-					}
-				}
-			} while ((clazz = clazz.getSuperclass()) != null);
-		}
-		return method.invoke(p, args);
-	}
+            Class<?> clazz = p.getClass();
+            do {
+                for (Method m : clazz.getDeclaredMethods()) {
+                    if (m.getAnnotation(DispatchRemove.class) != null) {
+                        m.setAccessible(true);
+                        putCacheMethod(M_Send, m);
+                        return m.invoke(p, args);
+                    }
+                }
+            } while ((clazz = clazz.getSuperclass()) != null);
+        }
+        return method.invoke(p, args);
+    }
 
-	private Method getCacheMethod(String name) {
-		WeakReference<Method> wr = _mc.get(name);
-		return wr == null ? null : wr.get();
-	}
+    private Method getCacheMethod(String name) {
+        WeakReference<Method> wr = _mc.get(name);
+        return wr == null ? null : wr.get();
+    }
 
-	private void putCacheMethod(String name, Method m) {
-		_mc.put(name, new WeakReference<Method>(m));
-	}
+    private void putCacheMethod(String name, Method m) {
+        _mc.put(name, new WeakReference<Method>(m));
+    }
 }
