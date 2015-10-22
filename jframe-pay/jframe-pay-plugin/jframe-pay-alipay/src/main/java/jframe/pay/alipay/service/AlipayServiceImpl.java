@@ -160,13 +160,14 @@ class AlipayServiceImpl implements AlipayService, Fields {
             PayDao.updateOrderAlipay(od);
             return;
         }
+
+        PayDao.updateOrderAlipay(od);
         // pay info
         String odinfo = OrderUtil.buildOrderInfo(req);
         if (LOG.isDebugEnabled()) {
             LOG.debug("odinfo -> {}", odinfo);
         }
         rsp.put(F_od, OrderUtil.genPayInfo(odinfo));
-
         // Map<String, String> map = new HashMap<>();
         // map.put("out_trade_no", req.get(F_orderNo));
         // insert task TODO

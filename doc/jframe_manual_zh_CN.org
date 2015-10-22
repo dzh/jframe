@@ -60,6 +60,10 @@ git clone https://github.com/dzh/jframe.git
 * Plugin
 ** 插件示例
 ** 开发插件
+*** 定义插件类
+
+*** 插件配置文件 - plugin.properties
+
 ** 插件使用技巧
 *** 插件间交互~Policy
 

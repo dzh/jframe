@@ -8,6 +8,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import jframe.pay.domain.util.XmlUtil;
+
 /**
  * @author dzh
  * @date Oct 17, 2015 9:51:40 AM
@@ -22,7 +24,7 @@ public class TestWxServiceNew {
                 + "<nonce_str><![CDATA[dYsIEeHnqdmc8G1O]]></nonce_str><sign><![CDATA[74D85CEBC1EF6D67F7273061DFB9CB9C]]></sign>"
                 + "<result_code><![CDATA[SUCCESS]]></result_code><prepay_id><![CDATA[wx2015101617451557b7fb34c80052355013]]>"
                 + "</prepay_id><trade_type><![CDATA[APP]]></trade_type></xml>";
-        Map<String, String> map = WxServiceNew.decodeXml(content);
+        Map<String, String> map = XmlUtil.fromXml(content);
         Assert.assertEquals("SUCCESS", map.get("return_code"));
     }
 

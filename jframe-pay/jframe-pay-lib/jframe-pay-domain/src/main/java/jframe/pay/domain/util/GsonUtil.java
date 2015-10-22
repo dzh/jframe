@@ -12,14 +12,14 @@ import com.google.gson.Gson;
  */
 public class GsonUtil {
 
-	static final Gson gson = new Gson();
+    static final Gson gson = new Gson();
 
-	public static final String toJson(Object obj) {
-		return gson.toJson(obj);
-	}
+    public static final String toJson(Object obj) {
+        return gson.toJson(obj);
+    }
 
-	public static final <T> T fromJson(String json, Class<T> clazz) {
-		return gson.fromJson(json, clazz);
-	}
+    public static final <T> T fromJson(String json, Class<T> clazz) {
+        return gson.fromJson(json, clazz);
+    }
 
 }

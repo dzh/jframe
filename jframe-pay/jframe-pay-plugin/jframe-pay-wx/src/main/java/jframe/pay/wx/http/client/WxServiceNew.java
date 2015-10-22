@@ -3,27 +3,20 @@
  */
 package jframe.pay.wx.http.client;
 
-import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import jframe.pay.domain.util.IDUtil;
+import jframe.pay.domain.util.XmlUtil;
 import jframe.pay.wx.domain.WxConfig;
 import jframe.pay.wx.domain.WxFields;
 import jframe.pay.wx.http.util.MD5Util;
@@ -54,6 +47,7 @@ public class WxServiceNew {
             packageParams.add(new BasicNameValuePair(WxFields.F_out_trade_no, orderNo));
             packageParams.add(new BasicNameValuePair(WxFields.F_spbill_create_ip, req.get(WxFields.F_remoteIp)));
             packageParams.add(new BasicNameValuePair(WxFields.F_total_fee, req.get(WxFields.F_payAmount)));
+            // packageParams.add(new BasicNameValuePair(WxFields.F_attach, ""));
             packageParams
                     .add(new BasicNameValuePair(WxFields.F_trade_type, req.getOrDefault(WxFields.F_trade_type, "APP")));
 
@@ -69,7 +63,7 @@ public class WxServiceNew {
                 if (LOG.isDebugEnabled())
                     LOG.debug("genPrePay  url -> {}, req -> {}, rsp -> {}", url, entity, content);
 
-                Map<String, String> xml = decodeXml(content);
+                Map<String, String> xml = XmlUtil.fromXml(content);
                 if (xml.get(WxFields.F_return_code).equalsIgnoreCase("SUCCESS")) {
                     // 这些是手机端需要的参数
                     rsp.put(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID));
@@ -117,23 +111,6 @@ public class WxServiceNew {
 
         String appSign = getMessageDigest(sb.toString().getBytes("UTF-8")).toUpperCase();
         return appSign;
-    }
-
-    public static Map<String, String> decodeXml(String content) throws Exception {
-        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-        domFactory.setNamespaceAware(true);
-        DocumentBuilder builder = domFactory.newDocumentBuilder();
-        Document source = builder.parse(new ByteArrayInputStream(content.getBytes("UTF-8")));
-
-        NodeList nodeList = source.getDocumentElement().getChildNodes();
-
-        Map<String, String> map = new HashMap<>();
-        Node node = null;
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            node = nodeList.item(i);
-            map.put(node.getNodeName(), node.getTextContent());
-        }
-        return map;
     }
 
     /**
@@ -206,6 +183,18 @@ public class WxServiceNew {
 
     private static long genTimeStamp() {
         return System.currentTimeMillis() / 1000;
+    }
+
+    /**
+     * check sign https://pay.weixin.qq.com/wiki/doc/api/app.php?chapter=4_3
+     * 
+     * @param req
+     * @param rsp
+     * @return
+     */
+    public static boolean backPay(Map<String, String> req, Map<String, Object> rsp) {
+        // TODO check sign
+        return req.getOrDefault(WxFields.F_result_code, "failure").equalsIgnoreCase("SUCCESS");
     }
 
 }

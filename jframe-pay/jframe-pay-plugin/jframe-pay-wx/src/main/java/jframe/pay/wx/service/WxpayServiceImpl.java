@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
 import jframe.httpclient.service.HttpClientService;
+import jframe.memcached.client.MemcachedService;
 import jframe.pay.dao.service.PayDaoService;
 import jframe.pay.domain.PayCurrency;
 import jframe.pay.domain.PayStatus;
@@ -21,10 +24,10 @@ import jframe.pay.domain.dao.OrderWx;
 import jframe.pay.domain.http.RspCode;
 import jframe.pay.domain.util.HttpUtil;
 import jframe.pay.domain.util.ObjectUtil;
+import jframe.pay.domain.util.XmlUtil;
 import jframe.pay.wx.WxpayPlugin;
 import jframe.pay.wx.domain.WxConfig;
 import jframe.pay.wx.domain.WxFields;
-import jframe.pay.wx.http.client.WxService;
 import jframe.pay.wx.http.client.WxServiceNew;
 
 @Injector
@@ -40,6 +43,9 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
 
     @InjectService(id = "jframe.service.httpclient")
     static HttpClientService HttpClient;
+
+    @InjectService(id = "jframe.service.memcached.client")
+    static MemcachedService MemSvc;
 
     static Map<String, String> HTTP_PARAS = new HashMap<String, String>(1, 1);
 
@@ -93,6 +99,8 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
                 od = new OrderWx();
                 od.payNo = req.get(F_payNo);
                 od.payStatus = PayStatus.C_PAY_WAIT.code;
+            } else {
+                // TODO 已成功单子处理
             }
 
             od.payDesc = req.get(F_payDesc);
@@ -125,19 +133,60 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
         RspCode.setRspCode(rsp, RspCode.FAIL_NET);
     }
 
+    static final ConcurrentMap<String, String> PayBackLock = new ConcurrentHashMap<>();
+
+    /**
+     * <pre>
+     * 通知频率为15/15/30/180/1800/1800/1800/1800/3600，单位：秒
+     * </pre>
+     */
     @Override
     public void payBack(Map<String, String> req, Map<String, Object> rsp) throws Exception {
-        String orderStatus = PayStatus.C_PAY_PROC.code;
-
-        if (WxService.backPay(req, rsp)) {
-            orderStatus = PayStatus.C_PAY_SUC.code;
-        } else {
-            orderStatus = PayStatus.C_PAY_FAIL.code;
+        if (!chkPayBack(req)) {
+            return;
         }
 
-        req.put(F_payStatus, orderStatus);
-        req.put(F_transactionId, String.valueOf(rsp.get(F_transactionId)));
-        wxPayBack(req, rsp);
+        try {
+            // for cluster
+            MemSvc.add("wx.payback." + req.get(WxFields.F_out_trade_no), "1", new Date(15 * 1000));
+            String orderStatus = PayStatus.C_PAY_FAIL.code;
+            if (WxServiceNew.backPay(req, rsp)) {
+                orderStatus = PayStatus.C_PAY_SUC.code;
+
+                // SUCCESS/FAIL
+                Map<String, String> body = new HashMap<>(2, 1);
+                body.put("return_code", "<![CDATA[SUCCESS]]>");
+                body.put("return_msg", "<![CDATA[OK]]>");
+                rsp.put(F_rspOut, XmlUtil.toXml("xml", body));
+            }
+
+            req.put(F_payStatus, orderStatus);
+            wxPayBack(req, rsp);
+        } finally {
+            PayBackLock.remove(req.get(WxFields.F_out_trade_no));
+            MemSvc.delete("wx.payback." + req.get(WxFields.F_out_trade_no));
+        }
+    }
+
+    /**
+     * TODO BitSet
+     * 
+     * @param req
+     * @return
+     */
+    private boolean chkPayBack(Map<String, String> req) {
+        String od = req.get(WxFields.F_out_trade_no);
+        String ood = PayBackLock.putIfAbsent(od, "");
+        boolean chk = ood == null ? true : false;
+        if (chk) {
+            chk = MemSvc.get("wx.payback." + od) == null ? true : false;
+        }
+
+        // clean
+        if (ood == null && !chk)
+            PayBackLock.remove(od);
+
+        return chk;
     }
 
     @Override
@@ -233,24 +282,28 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
             return;
         }
 
-        od.tradeMode = Integer.parseInt(req.get(WxFields.F_trade_mode));
+        // od.tradeMode = Integer.parseInt(req.get(WxFields.F_trade_mode));
         od.payStatus = req.get(WxFields.F_payStatus);
-        od.payInfo = req.get(WxFields.F_pay_info);
+        // od.payInfo = req.get(WxFields.F_pay_info);
         od.bankType = req.get(WxFields.F_bank_type);
-        od.bankBillNo = req.get(WxFields.F_bank_billno);
-        od.notifyId = req.get(WxFields.F_notify_id);
-        od.transactionId = req.get(WxFields.F_transactionId);
-        od.timeEnd = req.get(F_timestamp);
-        od.transportFee = Integer.parseInt(req.getOrDefault(WxFields.F_transport_fee, "0"));
+        // od.bankBillNo = req.get(WxFields.F_bank_billno);
+        // od.notifyId = req.get(WxFields.F_notify_id);
+        od.transactionId = req.get(WxFields.F_transaction_id);
+        od.timeEnd = req.get(F_time_end);
+        // od.transportFee =
+        // Integer.parseInt(req.getOrDefault(WxFields.F_transport_fee, "0"));
         // transport_fee + product_fee=total_fee
-        od.productFee = Integer.parseInt(req.getOrDefault(WxFields.F_product_fee, "0"));
+        // od.productFee =
+        // Integer.parseInt(req.getOrDefault(WxFields.F_product_fee, "0"));
         // 折扣价格,单位分,如果 有值,通知的 total_fee + discount = 请求的 total_fee
-        od.discount = Integer.parseInt(req.get(WxFields.F_discount));
-        od.buyerAlias = req.get(WxFields.F_buyerAlias);
+        // od.discount = Integer.parseInt(req.get(WxFields.F_discount));
+        // od.buyerAlias = req.get(WxFields.F_buyerAlias);
         od.orderFinishTime = new Date().getTime();
+        od.openid = req.get(WxFields.F_openid);
 
         PayDao.updateOrderWx(od);
 
+        // TODO postBack until return success
         String orderStatus = od.payStatus;
         if (ObjectUtil.notEmpty(od.backUrl) && (PayStatus.C_PAY_SUC.code.equals(orderStatus)
                 || PayStatus.C_PAY_FAIL.code.equals(orderStatus) || PayStatus.C_PAY_TIMEOUT.code.equals(orderStatus))) {
@@ -265,21 +318,21 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
      * 通知租车后台
      * 
      * @param conn
-     * @param order
+     * @param od
      * @param orderStatus
      */
-    public void postBack(OrderWx order) {
+    public void postBack(OrderWx od) {
         Map<String, String> map = new HashMap<String, String>();
-        map.put(F_payNo, order.payNo);
-        map.put(F_payStatus, order.payStatus);
+        map.put(F_payNo, od.payNo);
+        map.put(F_payStatus, od.payStatus);
 
         boolean succ = false;
         try {
-            URL url = new URL(order.backUrl);
+            URL url = new URL(od.backUrl);
             int port = url.getPort() == -1 ? 80 : url.getPort();
 
             if (LOG.isDebugEnabled())
-                LOG.debug("postBack {},{}", new Date(), map);
+                LOG.debug("postBack -> {}, {},{}", url.toString(), new Date(), map);
             Long packtime = System.currentTimeMillis();
 
             Map<String, String> paras = new HashMap<>(HTTP_PARAS);
@@ -289,12 +342,12 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
                     HttpUtil.format(map, "utf-8"), null, paras);
             Long packTime = System.currentTimeMillis();
             if (LOG.isDebugEnabled())
-                LOG.debug("orderNo=" + order.orderNo + " postBack" + new Date() + " use time=" + (packTime - packtime)
+                LOG.debug("orderNo=" + od.orderNo + " postBack" + new Date() + " use time=" + (packTime - packtime)
                         + " rsp=" + rsp);
             if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
                 succ = true;
             } else {
-                LOG.error("payNo=" + order.payNo + "rsp=" + rsp);
+                LOG.error("payNo=" + od.payNo + "rsp=" + rsp);
             }
         } catch (Exception e) {
             succ = false;

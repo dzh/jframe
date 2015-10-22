@@ -6,6 +6,21 @@ package jframe.pay.http.handler;
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.serializer.SerializeFilter;
+
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -21,29 +36,15 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.CharsetUtil;
-
-import java.net.InetSocketAddress;
-import java.net.URLDecoder;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import jframe.core.msg.Msg;
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
 import jframe.pay.domain.Fields;
 import jframe.pay.domain.http.RspCode;
+import jframe.pay.domain.util.HttpUtil;
 import jframe.pay.domain.util.JsonUtil;
 import jframe.pay.http.HttpConstants;
 import jframe.pay.http.PayHttpPlugin;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.serializer.SerializeFilter;
 
 /**
  * TODO dispose
@@ -53,13 +54,11 @@ import com.alibaba.fastjson.serializer.SerializeFilter;
  * @since 1.0
  */
 @Injector
-public abstract class AbstractHandler extends
-        SimpleChannelInboundHandler<HttpObject> {
+public abstract class AbstractHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     static Logger LOG = LoggerFactory.getLogger(AbstractHandler.class);
 
-    static Logger LOG_REQ = LoggerFactory
-            .getLogger("dono.share.http.handle.req");
+    static Logger LOG_REQ = LoggerFactory.getLogger("jframe.pay.http.handler.req");
 
     @InjectPlugin
     protected static PayHttpPlugin Plugin;
@@ -89,8 +88,8 @@ public abstract class AbstractHandler extends
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public boolean acceptInboundMessage(Object msg) throws Exception {
         if (msg instanceof HttpRequest) {
             // TODO
@@ -101,21 +100,18 @@ public abstract class AbstractHandler extends
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.netty.channel.SimpleChannelInboundHandler#channelRead0(io.netty.channel
-     * .ChannelHandlerContext, java.lang.Object)
+     * @see io.netty.channel.SimpleChannelInboundHandler#channelRead0(io.netty.
+     * channel .ChannelHandlerContext, java.lang.Object)
      */
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg)
-            throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
         if (this.ctx == null)
             this.ctx = ctx;
 
         if (msg instanceof HttpRequest) {
             readHttpRequest((HttpRequest) msg);
             if (LOG_REQ.isDebugEnabled()) {
-                LOG_REQ.debug("Start reqUrl->{},ip->{},date->{}", getReqUrl(),
-                        getRemoteIp(), new Date().getTime());
+                LOG_REQ.debug("Start reqUrl->{},ip->{},date->{}", getReqUrl(), getRemoteIp(), new Date().getTime());
             }
         } else if (msg instanceof HttpContent) {
             readHttpContent((HttpContent) msg);
@@ -126,8 +122,7 @@ public abstract class AbstractHandler extends
         // nginx时设置客户端真实ip
         String remoteIp = getHttpRequest().headers().get("X-Real-Ip");
         if (Objects.isNull(remoteIp)) {
-            remoteIp = ((InetSocketAddress) getChannelHandlerContext()
-                    .channel().remoteAddress()).getHostName();
+            remoteIp = ((InetSocketAddress) getChannelHandlerContext().channel().remoteAddress()).getHostName();
         }
         return remoteIp;
     }
@@ -136,8 +131,7 @@ public abstract class AbstractHandler extends
         HttpRequest req = (HttpRequest) msg;
         AbstractHandler.this.req = req;
 
-        if (!req.getMethod().equals(HttpMethod.POST)
-                || !isValidHeaders(req.headers())) {
+        if (!req.getMethod().equals(HttpMethod.POST) || !isValidHeaders(req.headers())) {
             finish(ctx);
             return;
         }
@@ -147,8 +141,7 @@ public abstract class AbstractHandler extends
         if (encoding != null && encoding.indexOf("gzip") != -1) {
             gzip = true;
         }
-        QueryStringDecoder queryStringDecoder = new QueryStringDecoder(
-                req.getUri());
+        QueryStringDecoder queryStringDecoder = new QueryStringDecoder(req.getUri());
         _params = queryStringDecoder.parameters();
 
         if (LOG.isDebugEnabled()) {
@@ -163,12 +156,11 @@ public abstract class AbstractHandler extends
         if (msg instanceof LastHttpContent) {
             try {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Dispatch req map {}", parseHttpReq(URLDecoder
-                            .decode(buf.toString(), HttpConstants.UTF8)));
+                    LOG.debug("Dispatch req map {}",
+                            parseHttpReq(URLDecoder.decode(buf.toString(), HttpConstants.UTF8)));
                 }
 
-                String content = URLDecoder.decode(buf.toString(),
-                        HttpConstants.UTF8);
+                String content = URLDecoder.decode(buf.toString(), HttpConstants.UTF8);
                 if (isValidData(content)) {
                     service(parseHttpReq(content), rspMap);
                 } else {
@@ -178,8 +170,7 @@ public abstract class AbstractHandler extends
                 finish(ctx);
             }
             if (LOG_REQ.isDebugEnabled()) {
-                LOG_REQ.debug("Finish reqUrl->{},ip->{},date->{}", getReqUrl(),
-                        getRemoteIp(), new Date().getTime());
+                LOG_REQ.debug("Finish reqUrl->{},ip->{},date->{}", getReqUrl(), getRemoteIp(), new Date().getTime());
             }
         }
     }
@@ -258,45 +249,14 @@ public abstract class AbstractHandler extends
         return true;
     }
 
-    protected Map<String, String> parseHttpReq(String content) {
+    protected Map<String, String> parseHttpReq(String content) throws Exception {
         // if (content.indexOf('=') != -1) {
         // return parseHttpParas(content);
         // }
         // return JsonUtil.decode(content);
-        Map<String, String> req = parseHttpParas(content.trim());
+        Map<String, String> req = HttpUtil.parseHttpParas(content.trim());
         req.put("reqUrl", getReqUrl());
         return req;
-    }
-
-    /**
-     * 目前只支持单值情况， 不支持多值和编码
-     * 
-     * @param content
-     * @return
-     */
-    public static Map<String, String> parseHttpParas(String content) {
-        Map<String, String> map = new HashMap<String, String>();
-        int len = content.length();
-
-        StringBuilder buf = new StringBuilder(16);
-        String key = null;
-        for (int i = 0; i < len; ++i) {
-            char ch = content.charAt(i);
-
-            if (ch == '=') {
-                key = buf.toString();
-                buf.setLength(0);
-                continue;
-            }
-            if (ch == '&') {
-                map.put(key, buf.toString());
-                buf.setLength(0);
-                continue;
-            }
-            buf.append(ch);
-        }
-        map.put(key, buf.toString());
-        return map;
     }
 
     /**
@@ -336,15 +296,13 @@ public abstract class AbstractHandler extends
      * @param req
      * @param resp
      */
-    public abstract void service(Map<String, String> req,
-            Map<String, Object> rsp) throws PayException;
+    public abstract void service(Map<String, String> req, Map<String, Object> rsp) throws PayException;
 
     protected Map<String, Object> initRespMap() {
         return new HashMap<String, Object>();
     }
 
-    protected void writeResponse(ChannelHandlerContext ctx,
-            Map<String, Object> rsp) {
+    protected void writeResponse(ChannelHandlerContext ctx, Map<String, Object> rsp) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("response {}", rsp);
         }
@@ -364,16 +322,18 @@ public abstract class AbstractHandler extends
         if (rsp == null || rsp.isEmpty()) {
             response = new DefaultFullHttpResponse(HTTP_1_1, OK);
         } else {
-            Object filter = rsp.remove(Fields.F_filter);
-            if (filter != null && filter instanceof SerializeFilter) {
+            if (rsp.containsKey(Fields.F_rspOut)) {
                 response = new DefaultFullHttpResponse(HTTP_1_1, OK,
-                        Unpooled.copiedBuffer(
-                                JsonUtil.encode(rsp, (SerializeFilter) filter),
-                                CharsetUtil.UTF_8));
+                        Unpooled.copiedBuffer(rsp.get(Fields.F_rspOut).toString(), CharsetUtil.UTF_8));
             } else {
-                response = new DefaultFullHttpResponse(HTTP_1_1, OK,
-                        Unpooled.copiedBuffer(JsonUtil.encode(rsp),
-                                CharsetUtil.UTF_8));
+                Object filter = rsp.remove(Fields.F_filter);
+                if (filter != null && filter instanceof SerializeFilter) {
+                    response = new DefaultFullHttpResponse(HTTP_1_1, OK,
+                            Unpooled.copiedBuffer(JsonUtil.encode(rsp, (SerializeFilter) filter), CharsetUtil.UTF_8));
+                } else {
+                    response = new DefaultFullHttpResponse(HTTP_1_1, OK,
+                            Unpooled.copiedBuffer(JsonUtil.encode(rsp), CharsetUtil.UTF_8));
+                }
             }
         }
 
@@ -381,11 +341,9 @@ public abstract class AbstractHandler extends
             // response.headers().set(CONTENT_ENCODING, "gzip");
         }
         response.headers().set(CONTENT_TYPE, "application/json; charset=UTF-8");
-        response.headers().set(HttpHeaders.Names.CONTENT_LENGTH,
-                response.content().readableBytes());
+        response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
         if (keepAlive) {
-            response.headers().set(HttpHeaders.Names.CONNECTION,
-                    HttpHeaders.Values.KEEP_ALIVE);
+            response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         }
         return response;
     }
@@ -395,8 +353,7 @@ public abstract class AbstractHandler extends
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-            throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
         LOG.error(cause.getMessage(), cause);
         finish(ctx);

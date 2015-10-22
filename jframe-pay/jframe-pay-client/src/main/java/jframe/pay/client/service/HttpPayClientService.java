@@ -3,12 +3,20 @@
  */
 package jframe.pay.client.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.annotation.Injector;
+import jframe.core.plugin.annotation.Start;
 import jframe.httpclient.service.HttpClientService;
+import jframe.pay.client.PayClientConf;
+import jframe.pay.client.PayClientPlugin;
 import jframe.pay.domain.Fields;
 import jframe.pay.domain.TransType;
 import jframe.pay.domain.http.ReqOp;
@@ -22,20 +30,48 @@ import jframe.pay.domain.util.HttpUtil;
 @Injector
 class HttpPayClientService implements PayClientService, Fields {
 
+    static final Logger LOG = LoggerFactory.getLogger(HttpPayClientService.class);
+
+    @InjectPlugin
+    static PayClientPlugin Plugin;
+
     @InjectService(id = "jframe.service.httpclient")
     static HttpClientService HttpClient;
 
-    static String HttpClient_ID = "pay";
+    static final String HttpClient_ID = "pay";
 
-    static String Prefix_ord = "/pay/ord/";
+    static final String Prefix_ord = "/pay/ord/";
 
-    static String Prefix_usr = "/pay/usr/";
+    static final String Prefix_usr = "/pay/usr/";
 
-    static Map<String, String> HTTP_PARAS = new HashMap<String, String>(1, 1);
+    static final Map<String, String> HTTP_PARAS = new HashMap<String, String>(1, 1);
+
+    static final PayClientConf _conf = new PayClientConf();
 
     static {
         HTTP_PARAS.put(HttpClientService.P_MIMETYPE, "application/x-www-form-urlencoded");
         // HTTP_PARAS.put(HttpClientService.P_METHOD, "post");
+    }
+
+    static final String FILE_CONF = "file.payclient";
+
+    @Start
+    void start() {
+        LOG.info("HttpPayClientService is starting!");
+
+        String path = Plugin.getConfig(FILE_CONF, "");
+        try {
+            if (new File(path).exists()) {
+                _conf.init(path);
+                LOG.info("HttpPayClientService load {} successfully!", path);
+            } else {
+                LOG.info("HttpPayClientService not found file -> {}", path);
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
+
+        LOG.info("HttpPayClientService start successfully!");
     }
 
     @Override
@@ -47,6 +83,10 @@ class HttpPayClientService implements PayClientService, Fields {
         // RspCode.setRspCode(rsp, RspCode.HTTP_REQ_MUST_EMPTY);
         // return;
         // }
+
+        req.putIfAbsent(PayClientConf.K_Pay_Version, _conf.getConf(null, PayClientConf.K_Pay_Version));
+        req.putIfAbsent(F_backUrl, _conf.getConf(null, PayClientConf.Pre_Pay_Req + F_backUrl));
+
         req.computeIfAbsent(F_reqOp, k -> {
             String transType = req.get(F_transType);
             if (TransType.Consume.code.equals(transType))

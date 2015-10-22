@@ -33,6 +33,8 @@ public interface WxFields extends Fields {
 
     String F_total_fee = "total_fee";
 
+    String F_attach = "attach";
+
     String F_spbill_create_ip = "spbill_create_ip";
 
     String F_fee_type = "fee_type";
@@ -55,6 +57,8 @@ public interface WxFields extends Fields {
 
     String F_timestamp = "timestamp";
 
+    String F_time_end = "time_end";
+
     String F_packageValue = "packagevalue";
 
     String F_traceid = "traceid";
@@ -70,6 +74,7 @@ public interface WxFields extends Fields {
     String F_sign = "sign";
 
     String F_transactionId = "transactionId";
+    String F_transaction_id = "transaction_id";
 
     String F_result = "result";
 
@@ -83,6 +88,8 @@ public interface WxFields extends Fields {
 
     String F_buyerAlias = "buyerAlias";
 
+    String F_openid = "openid";
+
     /**
      * 异步响应成功
      */
@@ -91,6 +98,7 @@ public interface WxFields extends Fields {
     String F_return_code = "return_code";
     String F_return_msg = "return_msg";
     String F_prepay_id = "prepay_id";
+    String F_result_code = "result_code";
     /**
      * 异步响应失败
      */

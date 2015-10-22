@@ -52,4 +52,6 @@ public class OrderWx extends OrderBase {
 
     public String buyerAlias;
 
+    public String openid;
+
 }

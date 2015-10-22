@@ -85,15 +85,20 @@ public class WxService implements WxFields {
             clientHandler.setParameter(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID));
             clientHandler.setParameter(WxFields.F_appkey, WxConfig.getConf(WxConfig.KEY_APP_KEY));
             clientHandler.setParameter(WxFields.F_noncestr, noncestr);
-//            if (req.get(WxFields.F_devType).equals(DevType.ANDRIOD.toString())) {
-//                clientHandler.setParameter(WxFields.F_package, "Sign=" + packageValue);
-//            } else if (req.get(WxFields.F_devType).equals(DevType.IOS.toString())) {
-//                clientHandler.setParameter(WxFields.F_package, "Sign=WXPay");
-//            } else {
-//                throw new PayException("Invalid devType -> " + req.get(WxFields.F_devType) + "when genPrePay");
-//            }
+            // if
+            // (req.get(WxFields.F_devType).equals(DevType.ANDRIOD.toString()))
+            // {
+            // clientHandler.setParameter(WxFields.F_package, "Sign=" +
+            // packageValue);
+            // } else if
+            // (req.get(WxFields.F_devType).equals(DevType.IOS.toString())) {
+            // clientHandler.setParameter(WxFields.F_package, "Sign=WXPay");
+            // } else {
+            // throw new PayException("Invalid devType -> " +
+            // req.get(WxFields.F_devType) + "when genPrePay");
+            // }
             clientHandler.setParameter(WxFields.F_package, "Sign=" + packageValue);
-            
+
             clientHandler.setParameter(WxFields.F_partnerid, WxConfig.getConf(WxConfig.KEY_PARTNER));
             clientHandler.setParameter(WxFields.F_prepayid, prepayid);
             clientHandler.setParameter(WxFields.F_timestamp, timestamp);

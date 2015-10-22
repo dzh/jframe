@@ -28,6 +28,8 @@ public interface Fields {
 
     String F_rspDesc = "rspDesc";
 
+    String F_rspOut = "rspOut";
+
     String F_imgUrl = "imgUrl";
 
     String F_mobile = "mobile";

@@ -54,7 +54,8 @@
 		<result property="payDesc" column="pay_desc" />
 		<result property="payGroup" column="pay_group" />
 		<result property="payInfo" column="pay_info" />
-		<result property="payTimeout" column="pay_timeout" />
+		<result property="payTimeout" column="pay_timeout"
+			typeHandler="jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler" />
 		<result property="productFee" column="product_fee" />
 		<result property="recvUserId" column="recv_user_id" />
 		<result property="recvUserName" column="recv_user_name" />
@@ -70,6 +71,7 @@
 		<result property="transactionId" column="transaction_id" />
 		<result property="transportFee" column="transport_fee" />
 		<result property="transType" column="trans_type" />
+		<result property="openid" column="openid" />
 	</resultMap>
 
 	<resultMap id="orderDetailResultMap" type="OrderDetail">
@@ -119,43 +121,45 @@
 		<if test="tradeMode != null">trade_mode,</if>
 		<if test="transactionId != null">transaction_id,</if>
 		<if test="transportFee != null">transport_fee,</if>
+		<if test="openid != null">openid,</if>
 		pay_no,create_time,order_create_time)
 		values
 		(
-		<if test="account != null">account=#{account},</if>
-		<if test="backUrl != null">back_url=#{backUrl},</if>
-		<if test="orderFinishTime != null">order_finish_time=#{orderFinishTime,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
+		<if test="account != null">#{account},</if>
+		<if test="backUrl != null">#{backUrl},</if>
+		<if test="orderFinishTime != null">#{orderFinishTime,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
 		</if>
-		<if test="orderNo != null">order_no=#{orderNo},</if>
-		<if test="payAmount != null">pay_amount=#{payAmount},</if>
-		<if test="payCurrency != null">pay_currency=#{payCurrency},</if>
-		<if test="payDesc != null">pay_desc=#{payDesc},</if>
-		<if test="payGroup != null">pay_group=#{payGroup},</if>
-		<if test="payStatus != null">pay_status=#{payStatus},</if>
-		<if test="payTimeout != null">pay_timeout=#{payTimeout,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
+		<if test="orderNo != null">#{orderNo},</if>
+		<if test="payAmount != null">#{payAmount},</if>
+		<if test="payCurrency != null">#{payCurrency},</if>
+		<if test="payDesc != null">#{payDesc},</if>
+		<if test="payGroup != null">#{payGroup},</if>
+		<if test="payStatus != null">#{payStatus},</if>
+		<if test="payTimeout != null">#{payTimeout,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
 		</if>
-		<if test="transType != null">trans_type=#{transType},</if>
-		<if test="bankBillNo != null">bank_billno=#{bankBillNo},</if>
-		<if test="bankType != null">bank_type=#{bankType},</if>
-		<if test="buyerAlias != null">buyer_alias=#{buyerAlias},</if>
-		<if test="discount != null">discount=#{discount},</if>
-		<if test="errcode != null">errcode=#{errcode},</if>
-		<if test="errmsg != null">errmsg=#{errmsg},</if>
-		<if test="notifyId != null">notify_id=#{notifyId},</if>
-		<if test="outRefundNo != null">out_refund_no=#{outRefundNo},</if>
-		<if test="payInfo != null">pay_info=#{payInfo},</if>
-		<if test="productFee != null">product_fee=#{productFee},</if>
-		<if test="recvUserId != null">recv_user_id=#{recvUserId},</if>
-		<if test="recvUserName != null">recv_user_name=#{recvUserName},</if>
-		<if test="refundChannel != null">refund_channel=#{refundChannel},</if>
-		<if test="refundFee != null">refund_fee=#{refundFee},</if>
-		<if test="refundId != null">refund_id=#{refundId},</if>
-		<if test="refundStatus != null">refund_status=#{refundStatus},</if>
-		<if test="refundType != null">refund_type=#{refundType},</if>
-		<if test="timeEnd != null">time_end=#{timeEnd},</if>
-		<if test="tradeMode != null">trade_mode=#{tradeMode},</if>
-		<if test="transactionId != null">transaction_id=#{transactionId},</if>
-		<if test="transportFee != null">transport_fee=#{transprtFee},</if>
+		<if test="transType != null">#{transType},</if>
+		<if test="bankBillNo != null">#{bankBillNo},</if>
+		<if test="bankType != null">#{bankType},</if>
+		<if test="buyerAlias != null">#{buyerAlias},</if>
+		<if test="discount != null">#{discount},</if>
+		<if test="errcode != null">#{errcode},</if>
+		<if test="errmsg != null">#{errmsg},</if>
+		<if test="notifyId != null">#{notifyId},</if>
+		<if test="outRefundNo != null">#{outRefundNo},</if>
+		<if test="payInfo != null">#{payInfo},</if>
+		<if test="productFee != null">#{productFee},</if>
+		<if test="recvUserId != null">#{recvUserId},</if>
+		<if test="recvUserName != null">#{recvUserName},</if>
+		<if test="refundChannel != null">#{refundChannel},</if>
+		<if test="refundFee != null">#{refundFee},</if>
+		<if test="refundId != null">#{refundId},</if>
+		<if test="refundStatus != null">#{refundStatus},</if>
+		<if test="refundType != null">#{refundType},</if>
+		<if test="timeEnd != null">#{timeEnd},</if>
+		<if test="tradeMode != null">#{tradeMode},</if>
+		<if test="transactionId != null">#{transactionId},</if>
+		<if test="transportFee != null">#{transprtFee},</if>
+		<if test="openid != null">#{openid},</if>
 		#{payNo},now(),now())
 	</insert>
 
@@ -196,6 +200,7 @@
 			<if test="tradeMode != null">trade_mode=#{tradeMode},</if>
 			<if test="transactionId != null">transaction_id=#{transactionId},</if>
 			<if test="transportFee != null">transport_fee=#{transportFee},</if>
+			<if test="openid != null">openid=#{openid},</if>
 		</set>
 		where pay_no = #{payNo}
 	</update>
