@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dispatchers>
+<dispatchers method="POST">
 	<dispatcher id="pay.usr">
 		<url-pattern>/pay/usr/.*</url-pattern>
 		<handler>jframe.pay.http.usr.UsrHandler</handler>

@@ -10,36 +10,45 @@ package jframe.pay.http.handler;
  */
 public class Dispatcher {
 
-	private String id;
-	private String url;
-	private String clazz;
+    private String id;
+    private String url;
+    private String clazz;
+    private String method;
 
-	public String getId() {
-		return id;
-	}
+    public String getMethod() {
+        return method;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getClazz() {
-		return clazz;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setClazz(String clazz) {
-		this.clazz = clazz;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	@Override
-	public String toString() {
-		return "id -> " + id + ", url -> " + url + ", clazz -> " + clazz;
-	}
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    @Override
+    public String toString() {
+        return "id -> " + id + ", url -> " + url + ", clazz -> " + clazz;
+    }
 }

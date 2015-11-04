@@ -58,8 +58,7 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
     @Sharable
     public class HeartbeatHandler extends ChannelDuplexHandler {
         @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object evt)
-                throws Exception {
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             if (evt instanceof IdleStateEvent) {
                 IdleStateEvent e = (IdleStateEvent) evt;
                 if (e.state() == IdleState.ALL_IDLE) {
