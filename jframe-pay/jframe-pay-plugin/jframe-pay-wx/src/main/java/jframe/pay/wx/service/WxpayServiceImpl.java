@@ -322,7 +322,7 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
      * @param orderStatus
      */
     public void postBack(OrderWx od) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<String, String>(2, 1);
         map.put(F_payNo, od.payNo);
         map.put(F_payStatus, od.payStatus);
 

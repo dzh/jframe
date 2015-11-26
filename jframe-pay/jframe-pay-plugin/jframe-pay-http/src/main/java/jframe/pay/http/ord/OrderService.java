@@ -5,6 +5,9 @@ package jframe.pay.http.ord;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.annotation.Injector;
 import jframe.pay.alipay.service.AlipayService;
@@ -15,10 +18,8 @@ import jframe.pay.domain.http.RspCode;
 import jframe.pay.domain.util.HttpUtil;
 import jframe.pay.domain.util.JsonUtil;
 import jframe.pay.http.usr.service.CommonService;
+import jframe.pay.upmp.service.UpmppayService;
 import jframe.pay.wx.service.WxpayService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author dzh
@@ -36,11 +37,12 @@ public class OrderService extends CommonService {
     @InjectService(id = "jframe.pay.service.wxpay")
     static WxpayService Wxpay;
 
-    public void consume(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    @InjectService(id = "jframe.pay.service.upmppay")
+    static UpmppayService Upmppay;
+
+    public void consume(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         // check req
-        if (HttpUtil.mustReq(req, F_payType, F_payNo, F_transType, F_payAmount,
-                F_payDesc).size() > 0) {
+        if (HttpUtil.mustReq(req, F_payType, F_payNo, F_transType, F_payAmount, F_payDesc).size() > 0) {
             RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_MISS_PARA);
             return;
         }
@@ -50,6 +52,8 @@ public class OrderService extends CommonService {
             Alipay.pay(req, rsp);
         } else if (PayType.W.type == payType) {
             Wxpay.pay(req, rsp);
+        } else if (PayType.Y.type == payType) {
+            Upmppay.pay(req, rsp);
         } else {
             RspCode.setRspCode(rsp, RspCode.FAIL_PAYTYPE_NOEXIST);
         }
@@ -90,14 +94,16 @@ public class OrderService extends CommonService {
         }
     }
 
-    public void aliback(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    public void aliback(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         Alipay.payBack(req, rsp);
     }
 
-    public void wxback(Map<String, String> req, Map<String, Object> rsp)
-            throws Exception {
+    public void wxback(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         Wxpay.payBack(req, rsp);
+    }
+
+    public void upmpback(Map<String, String> req, Map<String, Object> rsp) throws Exception {
+        Upmppay.payBack(req, rsp);
     }
 
 }

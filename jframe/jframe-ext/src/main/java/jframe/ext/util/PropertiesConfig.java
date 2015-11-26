@@ -121,4 +121,14 @@ public class PropertiesConfig {
         }
         return val == null ? defVal : val;
     }
+
+    public synchronized Properties clone2Properties() {
+        Properties p = new Properties();
+        if (conf == null)
+            return p;
+        for (String k : conf.keySet()) {
+            p.setProperty(k, conf.get(k));
+        }
+        return p;
+    }
 }

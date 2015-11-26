@@ -26,8 +26,10 @@
 -Xms1024M
 -Xmx1024M
 -Xmn800M
--XX:PermSize=32M
--XX:MaxPermSize=64M
+#-XX:PermSize=32M
+#-XX:MaxPermSize=64M
+-XX:MetaspaceSize=32M
+-XX:MaxMetaspaceSize=100M
 -XX:SurvivorRatio=9
 -XX:+DisableExplicitGC
 -XX:+HeapDumpOnOutOfMemoryError

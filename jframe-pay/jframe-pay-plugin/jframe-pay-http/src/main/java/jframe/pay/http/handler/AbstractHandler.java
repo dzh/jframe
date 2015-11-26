@@ -7,8 +7,10 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,7 +79,7 @@ public abstract class AbstractHandler extends SimpleChannelInboundHandler<HttpOb
 
     private Map<String, List<String>> _params;
 
-    private StringBuilder data;
+    protected StringBuilder data;
 
     // private ByteBufOutputStream data;
 
@@ -152,15 +154,15 @@ public abstract class AbstractHandler extends SimpleChannelInboundHandler<HttpOb
     // TODO buf
     protected void readHttpContent(HttpContent msg) throws Exception {
         StringBuilder buf = data == null ? data = new StringBuilder() : data;
-        buf.append(msg.content().toString(CharsetUtil.UTF_8));
+        buf.append(msg.content().toString(getReqCharset()));
         if (msg instanceof LastHttpContent) {
             try {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Dispatch req map {}",
+                    LOG.debug("Dispatch req buf->{} req->{}", buf.toString(),
                             parseHttpReq(URLDecoder.decode(buf.toString(), HttpConstants.UTF8)));
                 }
 
-                String content = URLDecoder.decode(buf.toString(), HttpConstants.UTF8);
+                String content = parseReqContent(buf.toString());
                 if (isValidData(content)) {
                     service(parseHttpReq(content), rspMap);
                 } else {
@@ -173,6 +175,14 @@ public abstract class AbstractHandler extends SimpleChannelInboundHandler<HttpOb
                 LOG_REQ.debug("Finish reqUrl->{},ip->{},date->{}", getReqUrl(), getRemoteIp(), new Date().getTime());
             }
         }
+    }
+
+    protected String parseReqContent(String content) throws UnsupportedEncodingException {
+        return URLDecoder.decode(content, HttpConstants.UTF8);
+    }
+
+    protected Charset getReqCharset() {
+        return CharsetUtil.UTF_8;
     }
 
     protected boolean isValidData(String data) {

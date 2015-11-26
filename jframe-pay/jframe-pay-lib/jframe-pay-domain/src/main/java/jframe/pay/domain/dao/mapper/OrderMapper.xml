@@ -74,6 +74,27 @@
 		<result property="openid" column="openid" />
 	</resultMap>
 
+	<resultMap id="orderUpmpResultMap" type="OrderUpmp">
+		<id property="payNo" column="pay_no" />
+		<result property="account" column="account" />
+		<result property="backUrl" column="back_url" />
+		<result property="orderCreateTime" column="order_create_time"
+			typeHandler="jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler" />
+		<result property="orderFinishTime" column="order_finish_time"
+			typeHandler="jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler" />
+		<result property="orderNo" column="order_no" />
+		<result property="payStatus" column="pay_status" />
+		<result property="payAmount" column="pay_amount" />
+		<result property="payCurrency" column="pay_currency" />
+		<result property="payDesc" column="pay_desc" />
+		<result property="payGroup" column="pay_group" />
+		<result property="payTimeout" column="pay_timeout"
+			typeHandler="jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler" />
+		<result property="merReserved" column="mer_reserved" />
+		<result property="version" column="version" />
+		<result property="traceNo" column="trace_no" />
+	</resultMap>
+
 	<resultMap id="orderDetailResultMap" type="OrderDetail">
 		<id property="id" column="id" />
 		<result property="accountFrom" column="account_from" />
@@ -85,6 +106,82 @@
 		<result property="payNo" column="pay_no" />
 		<result property="transType" column="trans_type" />
 	</resultMap>
+
+	<select id="selectOrderUpmp" parameterType="string" resultMap="orderUpmpResultMap">
+		select * from order_upmp where pay_no = #{payNo}
+	</select>
+
+	<select id="selectOrderUpmpWithOrderNo" parameterType="string"
+		resultMap="orderUpmpResultMap">
+		select * from order_upmp where order_no = #{orderNo}
+	</select>
+
+	<insert id="insertOrderUpmp" parameterType="OrderUpmp">
+		insert into
+		order_upmp
+		(
+		<if test="account != null">account,</if>
+		<if test="backUrl != null">back_url,</if>
+		order_create_time,
+		<if test="orderFinishTime != null">order_finish_time,</if>
+		order_no,
+		pay_status,
+		pay_amount,
+		<if test="payCurrency != null">pay_currency,</if>
+		<if test="payDesc != null">pay_desc,</if>
+		<if test="payGroup != null">pay_group,</if>
+		pay_no,
+		<if test="payTimeout != null">pay_timeout,</if>
+		<if test="transType != null">trans_type,</if>
+		<if test="merReserved != null">mer_reserved,</if>
+		<if test="version != null">version,</if>
+		<if test="traceNo != null">trace_no,</if>
+		create_time)
+		values
+		(
+		<if test="account != null">#{account},</if>
+		<if test="backUrl != null">#{backUrl},</if>
+		now(),
+		<if test="orderFinishTime != null">#{orderFinishTime,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
+		</if>
+		#{orderNo},
+		#{payStatus},
+		#{payAmount},
+		<if test="payCurrency != null">#{payCurrency},</if>
+		<if test="payDesc != null">#{payDesc},</if>
+		<if test="payGroup != null">#{payGroup},</if>
+		#{payNo},
+		<if test="payTimeout != null">#{payTimeout,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
+		</if>
+		<if test="transType != null">#{transType},</if>
+		<if test="merReserved != null">#{merReserved},</if>
+		<if test="version != null">#{version},</if>
+		<if test="traceNo != null">#{traceNo},</if>
+		now())
+	</insert>
+
+	<update id="updateOrderUpmp" parameterType="OrderUpmp">
+		update `order_upmp`
+		<set>
+			<if test="account != null">account=#{account},</if>
+			<if test="backUrl != null">back_url=#{backUrl},</if>
+			<if test="orderFinishTime != null">order_finish_time=#{orderFinishTime,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
+			</if>
+			<if test="orderNo != null">order_no=#{orderNo},</if>
+			<if test="payAmount != null">pay_amount=#{payAmount},</if>
+			<if test="payCurrency != null">pay_currency=#{payCurrency},</if>
+			<if test="payDesc != null">pay_desc=#{payDesc},</if>
+			<if test="payGroup != null">pay_group=#{payGroup},</if>
+			<if test="payStatus != null">pay_status=#{payStatus},</if>
+			<if test="payTimeout != null">pay_timeout=#{payTimeout,typeHandler=jframe.pay.domain.dao.mapper.SqlTimestampTypeHandler},
+			</if>
+			<if test="transType != null">trans_type=#{transType},</if>
+			<if test="merReserved != null">mer_reserved=#{merReserved},</if>
+			<if test="version != null">version=#{version},</if>
+			<if test="traceNo != null">trace_no=#{traceNo},</if>
+		</set>
+		where pay_no = #{payNo}
+	</update>
 
 	<insert id="insertOrderWx" parameterType="OrderWx">
 		insert into order_wx

@@ -3,8 +3,11 @@
  */
 package jframe.pay.http.ord;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Map;
 
+import io.netty.util.CharsetUtil;
 import jframe.pay.domain.http.ReqOp;
 import jframe.pay.domain.http.RspCode;
 import jframe.pay.domain.util.HttpUtil;
@@ -43,6 +46,8 @@ public class OrderHandler extends PayHandler {
             // }
             // });
             svc.wxback(req, rsp);
+        } else if (ReqOp.UPMPBACK.code.equals(reqOp)) {
+            svc.upmpback(req, rsp);
         } else {
             RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_REQOP);
             throw new PayException("Not found");
@@ -65,5 +70,24 @@ public class OrderHandler extends PayHandler {
         req.put("reqUrl", getReqUrl());
         return req;
     }
+
+    @Override
+    protected String parseReqContent(String content) throws UnsupportedEncodingException {
+        return ReqOp.UPMPBACK.code.equals(getReqOp()) ? content : super.parseReqContent(content);
+    }
+
+    @Override
+    protected Charset getReqCharset() {
+        return ReqOp.UPMPBACK.code.equals(getReqOp()) ? CharsetUtil.ISO_8859_1 : super.getReqCharset();
+    }
+
+    // private Map<String, String> fromParameters() {
+    // Map<String, String> map = new HashMap<>();
+    // getPara().forEach((k, v) -> {
+    // if (v != null && v.size() > 0)
+    // map.put(k, v.get(0));
+    // });
+    // return map;
+    // }
 
 }

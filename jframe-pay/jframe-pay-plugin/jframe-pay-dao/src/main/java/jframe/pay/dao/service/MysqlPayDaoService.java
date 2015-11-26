@@ -3,16 +3,17 @@
  */
 package jframe.pay.dao.service;
 
+import org.apache.ibatis.session.SqlSession;
+
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.annotation.Injector;
 import jframe.memcached.client.MemcachedService;
 import jframe.mybatis.MultiMybatisService;
 import jframe.pay.domain.dao.OrderAlipay;
+import jframe.pay.domain.dao.OrderUpmp;
 import jframe.pay.domain.dao.OrderWx;
 import jframe.pay.domain.dao.UsrAccount;
 import jframe.pay.domain.dao.mapper.Environment;
-
-import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author dzh
@@ -111,6 +112,37 @@ class MysqlPayDaoService implements PayDaoService {
     public OrderWx selectOrderWxWithOrderNo(String orderNo) {
         try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
             return session.selectOne("jframe.pay.domain.dao.mapper.OrderMapper.selectOrderWxWithOrderNo", orderNo);
+        }
+    }
+
+    @Override
+    public OrderUpmp selectOrderUpmp(String payNo) {
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
+            return session.selectOne("jframe.pay.domain.dao.mapper.OrderMapper.selectOrderUpmp", payNo);
+        }
+    }
+
+    @Override
+    public OrderUpmp selectOrderUpmpWithOrderNo(String orderNo) {
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN_RO1).openSession()) {
+            return session.selectOne("jframe.pay.domain.dao.mapper.OrderMapper.selectOrderUpmpWithOrderNo", orderNo);
+        }
+    }
+
+    @Override
+    public int updateOrderUpmp(OrderUpmp od) {
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            int sum = session.update("jframe.pay.domain.dao.mapper.OrderMapper.updateOrderUpmp", od);
+            session.commit();
+            return sum;
+        }
+    }
+
+    @Override
+    public void insertOrderUpmp(OrderUpmp od) {
+        try (SqlSession session = MultiMybatisSvc.getSqlSessionFactory(Environment.RUN).openSession()) {
+            session.insert("jframe.pay.domain.dao.mapper.OrderMapper.insertOrderUpmp", od);
+            session.commit();
         }
     }
 

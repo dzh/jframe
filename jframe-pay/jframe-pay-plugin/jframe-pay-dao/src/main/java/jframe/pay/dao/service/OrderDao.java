@@ -4,6 +4,7 @@
 package jframe.pay.dao.service;
 
 import jframe.pay.domain.dao.OrderAlipay;
+import jframe.pay.domain.dao.OrderUpmp;
 import jframe.pay.domain.dao.OrderWx;
 
 /**
@@ -28,5 +29,13 @@ public interface OrderDao {
     OrderWx selectOrderWxWithOrderNo(String orderNo);
 
     int updateOrderWx(OrderWx od);
+
+    void insertOrderUpmp(OrderUpmp od);
+
+    OrderUpmp selectOrderUpmp(String payNo);
+
+    OrderUpmp selectOrderUpmpWithOrderNo(String orderNo);
+
+    int updateOrderUpmp(OrderUpmp od);
 
 }

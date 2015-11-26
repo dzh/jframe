@@ -5,6 +5,7 @@ package jframe.pay.domain.util;
 
 import static java.util.stream.Collectors.toList;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -72,8 +73,9 @@ public class HttpUtil {
      * 
      * @param content
      * @return
+     * @throws UnsupportedEncodingException
      */
-    public static Map<String, String> parseHttpParas(String content) {
+    public static Map<String, String> parseHttpParas(String content) throws UnsupportedEncodingException {
         Map<String, String> map = new HashMap<>();
         int len = content.length();
 
@@ -89,6 +91,32 @@ public class HttpUtil {
             }
             if (ch == '&') {
                 map.put(key, buf.toString());
+                buf.setLength(0);
+                continue;
+            }
+            buf.append(ch);
+        }
+        map.put(key, buf.toString());
+        return map;
+    }
+
+    public static Map<String, String> parseHttpParas(String content, String fromCharset, String toCharset)
+            throws UnsupportedEncodingException {
+        Map<String, String> map = new HashMap<>();
+        int len = content.length();
+
+        StringBuilder buf = new StringBuilder(16);
+        String key = null;
+        for (int i = 0; i < len; ++i) {
+            char ch = content.charAt(i);
+
+            if (ch == '=') {
+                key = buf.toString();
+                buf.setLength(0);
+                continue;
+            }
+            if (ch == '&') {
+                map.put(key, new String(buf.toString().getBytes(fromCharset), toCharset));
                 buf.setLength(0);
                 continue;
             }

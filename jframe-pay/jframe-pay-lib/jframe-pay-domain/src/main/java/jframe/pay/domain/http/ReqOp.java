@@ -14,7 +14,7 @@ public enum ReqOp {
 	/************************** Order **********************************/
 	CONSUME("consume", "consume"), QRYOD("qryod", "query order"), ALIBACK(
 			"aliback", "alipay back"), WXBACK("wxback", "wxpay back"), ALICLIENTBACK(
-			"aliclientback", "alipay client back")
+			"aliclientback", "alipay client back"),UPMPBACK("upmpback","upmppay back")
 
 	;
 

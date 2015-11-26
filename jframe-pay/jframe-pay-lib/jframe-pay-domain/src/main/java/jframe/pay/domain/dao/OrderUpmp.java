@@ -10,8 +10,12 @@ package jframe.pay.domain.dao;
  */
 public class OrderUpmp extends OrderBase {
     /**
-     * 支付支持的卡类型，'{cardType=01}'-借记卡，'{cardType=02}'-信用卡，不填都支持
+     * TODO 支付支持的卡类型，'{cardType=01}'-借记卡，'{cardType=02}'-信用卡，不填都支持
      */
     public String merReserved;
+
+    public String version;
+
+    public String traceNo;
 
 }

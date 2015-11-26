@@ -15,11 +15,10 @@ import jframe.core.plugin.annotation.Service;
 @Service(clazz = "jframe.pay.alipay.service.AlipayServiceImpl", id = "jframe.pay.service.alipay")
 public interface AlipayService {
 
-	void pay(Map<String, String> req, Map<String, Object> rsp) throws Exception;
+    void pay(Map<String, String> req, Map<String, Object> rsp) throws Exception;
 
-	void payBack(Map<String, String> req, Map<String, Object> rsp)
-			throws Exception;
+    void payBack(Map<String, String> req, Map<String, Object> rsp) throws Exception;
 
-	void clientPayBack(Map<String, String> req, Map<String, Object> rsp)
-			throws Exception;
+    // TODO
+    void clientPayBack(Map<String, String> req, Map<String, Object> rsp) throws Exception;
 }

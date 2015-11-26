@@ -6,9 +6,9 @@
 	<properties>
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://61.153.100.20:4040/jframe_pay?useUnicode=true&amp;characterEncoding=UTF-8" />
-		<property name="username" value="pay" />
-		<property name="password" value="pay123" />
+			value="jdbc:mysql://ip:port/jframe_pay?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="****" />
+		<property name="password" value="****" />
 		<property name="connectionProperties" value="druid.stat.slowSqlMillis=100" />
 	</properties>
 
@@ -48,6 +48,7 @@
 		<typeAlias alias="OrderDetail" type="jframe.pay.domain.dao.OrderDetail" />
 		<typeAlias alias="OrderAlipay" type="jframe.pay.domain.dao.OrderAlipay" />
 		<typeAlias alias="OrderWx" type="jframe.pay.domain.dao.OrderWx" />
+		<typeAlias alias="OrderUpmp" type="jframe.pay.domain.dao.OrderUpmp" />
 
 		<package name="jframe.pay.domain.dao" />
 	</typeAliases>

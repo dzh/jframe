@@ -86,6 +86,7 @@ dzh_11@qq.com                (personal)
 	* Plugin Feature
 		* scala plugin
 		* clojure plugin
+		* auto plugin class in plugin.properties
 	* New Plugin
 		* jframe-monitor jframe runtime information
 	* upgrade plugin from Jframev1	
