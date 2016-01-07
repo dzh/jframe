@@ -26,7 +26,12 @@
 		<module>jframe-yunpian</module>
 		<module>jframe-qiniu</module>
 		<module>jframe-activemq-client</module>
+		<module>jframe-rabbitmq-client</module>
 	</modules>
+	<dependencyManagement>
+		<dependencies>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>

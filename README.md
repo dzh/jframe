@@ -56,12 +56,14 @@ dzh_11@qq.com                (personal)
   		* jframe-mybatis
     	* jframe-datasource
 * v1.2.0 deving
-	* TODO Add plugin fragment feature, 
 	* TODO Fix hot deployment supporting service/fragment feature
-	* TODO Rewrite bin/jframe.bat 
+	* TODO Rewrite bin/jframe.[bat|sh] 
+	* TODO Add plugin fragment feature
+	* TODO Add stopping policy, such as save/restore msg when jframe begin stopping
 	* TODO ActivemqDispatcher improvement
 		* Automatic reconnection(static:(tcp://host1:61616,tcp://host2:61616)
 		* Support Publish/Subscribe and Product/Consume
+	* TODO Add RabbitmqDispatcher
 	* New plugin
 		* jframe-yunpian
 		* jframe-qiniu
@@ -69,6 +71,8 @@ dzh_11@qq.com                (personal)
 		* TODO jframe-activemq
 		* TODO jframe-activemq-client
 		* TODO jframe-http
+		* TODO jframe-zk
+		* TODO jframe-watch
 	* Add jframe-pay application(pay gateway), see [jframe\_pay\_manual\_zh\_CN](https://github.com/dzh/jframe/tree/master/jframe-pay/doc/jframe_pay_manual_zh_CN.org) 
 
 ## Jframe v2 Feature
