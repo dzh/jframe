@@ -2,7 +2,7 @@
 
 #+TITLE: Jframe Manual
 #+AUTHOR: dzh
-#+EMAIL: jframe-dev@googlegroups.com
+#+EMAIL: dzh_11@qq.com
 
 * 工程目录
 ** 下载地址
@@ -31,7 +31,7 @@ git clone https://github.com/dzh/jframe.git
         - update                    #默认系统更新目录,upg更新插件使用
     - jframe-swt                    #jframe的swt插件实现,这个示例还没做好,目前演示了将jframe用于C端的方式
     - jframe-watch                  #资源更新插件,跟踪配置文件的修改并通知其他插件
-  - jframe-plugins                  #jframe实现的一些插件
+  - jframe-plugin                   #jframe实现的一些插件
 #+END_EXAMPLE
 *** TODO  Maven说明
    - jframe项目使用eclipse+maven开发和管理
@@ -56,6 +56,18 @@ git clone https://github.com/dzh/jframe.git
 ** 框架日志
 ** config.properties
 ** vmargs[-win]
+
+* Jframe
+** jframe-launcher
+*** 启动过程
+- Main 守护进程main函数
+- FrameMain
+*** 
+- v1.2.0版本开始功能, 和jframe-core的依赖关系倒置
+- 设计目标让launcher
+*** jframe.launcher.api
+*** use launcher
+
 
 * Plugin
 ** 插件示例

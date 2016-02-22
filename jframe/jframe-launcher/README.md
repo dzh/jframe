@@ -1,4 +1,13 @@
 JFrame Launcher
-===============================================================
+==============================
+Common launcher for Java program
 
-### 启动过程
+### Feature List
+- Configure file 
+- Daemon progress or not
+- 
+
+
+
+### Api Design
+- Conf 

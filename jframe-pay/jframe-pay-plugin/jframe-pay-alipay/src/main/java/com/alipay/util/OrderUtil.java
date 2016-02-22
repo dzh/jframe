@@ -60,7 +60,7 @@ public class OrderUtil {
             // 仅需对sign 做URL编码
             sign = URLEncoder.encode(sign, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         return od + "&sign=\"" + sign + "\"&" + AlipayConfig.getSignType();
     }

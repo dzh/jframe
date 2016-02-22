@@ -12,12 +12,13 @@ import java.util.regex.Pattern;
  * @date Oct 11, 2013 1:12:37 PM
  * @since 1.0
  */
+@Deprecated
 public class VarHandler {
 
     // private static final Logger LOG =
     // LoggerFactory.getLogger(VarHandler.class);
 
-    public static final Pattern P_VAR = Pattern.compile(ConfigConstants.REGEX_VAR, Pattern.CASE_INSENSITIVE);
+    public static final Pattern P_VAR = Pattern.compile(Config.REGEX_VAR, Pattern.CASE_INSENSITIVE);
 
     private Config _config;
 

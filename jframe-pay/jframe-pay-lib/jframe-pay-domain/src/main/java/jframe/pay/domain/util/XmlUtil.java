@@ -4,6 +4,7 @@
 package jframe.pay.domain.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +28,23 @@ public class XmlUtil {
         domFactory.setNamespaceAware(true);
         DocumentBuilder builder = domFactory.newDocumentBuilder();
         Document source = builder.parse(new ByteArrayInputStream(content.getBytes("UTF-8")));
+
+        NodeList nodeList = source.getDocumentElement().getChildNodes();
+
+        Map<String, String> map = new HashMap<>();
+        Node node = null;
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            node = nodeList.item(i);
+            map.put(node.getNodeName(), node.getTextContent());
+        }
+        return map;
+    }
+
+    public static Map<String, String> fromXml(InputStream in) throws Exception {
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+        domFactory.setNamespaceAware(true);
+        DocumentBuilder builder = domFactory.newDocumentBuilder();
+        Document source = builder.parse(in);
 
         NodeList nodeList = source.getDocumentElement().getChildNodes();
 

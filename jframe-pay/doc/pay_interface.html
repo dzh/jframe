@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>pay_interface</title>
-<!-- 2015-09-01 Tue 15:29 -->
+<!-- 2016-02-02 Tue 14:13 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="dzh" />
@@ -148,17 +148,27 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-2">1.2. 类型说明</a></li>
 </ul>
 </li>
-<li><a href="#sec-2">2. 账户 /pay/usr/${op}</a>
+<li><a href="#sec-2">2. 账户 /pay/usr/${reqOp}</a>
 <ul>
 <li><a href="#sec-2-1">2.1. reg 注册支付账户</a></li>
 <li><a href="#sec-2-2">2.2. upu 更新账户信息</a></li>
 <li><a href="#sec-2-3">2.3. qryu 查询账户信息</a></li>
 </ul>
 </li>
-<li><a href="#sec-3">3. 订单 /pay/ord/${op}</a>
+<li><a href="#sec-3">3. 订单 /pay/ord/${reqOp}</a>
 <ul>
 <li><a href="#sec-3-1">3.1. consume 消费订单，对应银联消费、支付宝、微信直接扣款</a></li>
 <li><a href="#sec-3-2">3.2. qryod 查询订单</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. 管理后台 /pay/adm/${reqOp}</a>
+<ul>
+<li><a href="#sec-4-1">4.1. addptemplate 创建支付模版</a></li>
+<li><a href="#sec-4-2">4.2. addpcompany 创建支付商户</a></li>
+<li><a href="#sec-4-3">4.3. addpscene 创建支付场景</a></li>
+<li><a href="#sec-4-4">4.4. addptype 创建支付类型</a></li>
+<li><a href="#sec-4-5">4.5. qrypscene</a></li>
+<li><a href="#sec-4-6">4.6. qryall 查询所有支付配置信息</a></li>
 </ul>
 </li>
 </ul>
@@ -178,6 +188,8 @@ for the JavaScript code in this tag.
 </pre>
 <ul class="org-ul">
 <li>'*'表示必要请求参数
+</li>
+<li>'*'[W|A|U],分别表示微信|支付宝|银联必要参数
 </li>
 </ul>
 </div>
@@ -232,7 +244,7 @@ for the JavaScript code in this tag.
 </div>
 
 <div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> 账户 /pay/usr/${op}</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> 账户 /pay/usr/${reqOp}</h2>
 <div class="outline-text-2" id="text-2">
 </div><div id="outline-container-sec-2-1" class="outline-3">
 <h3 id="sec-2-1"><span class="section-number-3">2.1</span> reg 注册支付账户</h3>
@@ -364,6 +376,12 @@ for the JavaScript code in this tag.
 <td class="left">str</td>
 <td class="left">&#xa0;</td>
 </tr>
+
+<tr>
+<td class="left">mobile</td>
+<td class="left">str</td>
+<td class="left">&#xa0;</td>
+</tr>
 </tbody>
 </table>
 <ul class="org-ul">
@@ -428,7 +446,7 @@ for the JavaScript code in this tag.
 
 
 <div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> 订单 /pay/ord/${op}</h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> 订单 /pay/ord/${reqOp}</h2>
 <div class="outline-text-2" id="text-3">
 </div><div id="outline-container-sec-3-1" class="outline-3">
 <h3 id="sec-3-1"><span class="section-number-3">3.1</span> consume 消费订单，对应银联消费、支付宝、微信直接扣款</h3>
@@ -462,7 +480,7 @@ for the JavaScript code in this tag.
 </tr>
 
 <tr>
-<td class="left">payGroup*</td>
+<td class="left">payGroup</td>
 <td class="left">str</td>
 <td class="left">支付组号</td>
 </tr>
@@ -471,12 +489,6 @@ for the JavaScript code in this tag.
 <td class="left">payNo*</td>
 <td class="left">str</td>
 <td class="left">支付号</td>
-</tr>
-
-<tr>
-<td class="left">transType*</td>
-<td class="left">int</td>
-<td class="left">消费类型</td>
 </tr>
 
 <tr>
@@ -492,7 +504,7 @@ for the JavaScript code in this tag.
 </tr>
 
 <tr>
-<td class="left">payDesc</td>
+<td class="left">payDesc*</td>
 <td class="left">str</td>
 <td class="left">交易描述</td>
 </tr>
@@ -516,15 +528,33 @@ for the JavaScript code in this tag.
 </tr>
 
 <tr>
-<td class="left">account*</td>
+<td class="left">account</td>
 <td class="left">str</td>
 <td class="left">订单支付账户</td>
+</tr>
+
+<tr>
+<td class="left">transType*</td>
+<td class="left">int</td>
+<td class="left">消费类型</td>
 </tr>
 
 <tr>
 <td class="left">merReserved</td>
 <td class="left">str</td>
 <td class="left">可选参数，支付支持的卡类型，'{cardType=01}'-借记卡，'{cardType=02}'-信用卡，不填都支持</td>
+</tr>
+
+<tr>
+<td class="left">devType*W</td>
+<td class="left">int</td>
+<td class="left">DevType, 微信支付必须参数</td>
+</tr>
+
+<tr>
+<td class="left">remoteIp*W</td>
+<td class="left">str</td>
+<td class="left">手机用户Ip</td>
 </tr>
 </tbody>
 </table>
@@ -535,7 +565,7 @@ for the JavaScript code in this tag.
 <pre class="example">
 {
   tn: 交易流水号
-  rspCode: 响应码,见RspCode（支付平台返回码定义），或URspCode（银联返回码定义）
+  rspCode: 响应码,见RspCode(支付平台返回码定义)，或URspCode(银联返回码定义）
   rspDesc:
 }
 </pre>
@@ -625,7 +655,338 @@ for the JavaScript code in this tag.
 <pre class="example">
 {
   od: {订单数据}
-  rspCode: 响应码,见RspCode（支付平台返回码定义），或URspCode（银联返回码定义）
+  rspCode: 响应码,见RspCode(支付平台返回码定义)，或URspCode(银联返回码定义）
+  rspDesc:
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 管理后台 /pay/adm/${reqOp}</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> addptemplate 创建支付模版</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>req
+</li>
+</ul>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">参数名</th>
+<th scope="col" class="left">类型</th>
+<th scope="col" class="left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">name</td>
+<td class="left">str</td>
+<td class="left">支付类型名字</td>
+</tr>
+
+<tr>
+<td class="left">desc</td>
+<td class="left">str</td>
+<td class="left">支付类型说明</td>
+</tr>
+
+<tr>
+<td class="left">template</td>
+<td class="left">str</td>
+<td class="left">支付类型配置样板</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>rsp
+</li>
+</ul>
+<pre class="example">
+{
+  id: templateId
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> addpcompany 创建支付商户</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li>req
+</li>
+</ul>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">参数名</th>
+<th scope="col" class="left">类型</th>
+<th scope="col" class="left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">name</td>
+<td class="left">str</td>
+<td class="left">商户名称</td>
+</tr>
+
+<tr>
+<td class="left">desc</td>
+<td class="left">str</td>
+<td class="left">支付类型说明</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>rsp
+</li>
+</ul>
+<pre class="example">
+{ 
+  id: 商户唯一ID
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> addpscene 创建支付场景</h3>
+<div class="outline-text-3" id="text-4-3">
+<ul class="org-ul">
+<li>req
+</li>
+</ul>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">参数名</th>
+<th scope="col" class="left">类型</th>
+<th scope="col" class="left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">companyId</td>
+<td class="left">int</td>
+<td class="left">商户ID</td>
+</tr>
+
+<tr>
+<td class="left">name</td>
+<td class="left">str</td>
+<td class="left">场景名称</td>
+</tr>
+
+<tr>
+<td class="left">desc</td>
+<td class="left">str</td>
+<td class="left">场景描述</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>rsp
+</li>
+</ul>
+<p>
+hh#+BEGIN<sub>EXAMPLE</sub>
+{
+  id: sceneId
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+#+END<sub>EXAMPLE</sub>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> addptype 创建支付类型</h3>
+<div class="outline-text-3" id="text-4-4">
+<ul class="org-ul">
+<li>req
+</li>
+</ul>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">参数名</th>
+<th scope="col" class="left">类型</th>
+<th scope="col" class="left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">name</td>
+<td class="left">str</td>
+<td class="left">支付名称</td>
+</tr>
+
+<tr>
+<td class="left">desc</td>
+<td class="left">str</td>
+<td class="left">支付描述</td>
+</tr>
+
+<tr>
+<td class="left">sceneId</td>
+<td class="left">int</td>
+<td class="left">场景ID</td>
+</tr>
+
+<tr>
+<td class="left">templateId</td>
+<td class="left">int</td>
+<td class="left">模版ID</td>
+</tr>
+
+<tr>
+<td class="left">conf</td>
+<td class="left">str</td>
+<td class="left">配置内容，格式由模版定义和校验</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>rsp
+</li>
+</ul>
+<pre class="example">
+{
+  id: 支付唯一标识
+  rspCode: 响应码,见RspCode(支付平台返回码定义)
+  rspDesc:
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> qrypscene</h3>
+<div class="outline-text-3" id="text-4-5">
+<ul class="org-ul">
+<li>req
+</li>
+</ul>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">参数名</th>
+<th scope="col" class="left">类型</th>
+<th scope="col" class="left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">sceneId</td>
+<td class="left">int</td>
+<td class="left">场景ID</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>rsp
+</li>
+</ul>
+<pre class="example">
+{
+  type: [{json of ptype}, ...]
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-4-6" class="outline-3">
+<h3 id="sec-4-6"><span class="section-number-3">4.6</span> qryall 查询所有支付配置信息</h3>
+<div class="outline-text-3" id="text-4-6">
+<ul class="org-ul">
+<li>req
+</li>
+</ul>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">参数名</th>
+<th scope="col" class="left">类型</th>
+<th scope="col" class="left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">filter</td>
+<td class="left">int</td>
+<td class="left">0-all</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>rsp
+</li>
+</ul>
+<pre class="example">
+{
+  payConf: {json, 树状结构配置}
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
   rspDesc:
 }
 </pre>
@@ -635,7 +996,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: dzh</p>
-<p class="date">Created: 2015-09-01 Tue 15:29</p>
+<p class="date">Created: 2016-02-02 Tue 14:13</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

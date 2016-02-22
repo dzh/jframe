@@ -7,13 +7,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jframe.core.conf.VarHandler;
-import jframe.ext.dispatch.MqConf;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import jframe.ext.dispatch.MqConf;
  */
 public class PropertiesConfig {
 
-    static final Logger LOG = LoggerFactory.getLogger(MqConf.class);
+    static final Logger LOG = LoggerFactory.getLogger(PropertiesConfig.class);
 
     boolean init = false;
 
@@ -126,8 +126,8 @@ public class PropertiesConfig {
         Properties p = new Properties();
         if (conf == null)
             return p;
-        for (String k : conf.keySet()) {
-            p.setProperty(k, conf.get(k));
+        for (Entry<String, String> e : conf.entrySet()) {
+            p.setProperty(e.getKey(), e.getValue());
         }
         return p;
     }

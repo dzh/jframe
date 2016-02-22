@@ -1,4 +1,5 @@
 *.class
+*.log
 *.DS_Store
 # Package Files #
 # /META-INF/lib/*.jar

@@ -4,28 +4,11 @@
 	<parent>
 		<groupId>cn</groupId>
 		<artifactId>jframe</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<artifactId>jframe-launcher</artifactId>
 
+
 	<dependencies>
-		<dependency>
-			<groupId>cn</groupId>
-			<artifactId>jframe-core</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>1.0.12</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.0.12</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 </project>

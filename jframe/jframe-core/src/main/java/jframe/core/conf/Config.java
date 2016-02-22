@@ -21,40 +21,36 @@ import jframe.core.Frame;
  */
 public interface Config extends ConfigConstants {
 
-	void setFrame(Frame frame);
+    void setFrame(Frame frame);
 
-	Frame getFrame();
+    Frame getFrame();
 
-	/**
-	 * 
-	 * 
-	 * @param key
-	 * @param value
-	 */
-	void addConfig(String key, String value);
+    /**
+     * <p>
+     * <li>if doesn't contain the key ,then return null.</li>
+     * <li>if contain the key, then return old value</li>
+     * </p>
+     * 
+     * @param key
+     * @param value
+     * @return old value or null
+     */
+    String modifyConfig(String key, String value);
 
-	String getConfig(String key);
+    void clearConfig();
 
-	String getConfig(String key, String defVal);
+    /**
+     * @since 1.2.0
+     * @return all config
+     */
+    Map<String, String> getConfig();
 
-	/**
-	 * <p>
-	 * <li>if doesn't contain the key ,then return null.</li>
-	 * <li>if contain the key, then return old value</li>
-	 * </p>
-	 * 
-	 * @param key
-	 * @param value
-	 * @return old value or null
-	 */
-	String modifyConfig(String key, String value);
+    String getConfig(String k);
 
-	void clearConfig();
+    String getConfig(String k, String defval);
 
-	/**
-	 * @since 1.2.0
-	 * @return all config
-	 */
-	Map<String, String> getConfig();
+    String setConfig(String k, String v);
+
+    boolean contain(String k);
 
 }

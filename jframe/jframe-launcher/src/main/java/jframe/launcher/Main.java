@@ -3,50 +3,16 @@
  */
 package jframe.launcher;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import jframe.core.conf.Config;
-import jframe.core.conf.ConfigConstants;
-import jframe.core.conf.DefConfig;
-import jframe.core.conf.VarHandler;
-import jframe.core.util.ConfigUtil;
-import jframe.core.util.Program;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.LoggerContext;
+import jframe.launcher.api.Config;
+import jframe.launcher.api.Launcher;
+import jframe.launcher.api.LauncherException;
 
 /**
- * <p>
- * daemon运行
- * <li>加载config.properties</li>
- * <li>判断是否daemon执行</li>
- * <li>写PID到daemon.pid</li>
- * <li>配置子进程(app.home)，调用launcher启动子进程，默認launcher是FrameMain</li>
- * <li>监听子进程，若异常停止则重启</li>
- * <li>子进程正常关闭时，自己也关闭</li>
- * </p>
- * <p>
- * normal运行
- * <li>加载config.properties</li>
- * <li>判断是否daemon执行</li>
- * <li>配置子进程(app.home)，调用launcher启动子进程</li>
- * <li>正常终止自己</li>
- * </p>
- * <p>
- * 父子进程关系
- * <li>父进程拷贝所有系统属性给子进程</li>
- * </p>
  * 
  * @author dzh
  * @date Oct 10, 2013 4:28:16 PM
@@ -54,227 +20,58 @@ import ch.qos.logback.classic.LoggerContext;
  */
 public class Main {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-	static final String ENCODING = "utf-8";
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		LOG.info("Main is Starting!");
-		String configFile = System.getProperty(ConfigConstants.FILE_CONFIG);
-		if (configFile == null || "".equals(configFile)) {
-			configFile = System.getProperty(ConfigConstants.APP_HOME)
-					+ File.separator + "conf" + File.separator
-					+ ConfigConstants.FILE_CONFIG;
-		}
+    /**
+     * 
+     * @param lclazz
+     *            launcher class
+     * @param deflclazz
+     *            default launcher class
+     * @return
+     */
+    public static Launcher createLauncher(String lclazz) throws LauncherException {
+        if (lclazz == null || "".equals(lclazz)) {
+            throw new LauncherException("Not found launcher class" + lclazz);
+        }
+        try {
+            return (Launcher) Thread.currentThread().getContextClassLoader().loadClass(lclazz).newInstance();
+        } catch (Exception e) {
+            err(e);
+        }
+        return null;
+    }
 
-		File confFile = new File(configFile);
-		if (!confFile.exists()) {
-			LOG.error("Not found config.properties");
-			exitSystem(-1);
-		}
+    static void err(Exception e) {
+        LOG.error(e.getMessage(), e.getCause());
+    }
 
-		final Config config = ConfigUtil.genNewConfig(configFile);
-		LOG.info("Loading config.properties successfully!");
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        start(System.getProperty(Config.LAUNCHER));
+    }
 
-		String daemon = config.getConfig(ConfigConstants.LAUNCH_MODE);
-		if (ConfigConstants.LAUNCH_MODE_DAEMON.equalsIgnoreCase(daemon)) {
-			launchDaemon(config);
-		} else {
-			launchNormal(config);
-		}
+    static void start(String launcher) {
+        Launcher l = null;
+        try {
+            String appHome = System.getProperty(Config.APP_HOME);
+            l = createLauncher(launcher);
+            LOG.info("{} is starting from {}!", l.name(), appHome);
 
-		LOG.info("Daemon process stopped!");
-		exitSystem(0);
-	}
+            String fileConfig = System.getProperty(Config.FILE_CONFIG,
+                    appHome + File.separator + "conf" + File.separator + Config.FILE_CONFIG_NAME);
+            Config config = l.load(fileConfig);
+            l.launch(config);
+        } catch (Exception e) {
+            LOG.error("launcher exception:", e.getCause());
+        } finally {
+            if (l != null) {
+                l.exit(0);
+                LOG.info("{} stopped!", l.name());
+            }
+        }
+    }
 
-	private static void exitSystem(int status) {
-		stopLog();
-		System.exit(status);
-	}
-
-	/**
-	 * @param conf
-	 */
-	private static void launchNormal(Config config) {
-		LOG.info("Launching normal mode!");
-		launch(config);
-	}
-
-	private static Process launch(Config config) {
-		// TODO class is not found
-		String launcher = config.getConfig(ConfigConstants.LAUNCHER);
-		if (launcher == null) {
-			launcher = FrameMain.class.getName(); //
-		}
-		List<String> list = loadVmargs(config
-				.getConfig(ConfigConstants.FILE_VMARGS));
-		VarHandler vh = new VarHandler(config);
-		for (int i = 0; i < list.size(); i++) {
-			String arg = list.get(i);
-			if (vh.hasVar(arg)) {
-				list.set(i, vh.replace(arg));
-			}
-		}
-
-		list.add(0, "-Dapp.home=" + config.getConfig(ConfigConstants.APP_HOME));
-		list.add(0, "java");
-		list.add(launcher);
-		ProcessBuilder pb = new ProcessBuilder();
-		pb.command(list);
-		// pb.redirectErrorStream(true);
-
-		Process p = null;
-		try {
-			p = pb.start();
-		} catch (IOException e) {
-			LOG.error(e.getMessage());
-		}
-		return p;
-	}
-
-	/**
-	 * @param string
-	 */
-	private static List<String> loadVmargs(String file) {
-		File f = new File(file); // vmargs file
-		if (!f.exists()) {
-			LOG.error("Not found vmargs file:" + file);
-			return Collections.emptyList();
-		}
-		List<String> vmargs = new LinkedList<String>();
-
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(file));
-			String line = null;
-			String[] args = null;
-			while (true) {
-				try {
-					line = br.readLine(); // ignore single line error
-				} catch (IOException e) {
-					LOG.warn(e.getMessage());
-					continue;
-				}
-				if (line == null)
-					break;
-				if (line.trim().startsWith("#") || line.equals(""))
-					continue;
-				args = line.split("\\s");
-				for (String a : args) {
-					vmargs.add(a);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			LOG.warn(e.getLocalizedMessage());
-		} finally {
-			if (br != null)
-				try {
-					br.close();
-				} catch (IOException e) {
-					LOG.warn(e.getLocalizedMessage());
-				}
-		}
-		return vmargs;
-	}
-
-	/**
-	 * @param conf
-	 */
-	private static void launchDaemon(Config config) {
-		LOG.info("Launching daemon mode!");
-		LOG.info("Write pid file: " + config.getConfig(DefConfig.PID_DAEMON));
-
-		try {
-			Program.writePID(Program.getPID(),
-					config.getConfig(DefConfig.PID_DAEMON));
-		} catch (IOException e) {
-			LOG.error(e.getMessage());
-			exitSystem(-1);
-		}
-
-		final String pid_daemon = config.getConfig(ConfigConstants.PID_DAEMON);
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				try {
-					new File(pid_daemon).deleteOnExit();
-				} catch (Exception e) {
-					LOG.error("Shutdown Error:" + e.getMessage());
-				}
-			}
-		});
-
-		int exit = 0;
-		do {
-			Process subp = launch(config);//
-			if (subp == null) {
-				LOG.error("Launch FrameMain Error! Are vmargs set the correct value?(win/linux)");
-				break;
-			}
-			Thread errT = redirectStream(subp.getErrorStream());
-			Thread stdT = redirectStream(subp.getInputStream());
-			LOG.info("Startup application process successfully!");
-			try {
-				exit = subp.waitFor();
-			} catch (Exception e) {
-				LOG.warn(e.getMessage());
-				break;
-			} finally {
-				if (errT != null)
-					errT.interrupt();
-				if (stdT != null)
-					stdT.interrupt();
-			}
-		} while (exit != 0 && exit != 143);
-	}
-
-	/**
-	 * @param inputStream
-	 */
-	private static Thread redirectStream(final InputStream inputStream) {
-		if (inputStream == null) {
-			LOG.error("Main redirectStream null");
-			return null;
-		}
-
-		Thread t = new Thread("redirectStream") {
-			public void run() {
-				BufferedReader br = null;
-				try {
-					br = new BufferedReader(new InputStreamReader(inputStream,
-							ENCODING));
-					while (!Thread.interrupted()) {
-						try {
-							String str = br.readLine();
-							if (str == null)
-								Thread.sleep(1000);
-							else
-								LOG.info(str);
-						} catch (IOException e) {
-							LOG.error(e.getMessage());
-							break;
-						}
-					}
-				} catch (Exception e) {
-					LOG.warn(e.getMessage());
-				} finally {
-					if (br != null)
-						try {
-							br.close();
-						} catch (Exception e) {
-						}
-				}
-			}
-		};
-		t.setDaemon(true);
-		t.start();
-		return t;
-	}
-
-	private static final void stopLog() {
-		LoggerContext loggerContext = (LoggerContext) LoggerFactory
-				.getILoggerFactory();
-		loggerContext.stop();
-	}
 }

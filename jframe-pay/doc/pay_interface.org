@@ -1,10 +1,10 @@
 #+STARTUP: showall
 #+author: dzh
-#+email: dzh_11@qq.com
+#+email: 120803528@qq.com
 
 * 接口说明
 ** 接口规范
-－ POST请求
+- POST请求
 #+BEGIN_EXAMPLE
 
 #+END_EXAMPLE
@@ -12,13 +12,13 @@
 - '*'[W|A|U],分别表示微信|支付宝|银联必要参数
 
 ** 类型说明
-| 类型      | 值 |
-|-----------+----|
-| RspCode   |    |
-| PayType   |    |
-| UsrType   |    |
-| TransType |    |
-| PayCurrency           |    |
+| 类型        | 值 |
+|-------------+----|
+| RspCode     |    |
+| PayType     |    |
+| UsrType     |    |
+| TransType   |    |
+| PayCurrency |    |
 
 * 账户 /pay/usr/${reqOp}
 ** reg 注册支付账户
@@ -37,7 +37,7 @@
 { 
   account: 注册成功，返回账户号
   rspCode: 
-  rspDesc:ce
+  rspDesc: 
 }
 #+END_EXAMPLE
 
@@ -96,7 +96,7 @@
 #+BEGIN_EXAMPLE
 {
   tn: 交易流水号
-  rspCode: 响应码,见RspCode（支付平台返回码定义），或URspCode（银联返回码定义）
+  rspCode: 响应码,见RspCode(支付平台返回码定义)，或URspCode(银联返回码定义）
   rspDesc:
 }
 #+END_EXAMPLE
@@ -117,9 +117,99 @@
 #+BEGIN_EXAMPLE
 {
   od: {订单数据}
-  rspCode: 响应码,见RspCode（支付平台返回码定义），或URspCode（银联返回码定义）
+  rspCode: 响应码,见RspCode(支付平台返回码定义)，或URspCode(银联返回码定义）
   rspDesc:
 }
 #+END_EXAMPLE
+
+* 管理后台 /pay/adm/${reqOp}
+** addptemplate 创建支付模版
+- req
+| 参数名   | 类型 | 说明         |
+|----------+------+--------------|
+| name     | str  | 支付类型名字 |
+| desc     | str  | 支付类型说明 |
+| template | str  | 支付类型配置样板     |
+- rsp
+#+BEGIN_EXAMPLE
+{
+  id: templateId
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+#+END_EXAMPLE
+** addpcompany 创建支付商户
+- req
+| 参数名   | 类型 | 说明         |
+|----------+------+--------------|
+| name     | str  | 商户名称   |
+| desc     | str  | 支付类型说明 |
+- rsp
+#+BEGIN_EXAMPLE
+{ 
+  id: 商户唯一ID
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+#+END_EXAMPLE
+** addpscene 创建支付场景
+- req
+| 参数名    | 类型 | 说明     |
+|-----------+------+----------|
+| companyId | int  | 商户ID   |
+| name      | str  | 场景名称 |
+| desc      | str  | 场景描述 |
+- rsp
+hh#+BEGIN_EXAMPLE
+{
+  id: sceneId
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+#+END_EXAMPLE
+** addptype 创建支付类型
+- req
+| 参数名     | 类型 | 说明                           |
+|------------+------+--------------------------------|
+| name       | str  | 支付名称                       |
+| desc       | str  | 支付描述                       |
+| sceneId    | int  | 场景ID                         |
+| templateId | int  | 模版ID                         |
+| conf       | str  | 配置内容，格式由模版定义和校验 |
+- rsp
+#+BEGIN_EXAMPLE
+{
+  id: 支付唯一标识
+  rspCode: 响应码,见RspCode(支付平台返回码定义)
+  rspDesc:
+}
+#+END_EXAMPLE
+** qrypscene
+- req
+| 参数名 | 类型 | 说明 |
+|--------+------+------|
+|  sceneId   |  int | 场景ID |
+- rsp
+#+BEGIN_EXAMPLE
+{
+  type: [{json of ptype}, ...]
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+#+END_EXAMPLE
+** qryall 查询所有支付配置信息
+- req
+| 参数名 | 类型 | 说明 |
+|--------+------+------|
+|  filter |  int | 0-all |
+- rsp
+#+BEGIN_EXAMPLE
+{
+  payConf: {json, 树状结构配置}
+  rspCode: 响应码,见RspCode(支付平台返回码定义）
+  rspDesc:
+}
+#+END_EXAMPLE
+
 
 

@@ -3,19 +3,27 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn</groupId>
 	<artifactId>jframe</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>jframe-launcher</module>
 		<module>jframe-core</module>
-		<module>jframe-example-plugin</module>
+		
 		<module>jframe-release</module>
-		<module>jframe-example-plugin2</module>
+		
 		<module>jframe-ext</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<logback.version>1.1.2</logback.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<jframe.version>1.2.1</jframe.version>
+		<junit.version>4.12</junit.version>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -114,30 +122,29 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
-			<scope>provided</scope>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.5</version>
+			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.1.2</version>
+			<version>${logback.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.1.2</version>
+			<version>${logback.version}</version>
 		</dependency>
 	</dependencies>
 </project>

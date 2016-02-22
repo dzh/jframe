@@ -8,6 +8,8 @@
 	<packaging>pom</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jframe.core.version>1.2.1</jframe.core.version>
+		<jframe.ext.version>1.2.1</jframe.ext.version>
 	</properties>
 	<modules>
 		<module>release</module>
@@ -27,6 +29,8 @@
 		<module>jframe-qiniu</module>
 		<module>jframe-activemq-client</module>
 		<module>jframe-rabbitmq-client</module>
+		<module>jframe-rongcloud</module>
+		<module>jframe-aliyun</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -155,12 +159,12 @@
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-core</artifactId>
-			<version>1.2.0</version>
+			<version>${jframe.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-ext</artifactId>
-			<version>1.2.0</version>
+			<version>${jframe.ext.version}</version>
 		</dependency>
 	</dependencies>
 </project>

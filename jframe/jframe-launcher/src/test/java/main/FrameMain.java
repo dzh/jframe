@@ -15,36 +15,35 @@ import java.util.Date;
  */
 public class FrameMain {
 
-	/**
-	 * @param args
-	 * @throws InterruptedException
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws InterruptedException,
-			IOException {
-		System.out.println("Frame main start");
-		for (String arg : args) {
-			System.out.println(arg);
-		}
+    /**
+     * @param args
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    public static void main(String[] args) throws InterruptedException, IOException {
+        System.out.println("Frame main start");
+        for (String arg : args) {
+            System.out.println(arg);
+        }
 
-		Date s = new Date();
-		while (true) {
-			Thread.sleep(2000);
+        Date s = new Date();
+        while (true) {
+            Thread.sleep(2000);
 
-			Date d = new Date();
-			File f = new File("/home/dzh/temp/test/process.txt");
-			FileOutputStream fos = new FileOutputStream(f);
-			fos.write(d.toString().getBytes());
-			fos.close();
+            Date d = new Date();
+            File f = new File("/home/dzh/temp/test/process.txt");
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(d.toString().getBytes());
+            fos.close();
 
-			System.out.println("write date: " + d.toString());
-			// System.out.flush();
-			// System.out.close();
+            System.out.println("write date: " + d.toString());
+            // System.out.flush();
+            // System.out.close();
 
-			if (d.getTime() - s.getTime() > 10000) {
-				break;
-			}
-		}
-	}
+            if (d.getTime() - s.getTime() > 10000) {
+                break;
+            }
+        }
+    }
 
 }
