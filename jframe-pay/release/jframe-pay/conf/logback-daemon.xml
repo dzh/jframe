@@ -15,16 +15,19 @@
 		</encoder>
 	</appender>
 
-	<appender name="FILE"
+	<appender name="JFRAME"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_HOME}/log-daemon-${byDay}.txt</file>
+		<!-- <file>${LOG_HOME}/log-daemon-${byDay}.log</file> -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_HOME}/log-daemon-%d{yyyy-MM-dd}.%i.txt
+			<fileNamePattern>${LOG_HOME}/jfd-%d{yyyy-MM-dd}.log
 			</fileNamePattern>
+			<maxHistory>10</maxHistory>
+			<!--
 			<timeBasedFileNamingAndTriggeringPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>5MB</maxFileSize>
+				<maxFileSize>10MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
+			-->
 		</rollingPolicy>
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
@@ -33,7 +36,7 @@
 	</appender>
 
 	<logger name="jframe" additivity="true">
-		<appender-ref ref="FILE" />
+		<appender-ref ref="JFRAME" />
 	</logger>
 
 	<root level="info">

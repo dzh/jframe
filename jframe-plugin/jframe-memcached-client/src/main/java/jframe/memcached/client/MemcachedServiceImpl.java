@@ -95,7 +95,7 @@ public class MemcachedServiceImpl implements MemcachedService {
             memWeights[i] = Integer.parseInt(_conf.getProperty("mem."
                     + servers[i] + ".weight", "1"));
 
-            LOG.info("memached -> {}", memServers[i]);
+            LOG.info("memcached -> {}", memServers[i]);
         }
         _pool.setServers(memServers);
         _pool.setWeights(memWeights);

@@ -70,6 +70,6 @@ public class HttpClientConfig {
 				hosts.add(host);
 			}
 		}
-		return hosts;
-	}
+        return hosts;
+    }
 }

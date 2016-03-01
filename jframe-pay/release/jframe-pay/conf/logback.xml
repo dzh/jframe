@@ -15,53 +15,25 @@
 		</encoder>
 	</appender>
 
-	<appender name="FILE"
+	<appender name="JFRAME"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_HOME}/log-${byDay}.txt</file>
+		<!-- <file>${LOG_HOME}/log-${byDay}.log</file> -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_HOME}/log-%d{yyyy-MM-dd}.%i.txt
+			<fileNamePattern>${LOG_HOME}/jf-%d{yyyy-MM-dd}.log
 			</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>2MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>10</maxHistory>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
 			</pattern>
 		</encoder>
 	</appender>
-
-	<appender name="FILE.APNS"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_HOME}/apns-${byDay}.txt</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_HOME}/log-%d{yyyy-MM-dd}.%i.txt
-			</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>2MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
-			</pattern>
-		</encoder>
-	</appender>
-
-
+	
 	<logger name="jframe" additivity="true">
-		<appender-ref ref="FILE" />
-	</logger>
-	<logger name="lech" additivity="true">
-		<appender-ref ref="FILE" />
-	</logger>
-	<logger name="lech.rent.apns" additivity="false">
-		<appender-ref ref="FILE.APNS" />
+		<appender-ref ref="JFRAME" />
 	</logger>
 
-
-	<root level="info">
-
+	<root level="debug">
+		<!-- <appender-ref ref="STDOUT" /> -->
 	</root>
 </configuration>

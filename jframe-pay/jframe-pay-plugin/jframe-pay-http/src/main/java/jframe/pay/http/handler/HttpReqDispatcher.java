@@ -124,7 +124,7 @@ public class HttpReqDispatcher extends SimpleChannelInboundHandler<HttpObject> {
                 List<Dispatcher> list = _dispatcher;
                 boolean notFound = true;
                 for (Dispatcher d : list) {
-                    if (req.getMethod().name().equalsIgnoreCase(d.getMethod()) && Pattern.matches(d.getUrl(), reqUrl)) {
+                    if (d.getMethod().contains(req.getMethod().name()) && Pattern.matches(d.getUrl(), reqUrl)) {
                         // if (d.getId().equals("img.down")) {
                         // ctx.pipeline().remove("http compressor");
                         // ctx.pipeline().addLast("http aggregator",

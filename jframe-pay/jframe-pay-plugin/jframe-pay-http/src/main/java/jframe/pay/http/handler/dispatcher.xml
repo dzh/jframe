@@ -11,7 +11,7 @@
 	</dispatcher>
 
 
-	<dispatcher id="void">
+	<dispatcher id="void" method="POST|HEAD|GET">
 		<url-pattern>/.*</url-pattern>
 		<handler>jframe.pay.http.handler.VoidHandler</handler>
 	</dispatcher>

@@ -12,6 +12,6 @@ import jframe.ext.util.PropertiesConfig;
  */
 public class MongoClientConf extends PropertiesConfig {
 
-	public static String P_uri = "uri";
+    public static String P_uri = "uri";
 
 }
