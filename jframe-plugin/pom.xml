@@ -31,6 +31,7 @@
 		<module>jframe-rabbitmq-client</module>
 		<module>jframe-rongcloud</module>
 		<module>jframe-aliyun</module>
+		<module>jframe-umeng</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

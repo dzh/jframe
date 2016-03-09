@@ -8,6 +8,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jframe.version>1.2.1</jframe.version>
 	</properties>
 
 	<build>
@@ -167,12 +168,12 @@
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-core</artifactId>
-			<version>1.2.1</version>
+			<version>${jframe.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-ext</artifactId>
-			<version>1.2.1</version>
+			<version>${jframe.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

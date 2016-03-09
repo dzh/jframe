@@ -11,10 +11,10 @@
 
 	<dependencies>
 		<dependency>
-            <groupId>cn</groupId>
-            <artifactId>jframe-launcher</artifactId>
-            <version>1.2.1</version>
-        </dependency>
+			<groupId>cn</groupId>
+			<artifactId>jframe-launcher</artifactId>
+			<version>${jframe.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-http</artifactId>
