@@ -3,7 +3,11 @@
  */
 package jframe.rongcloud.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -82,8 +86,124 @@ public class RongcloudServiceImpl implements RongcloudService {
         } catch (Exception e) {
             LOG.error(e.getMessage(), e.fillInStackTrace());
         }
-        LOG.error("RongcloudService.refreshUsr error! id->{} req->{} r->", id, req, r);
+        LOG.error("RongcloudService.refreshUsr error! id->{} req->{} r->{}", id, req, r);
         return false;
+    }
+
+    @Override
+    public boolean createGroup(String id, Map<String, String> req) {
+        SdkHttpResult r = null;
+        try {
+            List<String> ids = Arrays.asList(req.get(F_usrList).split("_"));
+
+            r = ApiHttpClient.createGroup(conf.getConf(id, RongcloudConf.K_APP_KEY),
+                    conf.getConf(id, RongcloudConf.K_APP_SECRET), ids, req.get(F_groupId), req.get(F_groupName),
+                    FormatType.json);
+            if ("200".equals(r.getHttpCode())) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
+        LOG.error("RongcloudService.createGroup error! id->{} req->{} r->{}", id, req, r);
+        return false;
+    }
+
+    @Override
+    public boolean joinGroupBatch(String id, Map<String, String> req) {
+        SdkHttpResult r = null;
+        try {
+            List<String> ids = Arrays.asList(req.get(F_usrList).split("_"));
+
+            r = ApiHttpClient.joinGroupBatch(conf.getConf(id, RongcloudConf.K_APP_KEY),
+                    conf.getConf(id, RongcloudConf.K_APP_SECRET), ids, req.get(F_groupId), req.get(F_groupName),
+                    FormatType.json);
+            if ("200".equals(r.getHttpCode())) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
+        LOG.error("RongcloudService.joinGroupBatch error! id->{} req->{} r->{}", id, req, r);
+        return false;
+    }
+
+    @Override
+    public boolean quitGroup(String id, Map<String, String> req) {
+        SdkHttpResult r = null;
+        try {
+            r = ApiHttpClient.quitGroup(conf.getConf(id, RongcloudConf.K_APP_KEY),
+                    conf.getConf(id, RongcloudConf.K_APP_SECRET), req.get(F_usrId), req.get(F_groupId),
+                    FormatType.json);
+            if ("200".equals(r.getHttpCode())) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
+        LOG.error("RongcloudService.quitGroup error! id->{} req->{} r->{}", id, req, r);
+        return false;
+    }
+
+    @Override
+    public boolean dismissGroup(String id, Map<String, String> req) {
+        SdkHttpResult r = null;
+        try {
+            r = ApiHttpClient.dismissGroup(conf.getConf(id, RongcloudConf.K_APP_KEY),
+                    conf.getConf(id, RongcloudConf.K_APP_SECRET), req.get(F_usrId), req.get(F_groupId),
+                    FormatType.json);
+            if ("200".equals(r.getHttpCode())) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
+        LOG.error("RongcloudService.dismissGroup error! id->{} req->{} r->{}", id, req, r);
+        return false;
+    }
+
+    @Override
+    public boolean refreshGroupInfo(String id, Map<String, String> req) {
+        SdkHttpResult r = null;
+        try {
+            r = ApiHttpClient.refreshGroupInfo(conf.getConf(id, RongcloudConf.K_APP_KEY),
+                    conf.getConf(id, RongcloudConf.K_APP_SECRET), req.get(F_groupId), req.get(F_groupName),
+                    FormatType.json);
+            if ("200".equals(r.getHttpCode())) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
+        LOG.error("RongcloudService.refreshGroupInfo error! id->{} req->{} r->{}", id, req, r);
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> queryGroupUserList(String id, Map<String, String> req) {
+        SdkHttpResult r = null;
+        try {
+            r = ApiHttpClient.queryGroupUserList(conf.getConf(id, RongcloudConf.K_APP_KEY),
+                    conf.getConf(id, RongcloudConf.K_APP_SECRET), req.get(F_groupId), FormatType.json);
+            if ("200".equals(r.getHttpCode())) {
+                Map<String, String> map = (Map<String, String>) GsonUtil.fromJson(r.getResult(), HashMap.class);
+                String users = map.get(F_users);
+                if (users != null) {
+                    List<Map<String, String>> usrList = (List<Map<String, String>>) GsonUtil.fromJson(users,
+                            ArrayList.class);
+                    List<String> usrIds = new ArrayList<String>(usrList.size());
+                    for (Map<String, String> m : usrList) {
+                        usrIds.add(m.get(F_id));
+                    }
+                    return usrIds;
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
+        LOG.error("RongcloudService.queryGroupUserList error! id->{} req->{} r->{}", id, req, r);
+        return Collections.emptyList();
     }
 
 }

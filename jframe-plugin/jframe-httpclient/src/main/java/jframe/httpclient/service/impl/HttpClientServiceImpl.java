@@ -232,7 +232,7 @@ public class HttpClientServiceImpl implements HttpClientService {
         String ip = paras != null && paras.containsKey("ip") ? paras.get("ip")
                 : HttpClientConfig.getConf(id, HttpClientConfig.IP);
         String port = paras != null && paras.containsKey("port") ? paras.get("port")
-                : HttpClientConfig.getConf(id, HttpClientConfig.PORT);
+                : HttpClientConfig.getConf(id, HttpClientConfig.PORT, "80");
 
         HttpHost target = new HttpHost(ip, Integer.parseInt(port), HttpHost.DEFAULT_SCHEME_NAME);
 

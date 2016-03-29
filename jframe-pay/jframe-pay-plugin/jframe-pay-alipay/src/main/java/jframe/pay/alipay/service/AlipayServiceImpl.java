@@ -9,6 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alipay.util.OrderUtil;
+
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.annotation.Injector;
@@ -28,11 +33,6 @@ import jframe.pay.domain.http.RspCode;
 import jframe.pay.domain.util.HttpUtil;
 import jframe.pay.domain.util.IDUtil;
 import jframe.pay.domain.util.ObjectUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alipay.util.OrderUtil;
 
 /**
  * @author dzh
@@ -343,18 +343,16 @@ class AlipayServiceImpl implements AlipayService, Fields {
             int port = url.getPort() == -1 ? 80 : url.getPort();
 
             if (LOG.isDebugEnabled())
-                LOG.debug("postBack {},{}", new Date(), map);
-            Long packtime = System.currentTimeMillis();
-
+                LOG.debug("postBack start time->{},req->{}", new Date(), map);
+            Long backtime = System.currentTimeMillis();
             Map<String, String> paras = new HashMap<>(HTTP_PARAS);
             paras.put("ip", url.getHost());
             paras.put("port", String.valueOf(port));
             Map<String, String> rsp = HttpClient.<HashMap<String, String>> send("payback", url.getPath(),
                     HttpUtil.format(map, "utf-8"), null, paras);
-            Long packTime = System.currentTimeMillis();
             if (LOG.isDebugEnabled())
-                LOG.debug("orderNo=" + order.orderNo + " postBack" + new Date() + " use time=" + (packTime - packtime)
-                        + " rsp=" + rsp);
+                LOG.debug("postback orderNo={}, postBack->{}, use time->{}, rsp->{}", order.orderNo, url.getPath(),
+                        (System.currentTimeMillis() - backtime), rsp);
             if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
                 succ = true;
             } else {

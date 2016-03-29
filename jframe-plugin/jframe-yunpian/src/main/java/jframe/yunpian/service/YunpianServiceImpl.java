@@ -122,7 +122,7 @@ public class YunpianServiceImpl implements YunpianService {
 
     @Override
     public Map<String, String> send(String text, String... mobile) {
-        return this.send(text, null, null, null, mobile);
+        return send(text, null, null, null, mobile);
     }
 
 }

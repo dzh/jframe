@@ -124,7 +124,8 @@ public abstract class AbstractHandler extends SimpleChannelInboundHandler<HttpOb
         // nginx时设置客户端真实ip
         String remoteIp = getHttpRequest().headers().get("X-Real-Ip");
         if (Objects.isNull(remoteIp)) {
-            remoteIp = ((InetSocketAddress) getChannelHandlerContext().channel().remoteAddress()).getHostName();
+            remoteIp = ((InetSocketAddress) getChannelHandlerContext().channel().remoteAddress()).getAddress()
+                    .getHostAddress();
         }
         return remoteIp;
     }

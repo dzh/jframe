@@ -1,5 +1,8 @@
 package test;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * 
  */
@@ -14,40 +17,42 @@ import redis.clients.jedis.Jedis;
  */
 public class TestJedis {
 
-	public void testLoadConf() throws Exception {
-		JedisServiceImpl impl = new JedisServiceImpl();
-		impl.init(Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("test/redis.properties"), true);
-		impl.start();
+    JedisServiceImpl impl;
 
-		Jedis j = impl.getJedis("t1");
-		long l = j.incr("test.pay");
-		System.out.println(l);
-		j.del("test.pay");
+    @Before
+    public void init() throws Exception {
+        impl = new JedisServiceImpl();
+        impl.start(impl.init(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("test/redis.properties"), true));
+    }
 
-		j = impl.getJedis();
-		l = j.incr("test.pay.d");
-		System.out.println(l);
-		j.del("test.pay.d");
+    @Test
+    public void testLoadConf() throws Exception {
 
-		impl.stop();
-	}
+        Jedis j = impl.getJedis("t1");
+        long l = j.incr("test.pay");
+        System.out.println(l);
+        j.del("test.pay");
 
-	public void testExpire() throws Exception {
-		JedisServiceImpl impl = new JedisServiceImpl();
-		impl.init(Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("test/redis.properties"), true);
-		impl.start();
+        j = impl.getJedis();
+        l = j.incr("test.pay.d");
+        System.out.println(l);
+        j.del("test.pay.d");
 
-		String key = "test.pay.expire";
-		Jedis j = impl.getJedis();
-		long l = j.incr(key);
-		System.out.println(l);
-		System.out.println(j.get(key));
-		j.expire(key, 2);
-		Thread.sleep(4 * 1000);
-		System.out.println(j.get(key));
-		impl.stop();
-	}
+        impl.stop();
+    }
+
+    @Test
+    public void testExpire() throws Exception {
+        String key = "test.pay.expire";
+        Jedis j = impl.getJedis();
+        long l = j.incr(key);
+        System.out.println(l);
+        System.out.println(j.get(key));
+        j.expire(key, 2);
+        Thread.sleep(4 * 1000);
+        System.out.println(j.get(key));
+        impl.stop();
+    }
 
 }

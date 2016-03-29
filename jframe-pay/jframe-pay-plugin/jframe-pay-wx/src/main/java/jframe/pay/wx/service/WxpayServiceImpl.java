@@ -147,7 +147,7 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
         }
 
         try {
-            // for cluster
+            // for cluster TODO concurrent
             MemSvc.add("wx.payback." + req.get(WxFields.F_out_trade_no), "1", new Date(15 * 1000));
             String orderStatus = PayStatus.C_PAY_FAIL.code;
             if (WxServiceNew.backPay(req, rsp)) {

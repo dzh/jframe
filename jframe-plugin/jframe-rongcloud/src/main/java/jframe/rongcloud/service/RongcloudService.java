@@ -3,6 +3,7 @@
  */
 package jframe.rongcloud.service;
 
+import java.util.List;
 import java.util.Map;
 
 import jframe.core.plugin.annotation.Service;
@@ -21,5 +22,17 @@ public interface RongcloudService extends Fields {
     String getToken(String id, Map<String, String> req);
 
     boolean refreshUsr(String id, Map<String, String> req);
+
+    boolean createGroup(String id, Map<String, String> req);
+
+    boolean joinGroupBatch(String id, Map<String, String> req);
+
+    boolean quitGroup(String id, Map<String, String> req);
+
+    boolean dismissGroup(String id, Map<String, String> req);
+
+    boolean refreshGroupInfo(String id, Map<String, String> req);
+
+    List<String> queryGroupUserList(String id, Map<String, String> req);
 
 }

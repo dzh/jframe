@@ -3,13 +3,177 @@
  */
 package jframe.umeng.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.InjectService;
+import jframe.core.plugin.annotation.Injector;
+import jframe.core.plugin.annotation.Start;
+import jframe.core.plugin.annotation.Stop;
+import jframe.httpclient.service.HttpClientService;
+import jframe.umeng.UmengConfig;
+import jframe.umeng.UmengPlugin;
 import jframe.umeng.service.UmengService;
+import push.AndroidNotification;
+import push.UmengNotification;
+import push.android.AndroidBroadcast;
+import push.android.AndroidUnicast;
+import push.ios.IOSBroadcast;
+import push.ios.IOSUnicast;
 
 /**
  * @author dzh
  * @date Mar 4, 2016 10:13:18 PM
  * @since 1.0
  */
+@Injector
 public class UmengServiceImpl implements UmengService {
 
+    static Logger LOG = LoggerFactory.getLogger(UmengServiceImpl.class);
+
+    @InjectPlugin
+    static UmengPlugin Plugin;
+
+    @InjectService(id = "jframe.service.httpclient")
+    static HttpClientService _http;
+
+    static Map<String, String> HTTP_PARAS = new HashMap<String, String>(1, 1);
+
+    static String FILE_CONF = "file.umeng";
+
+    UmengConfig _config = new UmengConfig();
+
+    static {
+        HTTP_PARAS.put(HttpClientService.P_MIMETYPE, "application/json");
+        HTTP_PARAS.put(HttpClientService.P_METHOD, "post");
+    }
+
+    @Start
+    void start() {
+        start(Plugin.getConfig(FILE_CONF, ""));
+    }
+
+    public void start(String path) {
+        File conf = new File(path);
+        if (!conf.exists()) {
+            LOG.error("Not found umeng.properties {}", path);
+            return;
+        }
+
+        try {
+            _config.init(new FileInputStream(conf));
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            return;
+        }
+        LOG.info("Load UmengServiceImpl successfully!");
+    }
+
+    @Stop
+    void stop() {
+    }
+
+    @Override
+    public void sendIOSUnicast(String groupId, String token, String alert, Integer badge, String sound,
+            Map<String, String> custom) throws Exception {
+        IOSUnicast unicast = new IOSUnicast(_config.getConf(groupId, UmengConfig.AppKey),
+                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+        unicast.setDeviceToken(token);
+        unicast.setAlert(alert);
+        badge = badge == null ? 0 : badge;
+        unicast.setBadge(badge);
+        sound = sound == null ? "default" : sound;
+        unicast.setSound(sound);
+        unicast.setTestMode();
+        if (custom != null)
+            for (Map.Entry<String, String> e : custom.entrySet()) {
+                unicast.setCustomizedField(e.getKey(), e.getValue());
+            }
+
+        sendUmengNotification(unicast);
+    }
+
+    @Override
+    public void sendAndUnicast(String groupId, String token, String ticker, String title, String text,
+            Map<String, String> custom) throws Exception {
+        AndroidUnicast unicast = new AndroidUnicast(_config.getConf(groupId, UmengConfig.AppKey),
+                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+        unicast.setDeviceToken(token);
+        unicast.setTicker(ticker);
+        unicast.setTitle(title);
+        unicast.setText(text);
+        unicast.goAppAfterOpen();
+        unicast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
+        unicast.setProductionMode();
+        if (custom != null)
+            for (Map.Entry<String, String> e : custom.entrySet()) {
+                unicast.setExtraField(e.getKey(), e.getValue());
+            }
+
+        sendUmengNotification(unicast);
+    }
+
+    void sendUmengNotification(UmengNotification n) throws Exception {
+        String timestamp = Integer.toString((int) (System.currentTimeMillis() / 1000));
+        n.setPredefinedKeyValue("timestamp", timestamp);
+        String postBody = n.getPostBody();
+        String sign = DigestUtils
+                .md5Hex(("POST" + UmengConfig.UrlSend + postBody + n.getAppMasterSecret()).getBytes("utf8"));
+        String httpid = _config.getConf(null, UmengConfig.HttpId, "umeng");
+        String path = "/api/send?sign=" + sign;
+
+        Map<String, String> headers = new HashMap<String, String>(1, 1);
+        headers.put("User-Agent", "Mozilla/5.0");
+        _http.send(httpid, path, postBody, headers, null);
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("m->sendUmengNotification data->{}", n.getPostBody());
+        }
+    }
+
+    @Override
+    public void sendIOSBroadcast(String groupId, String token, String alert, Integer badge, String sound,
+            Map<String, String> custom) throws Exception {
+        IOSBroadcast broadcast = new IOSBroadcast(_config.getConf(groupId, UmengConfig.AppKey),
+                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+
+        broadcast.setAlert(alert);
+        badge = badge == null ? 0 : badge;
+        broadcast.setBadge(badge);
+        sound = sound == null ? "default" : sound;
+        broadcast.setSound(sound);
+        broadcast.setTestMode();
+        if (custom != null)
+            for (Map.Entry<String, String> e : custom.entrySet()) {
+                broadcast.setCustomizedField(e.getKey(), e.getValue());
+            }
+
+        sendUmengNotification(broadcast);
+    }
+
+    @Override
+    public void sendAndBroadcast(String groupId, String token, String ticker, String title, String text,
+            Map<String, String> custom) throws Exception {
+        AndroidBroadcast broadcast = new AndroidBroadcast(_config.getConf(groupId, UmengConfig.AppKey),
+                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+        broadcast.setTicker(ticker);
+        broadcast.setTitle(title);
+        broadcast.setText(text);
+        broadcast.goAppAfterOpen();
+        broadcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
+        broadcast.setProductionMode();
+        if (custom != null)
+            for (Map.Entry<String, String> e : custom.entrySet()) {
+                broadcast.setExtraField(e.getKey(), e.getValue());
+            }
+
+        sendUmengNotification(broadcast);
+    }
 }
