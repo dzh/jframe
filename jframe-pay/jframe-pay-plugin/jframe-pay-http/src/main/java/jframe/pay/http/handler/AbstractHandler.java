@@ -173,7 +173,8 @@ public abstract class AbstractHandler extends SimpleChannelInboundHandler<HttpOb
                 finish(ctx);
             }
             if (LOG_REQ.isDebugEnabled()) {
-                LOG_REQ.debug("Finish reqUrl->{},ip->{},date->{}", getReqUrl(), getRemoteIp(), new Date().getTime());
+                LOG_REQ.debug("Finish reqUrl->{},ip->{},date->{}", getReqUrl(), getRemoteIp(),
+                        System.currentTimeMillis());
             }
         }
     }
