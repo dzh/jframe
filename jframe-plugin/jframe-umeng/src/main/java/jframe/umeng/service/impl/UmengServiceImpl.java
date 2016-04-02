@@ -22,6 +22,7 @@ import jframe.umeng.UmengConfig;
 import jframe.umeng.UmengPlugin;
 import jframe.umeng.service.UmengService;
 import push.AndroidNotification;
+import push.AndroidNotification.DisplayType;
 import push.UmengNotification;
 import push.android.AndroidBroadcast;
 import push.android.AndroidUnicast;
@@ -97,7 +98,7 @@ public class UmengServiceImpl implements UmengService {
                 unicast.setCustomizedField(e.getKey(), e.getValue());
             }
 
-        sendUmengNotification(unicast);
+        sendUmengNotification(unicast, groupId);
     }
 
     @Override
@@ -110,31 +111,38 @@ public class UmengServiceImpl implements UmengService {
         unicast.setTitle(title);
         unicast.setText(text);
         unicast.goAppAfterOpen();
-        unicast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-        unicast.setProductionMode();
+        String displayType = _config.getConf(groupId, UmengConfig.DisplayType, DisplayType.NOTIFICATION.getValue());
+        unicast.setPredefinedKeyValue("display_type", displayType);
+        if (DisplayType.MESSAGE.getValue().equals(displayType)) {
+            unicast.setCustomField(text);
+        }
+        // unicast.setDisplayType(DisplayType.NOTIFICATION);
         if (custom != null)
             for (Map.Entry<String, String> e : custom.entrySet()) {
                 unicast.setExtraField(e.getKey(), e.getValue());
             }
 
-        sendUmengNotification(unicast);
+        sendUmengNotification(unicast, groupId);
     }
 
-    void sendUmengNotification(UmengNotification n) throws Exception {
+    void sendUmengNotification(UmengNotification n, String groupId) throws Exception {
+        if (UmengConfig.Mode_P.equals(_config.getConf(groupId, UmengConfig.Mode))) {
+            n.setProductionMode();
+        }
         String timestamp = Integer.toString((int) (System.currentTimeMillis() / 1000));
         n.setPredefinedKeyValue("timestamp", timestamp);
         String postBody = n.getPostBody();
         String sign = DigestUtils
-                .md5Hex(("POST" + UmengConfig.UrlSend + postBody + n.getAppMasterSecret()).getBytes("utf8"));
+                .md5Hex(("POST" + UmengConfig.UrlSend + postBody + n.getAppMasterSecret()).getBytes("utf-8"));
         String httpid = _config.getConf(null, UmengConfig.HttpId, "umeng");
         String path = "/api/send?sign=" + sign;
 
         Map<String, String> headers = new HashMap<String, String>(1, 1);
         headers.put("User-Agent", "Mozilla/5.0");
-        _http.send(httpid, path, postBody, headers, null);
+        Object rsp = _http.send(httpid, path, postBody, headers, null);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("m->sendUmengNotification data->{}", n.getPostBody());
+            LOG.debug("m->sendUmengNotification data->{} rsp->{}", n.getPostBody(), rsp);
         }
     }
 
@@ -143,7 +151,6 @@ public class UmengServiceImpl implements UmengService {
             Map<String, String> custom) throws Exception {
         IOSBroadcast broadcast = new IOSBroadcast(_config.getConf(groupId, UmengConfig.AppKey),
                 _config.getConf(groupId, UmengConfig.AppMasterSecret));
-
         broadcast.setAlert(alert);
         badge = badge == null ? 0 : badge;
         broadcast.setBadge(badge);
@@ -155,7 +162,7 @@ public class UmengServiceImpl implements UmengService {
                 broadcast.setCustomizedField(e.getKey(), e.getValue());
             }
 
-        sendUmengNotification(broadcast);
+        sendUmengNotification(broadcast, groupId);
     }
 
     @Override
@@ -168,12 +175,11 @@ public class UmengServiceImpl implements UmengService {
         broadcast.setText(text);
         broadcast.goAppAfterOpen();
         broadcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-        broadcast.setProductionMode();
         if (custom != null)
             for (Map.Entry<String, String> e : custom.entrySet()) {
                 broadcast.setExtraField(e.getKey(), e.getValue());
             }
 
-        sendUmengNotification(broadcast);
+        sendUmengNotification(broadcast, groupId);
     }
 }

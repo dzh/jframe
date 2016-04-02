@@ -19,4 +19,8 @@ public class UmengConfig extends PropertiesConfig {
 
     public static final String UrlSend = "http://msg.umeng.com/api/send";
 
+    public static final String Mode = "mode";
+    public static final String Mode_P = "production";
+
+    public static final String DisplayType = "DisplayType";
 }

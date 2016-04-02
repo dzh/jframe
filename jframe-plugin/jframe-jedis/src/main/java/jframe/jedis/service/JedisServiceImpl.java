@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
+import jframe.ext.util.PropertiesConfig;
 import jframe.jedis.JedisPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -36,7 +36,7 @@ public class JedisServiceImpl implements JedisService {
 
     static final Logger LOG = LoggerFactory.getLogger(JedisServiceImpl.class);
 
-    private Properties conf = new Properties();
+    private PropertiesConfig conf = new PropertiesConfig();
 
     private Map<String, JedisPool> _jedis = new HashMap<String, JedisPool>();
 
@@ -49,12 +49,7 @@ public class JedisServiceImpl implements JedisService {
     }
 
     public JedisPoolConfig init(InputStream jedis, boolean closeIn) throws Exception {
-        try {
-            conf.load(jedis);
-        } finally {
-            if (jedis != null && closeIn)
-                jedis.close();
-        }
+        conf.init(jedis);
         return createPoolConfig();
     }
 
@@ -87,21 +82,22 @@ public class JedisServiceImpl implements JedisService {
 
     public void start(JedisPoolConfig config) {
         LOG.info("JedisServiceImpl starting");
-        String[] hosts = conf.getProperty("redis.hosts").split("\\s");
+        String[] hosts = conf.getGroupIds();
         for (String h : hosts) {
             if ("".equals(h))
                 continue;
             try {
-                String ip = conf.getProperty("redis.host." + h + ".ip", "127.0.0.1").trim();
+                String ip = conf.getConf(h, "ip");
                 // if ("127.0.0.1".equals(ip)) {
                 // continue;
                 // }
-                Integer port = Integer.parseInt(conf.getProperty("redis.host." + h + ".port", "0").trim());
+                int port = conf.getConfInt(h, "port", "6379");
 
+                int timeout = conf.getConfInt(h, "timeout", "2000");
                 if (port == 0) {
-                    _jedis.put(h, new JedisPool(config, ip, Protocol.DEFAULT_PORT, 6000));
+                    _jedis.put(h, new JedisPool(config, ip, Protocol.DEFAULT_PORT, timeout));
                 } else {
-                    _jedis.put(h, new JedisPool(config, ip, port, 6000));
+                    _jedis.put(h, new JedisPool(config, ip, port, timeout));
                 }
             } catch (Exception e) {
                 LOG.error(e.getMessage());
@@ -175,9 +171,10 @@ public class JedisServiceImpl implements JedisService {
      * @see dono.pay.service.JedisService#getJedis()
      */
     @Override
+    @Deprecated
     public Jedis getJedis() {
         try {
-            JedisPool pool = _jedis.get(conf.getProperty("redis.host.default", ""));
+            JedisPool pool = _jedis.get(conf.getConf(null, "redis.host"));
             if (pool == null)
                 return null;
             return pool.getResource();
@@ -206,9 +203,8 @@ public class JedisServiceImpl implements JedisService {
      */
     @Override
     public void recycleJedis(String name, Jedis jedis) {
-        if (conf == null || _jedis == null)
+        if (conf == null || _jedis == null || name == null)
             return;
-        name = name == null ? conf.getProperty("redis.host.default", "") : name;
         JedisPool pool = _jedis.get(name);
         if (pool == null) {
             if (LOG.isDebugEnabled()) {

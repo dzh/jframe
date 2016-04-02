@@ -122,6 +122,20 @@ public class PropertiesConfig {
         return val == null ? defVal : val;
     }
 
+    public synchronized int getConfInt(String group, String key, String defVal) {
+        String val = getConf(group, key, defVal);
+        if (val == null)
+            return -1;
+        return Integer.parseInt(val);
+    }
+
+    public synchronized long getConfLong(String group, String key, String defVal) {
+        String val = getConf(group, key, defVal);
+        if (val == null)
+            return -1;
+        return Long.parseLong(val);
+    }
+
     public synchronized Properties clone2Properties() {
         Properties p = new Properties();
         if (conf == null)
@@ -130,5 +144,10 @@ public class PropertiesConfig {
             p.setProperty(e.getKey(), e.getValue());
         }
         return p;
+    }
+
+    public synchronized void clear() {
+        if (conf != null)
+            conf.clear();
     }
 }
