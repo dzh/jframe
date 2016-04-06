@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.jar.JarFile;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import jframe.core.util.FileUtil;
 import jframe.core.util.MathUtil;
-import junit.framework.Assert;
-
-import org.junit.Test;
 
 /**
  * @author dzh

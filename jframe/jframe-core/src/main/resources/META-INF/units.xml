@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- default start-order level is 4 -->
-<units>
-	<unit clazz="jframe.core.unit.FrameUnit" start-order="1" />
-	<unit clazz="jframe.core.unit.PluginUnit" load="true" />
-</units>

@@ -10,6 +10,13 @@ package jframe.launcher.api;
  */
 public interface Launcher {
 
+    /**
+     * read and parse config file
+     * 
+     * @param file
+     * @return
+     * @throws LauncherException
+     */
     Config load(String file) throws LauncherException;
 
     /**

@@ -3,6 +3,7 @@
  */
 package util;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +11,6 @@ import jframe.core.conf.Config;
 import jframe.core.conf.FrameConfig;
 import jframe.core.conf.VarHandler;
 import jframe.ext.util.PropertiesConfig;
-import junit.framework.Assert;
 
 /**
  * @author dzh
@@ -26,7 +26,6 @@ public class TestPropertiesConf {
         PropertiesConfig = new PropertiesConfig();
         PropertiesConfig
                 .init(Thread.currentThread().getContextClassLoader().getResourceAsStream("util/conf-demo.properties"));
-
     }
 
     @Test

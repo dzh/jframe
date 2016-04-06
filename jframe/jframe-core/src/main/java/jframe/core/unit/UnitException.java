@@ -10,20 +10,24 @@ package jframe.core.unit;
  */
 public class UnitException extends Exception {
 
-	/**
-	 * @param string
-	 */
-	public UnitException(String message) {
-		super(message);
-	}
+    /**
+     * @param string
+     */
+    public UnitException(String message) {
+        super(message);
+    }
 
-	public UnitException(Throwable cause) {
-		super(cause);
-	}
+    public UnitException(Throwable cause) {
+        super(cause);
+    }
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    public UnitException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
 }

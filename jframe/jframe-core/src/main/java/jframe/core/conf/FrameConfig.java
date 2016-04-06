@@ -5,6 +5,8 @@ package jframe.core.conf;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import jframe.core.Frame;
 
@@ -16,7 +18,7 @@ import jframe.core.Frame;
  */
 public class FrameConfig implements Config {
 
-    private Map<String, String> _config = new HashMap<String, String>(20);
+    private ConcurrentMap<String, String> _config = new ConcurrentHashMap<String, String>(20);
     // private Collection<ConfigListener> _listeners = new
     // LinkedList<ConfigListener>();
 
@@ -28,7 +30,7 @@ public class FrameConfig implements Config {
      * @see jframe.core.conf.Config#addConfig(java.lang.String,
      * java.lang.String)
      */
-    public synchronized String setConfig(String key, String value) {
+    public String setConfig(String key, String value) {
         return _config.put(key, value);
     }
 
@@ -37,7 +39,7 @@ public class FrameConfig implements Config {
      * 
      * @see jframe.core.conf.Config#getConfig(java.lang.String)
      */
-    public synchronized String getConfig(String key) {
+    public String getConfig(String key) {
         return _config.get(key);
     }
 
@@ -47,10 +49,9 @@ public class FrameConfig implements Config {
      * @see jframe.core.conf.Config#getConfig(java.lang.String,
      * java.lang.String)
      */
-    public synchronized String getConfig(String key, String defVal) {
-        if (_config.containsKey(key))
-            return _config.get(key);
-        return defVal;
+    public String getConfig(String key, String defVal) {
+        String v = _config.get(key);
+        return v == null ? defVal : v;
     }
 
     /*
@@ -59,7 +60,7 @@ public class FrameConfig implements Config {
      * @see jframe.core.conf.Config#modifyConfig(java.lang.String,
      * java.lang.String)
      */
-    public synchronized String modifyConfig(String key, String value) {
+    public String modifyConfig(String key, String value) {
         return _config.put(key, value);
     }
 
@@ -68,7 +69,7 @@ public class FrameConfig implements Config {
      * 
      * @see jframe.core.conf.Config#clearConfig()
      */
-    public synchronized void clearConfig() {
+    public void clearConfig() {
         _config.clear();
     }
 
@@ -90,11 +91,11 @@ public class FrameConfig implements Config {
         return _frame;
     }
 
-    public synchronized Map<String, String> getConfig() {
+    public Map<String, String> getConfig() {
         return new HashMap<String, String>(_config);
     }
 
-    public synchronized boolean contain(String k) {
+    public boolean contain(String k) {
         return _config.containsKey(k);
     }
 

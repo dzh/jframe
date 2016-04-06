@@ -5,13 +5,13 @@ package loader;
 
 import java.net.URL;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import jframe.core.dispatch.DefDispatcher;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginClassLoader;
 import jframe.core.plugin.loader.ext.DefPluginLoaderContext;
-import junit.framework.Assert;
-
-import org.junit.Test;
 
 /**
  * @author dzh

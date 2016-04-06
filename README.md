@@ -73,13 +73,14 @@ dzh_11@qq.com                (personal)
 	* Improvement
 	* New Feature
 		* Refactor jframe-launcher, support Launcher interface
-	* New plugin
+	* New Plugin
 		* TODO jframe-activemq
 		* TODO jframe-activemq-client
 		* TODO jframe-http
 		* TODO jframe-zk
 		* TODO jframe-watch
-		* TODO jframe-rongyun
+		* jframe-rongyun
+		* jframe-umeng
 * v1.3.0 
 	* service monitor
 ## Jframe v2 Feature

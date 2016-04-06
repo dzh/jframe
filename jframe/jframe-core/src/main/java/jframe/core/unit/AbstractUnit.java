@@ -13,60 +13,64 @@ import jframe.core.signal.Signal;
  */
 public abstract class AbstractUnit implements Unit {
 
-	private int _id;
-	protected Frame _frame;
-	private String _name;
+    private int _id;
+    protected Frame _frame;
+    private String _name;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.unit.Unit#getID()
-	 */
-	public int getID() {
-		return _id;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.core.unit.Unit#getID()
+     */
+    public int getID() {
+        return _id;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.unit.Unit#sendSig(jframe.core.signal.Signal)
-	 */
-	public void sendSig(Signal sig) {
-		_frame.broadcast(sig);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.core.unit.Unit#sendSig(jframe.core.signal.Signal)
+     */
+    public void sendSig(Signal sig) {
+        _frame.broadcast(sig);
+    }
 
-	public void init(Frame frame) throws UnitException {
-		if (frame == null)
-			throw new UnitException("frame is null when initialize unit "
-					+ getID() + "-" + getName());
-		this._frame = frame;
-	}
+    public void init(Frame frame) throws UnitException {
+        if (frame == null)
+            throw new UnitException("frame is null when initialize unit " + getID() + "-" + getName());
+        this._frame = frame;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Unit && ((Unit) obj).getID() == this.getID())
-			return true;
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Unit && ((Unit) obj).getID() == getID())
+            return true;
+        return false;
+    }
 
-	public void setID(int id) {
-		this._id = id;
-	}
+    public void setID(int id) {
+        this._id = id;
+    }
 
-	public void setName(String name) {
-		this._name = name;
-	}
+    public void setName(String name) {
+        this._name = name;
+    }
 
-	public String getName() {
-		return _name;
-	}
+    public String getName() {
+        return _name;
+    }
 
-	public Frame getFrame() {
-		return _frame;
-	}
+    public Frame getFrame() {
+        return _frame;
+    }
 
-	public String getConfig(String key) {
-		return _frame.getConfig().getConfig(key);
-	}
+    public String getConfig(String key) {
+        return _frame.getConfig().getConfig(key);
+    }
+
+    @Override
+    public String toString() {
+        return getName() + "@" + getID();
+    }
 
 }

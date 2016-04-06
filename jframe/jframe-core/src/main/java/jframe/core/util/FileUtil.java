@@ -127,7 +127,7 @@ public class FileUtil {
     public static final void copy(String target, String source, boolean overwriting) throws IOException {
         File sf = new File(source);
         if (!sf.exists())
-            throw new IOException("Not found source file: " + sf.getAbsolutePath());
+            throw new IOException("Not found sourcefile->" + sf.getAbsolutePath());
 
         File tf = new File(target);
         if (overwriting && tf.exists()) {
@@ -167,7 +167,7 @@ public class FileUtil {
         try {
             JarEntry je = jar.getJarEntry(jarEntry);
             if (je == null) {
-                LOG.warn("Not found jar entry " + jarEntry);
+                LOG.warn("Not found jar entry->" + jarEntry);
                 return;
             }
             File df = new File(dest);
