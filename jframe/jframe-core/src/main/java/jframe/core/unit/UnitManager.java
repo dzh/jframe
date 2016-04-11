@@ -51,7 +51,7 @@ public class UnitManager {
      */
     public Unit regUnit(Unit u) throws UnitException {
         if (u == null)
-            throw new UnitException("Unit is null when invoking regUnit()");
+            throw new UnitException("m->regUnit Unit is null");
 
         synchronized (_units) {
             if (_units.contains(u)) {
@@ -106,7 +106,7 @@ public class UnitManager {
                 try {
                     unregUnit(u);
                 } catch (UnitException e) {
-                    LOG.warn(e.getLocalizedMessage()); // TODO
+                    LOG.warn(e.getMessage(), e.fillInStackTrace());
                 }
             }
         }
@@ -118,7 +118,6 @@ public class UnitManager {
      * <p>
      * Initialize Manager and Register Units
      * </p>
-     * TODO
      * 
      * @throws UnitException
      */

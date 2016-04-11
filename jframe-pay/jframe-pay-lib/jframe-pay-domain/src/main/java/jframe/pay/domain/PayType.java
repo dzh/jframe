@@ -9,29 +9,29 @@ package jframe.pay.domain;
  * @since 1.0
  */
 public enum PayType {
-	/**
-	 * 银联支付
-	 */
-	Y(1, "UPMP"),
-	/**
-	 * 微信支付
-	 */
-	W(2, "WEPAY"),
-	/**
-	 * 支付宝
-	 */
-	A(3, "ALIPAY"),
+    /**
+     * 银联支付
+     */
+    Y(1, "UPMP"),
+    /**
+     * 微信支付 APP
+     */
+    W(2, "WEPAY"),
+    /**
+     * 支付宝
+     */
+    A(3, "ALIPAY"),
 
-	;
-	public final int type;
-	public final String name;
+    ;
+    public final int type;
+    public final String name;
 
-	private PayType(int type, String name) {
-		this.type = type;
-		this.name = name;
-	}
+    private PayType(int type, String name) {
+        this.type = type;
+        this.name = name;
+    }
 
-	public String toStrVal() {
-		return String.valueOf(type);
-	}
+    public String toStrVal() {
+        return String.valueOf(type);
+    }
 }

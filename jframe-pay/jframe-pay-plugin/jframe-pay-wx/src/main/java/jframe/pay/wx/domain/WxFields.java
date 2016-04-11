@@ -55,6 +55,10 @@ public interface WxFields extends Fields {
 
     String F_package = "package";
 
+    String F_bill_date = "bill_date";
+
+    String F_bill_type = "bill_type";
+
     String F_timestamp = "timestamp";
 
     String F_time_end = "time_end";

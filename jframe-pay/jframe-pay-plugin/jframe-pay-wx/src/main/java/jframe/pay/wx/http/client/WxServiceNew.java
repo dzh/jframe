@@ -15,6 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jframe.pay.domain.TradeType;
 import jframe.pay.domain.util.IDUtil;
 import jframe.pay.domain.util.XmlUtil;
 import jframe.pay.wx.domain.WxConfig;
@@ -40,19 +41,24 @@ public class WxServiceNew {
 
             List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
             packageParams.add(new BasicNameValuePair(WxFields.F_appid, WxConfig.getConf(WxConfig.KEY_APP_ID)));
+            if (req.containsKey(WxFields.F_attach)) {
+                packageParams.add(new BasicNameValuePair(WxFields.F_attach, req.get(WxFields.F_attach)));
+            }
             packageParams.add(new BasicNameValuePair(WxFields.F_body, req.get(WxFields.F_payDesc)));
             packageParams.add(new BasicNameValuePair(WxFields.F_mch_id, WxConfig.getConf(WxConfig.KEY_PARTNER)));
             packageParams.add(new BasicNameValuePair(WxFields.F_nonce_str, genNonceStr()));
             packageParams.add(new BasicNameValuePair(WxFields.F_notify_url, WxConfig.getConf(WxConfig.KEY_NOTIFY_URL)));
+            if (req.containsKey(WxFields.F_openid)) {
+                packageParams.add(new BasicNameValuePair(WxFields.F_openid, req.get(WxFields.F_openid)));
+            }
             packageParams.add(new BasicNameValuePair(WxFields.F_out_trade_no, orderNo));
             packageParams.add(new BasicNameValuePair(WxFields.F_spbill_create_ip, req.get(WxFields.F_remoteIp)));
             packageParams.add(new BasicNameValuePair(WxFields.F_total_fee, req.get(WxFields.F_payAmount)));
-            // packageParams.add(new BasicNameValuePair(WxFields.F_attach, ""));
-            packageParams
-                    .add(new BasicNameValuePair(WxFields.F_trade_type, req.getOrDefault(WxFields.F_trade_type, "APP")));
+            packageParams.add(new BasicNameValuePair(WxFields.F_trade_type,
+                    req.getOrDefault(WxFields.F_tradeType, TradeType.APP.code)));
 
             String sign = genPackageSign(packageParams);
-            packageParams.add(new BasicNameValuePair("sign", sign));
+            packageParams.add(new BasicNameValuePair(WxFields.F_sign, sign));
             String entity = toXml(packageParams);
 
             // byte[] buf = httpPost(url, entity);
@@ -118,7 +124,7 @@ public class WxServiceNew {
      * 
      * @throws UnsupportedEncodingException
      */
-    private static String genPackageSign(List<NameValuePair> params) throws UnsupportedEncodingException {
+    public static String genPackageSign(List<NameValuePair> params) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < params.size(); i++) {
@@ -161,7 +167,7 @@ public class WxServiceNew {
         return IDUtil.genOrderNo();
     }
 
-    private static String toXml(List<NameValuePair> params) {
+    public static String toXml(List<NameValuePair> params) {
         StringBuilder sb = new StringBuilder();
         sb.append("<xml>");
         for (int i = 0; i < params.size(); i++) {

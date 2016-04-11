@@ -76,6 +76,8 @@ public interface Fields {
 
     String F_transType = "transType";
 
+    String F_tradeType = "tradeType";
+
     /**
      * wx need
      */

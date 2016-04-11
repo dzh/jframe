@@ -20,6 +20,7 @@ import jframe.memcached.client.MemcachedService;
 import jframe.pay.dao.service.PayDaoService;
 import jframe.pay.domain.PayCurrency;
 import jframe.pay.domain.PayStatus;
+import jframe.pay.domain.TradeType;
 import jframe.pay.domain.dao.OrderWx;
 import jframe.pay.domain.http.RspCode;
 import jframe.pay.domain.util.HttpUtil;
@@ -72,7 +73,7 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
     @Override
     public void pay(Map<String, String> req, Map<String, Object> rsp) throws Exception {
         // check req
-        if (HttpUtil.mustReq(req, F_payNo, F_transType, F_payAmount, F_payDesc, F_remoteIp).size() > 0) {
+        if (HttpUtil.mustReq(req, F_payNo, F_payAmount, F_payDesc, F_remoteIp).size() > 0) {
             RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_MISS_PARA);
             return;
         }
@@ -80,6 +81,13 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
         if (PayDao == null) {
             RspCode.setRspCode(rsp, RspCode.FAIL_DB_Conn);
             return;
+        }
+
+        if (TradeType.JSAPI.code.equals(req.get(F_tradeType))) {
+            if (HttpUtil.mustReq(req, F_openid).size() > 0) {
+                RspCode.setRspCode(rsp, RspCode.FAIL_HTTP_MISS_PARA);
+                return;
+            }
         }
 
         // String token = WxUtil.getToken();

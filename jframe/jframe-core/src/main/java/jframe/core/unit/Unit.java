@@ -12,7 +12,6 @@ import jframe.core.signal.Signal;
  * <li>Units communicate with signal</li>
  * <li>Frame broadcasts signal</li>
  * </p>
- * TODO canStop
  * 
  * @author dzh
  * @date Sep 18, 2013 11:19:01 AM
@@ -20,21 +19,21 @@ import jframe.core.signal.Signal;
  */
 public interface Unit {
 
-	void setID(int id);
+    void setID(int id);
 
-	int getID();
+    int getID();
 
-	void setName(String name);
+    void setName(String name);
 
-	String getName();
+    String getName();
 
-	void sendSig(Signal sig);
+    void sendSig(Signal sig);
 
-	void recvSig(Signal sig);
+    void recvSig(Signal sig);
 
-	void init(Frame frame) throws UnitException;
+    void init(Frame frame) throws UnitException;
 
-	void start() throws UnitException;
+    void start() throws UnitException;
 
-	void stop() throws UnitException;
+    void stop() throws UnitException;
 }
