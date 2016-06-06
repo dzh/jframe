@@ -67,6 +67,11 @@ git clone https://github.com/dzh/jframe.git
 - 设计目标让launcher
 *** jframe.launcher.api
 *** use launcher
+** jframe-core
+*** jframe状态机
+*** UnitManager
+**** signal
+*** 
 
 
 * Plugin

@@ -1,5 +1,6 @@
 package test;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,42 +18,52 @@ import redis.clients.jedis.Jedis;
  */
 public class TestJedis {
 
-    JedisServiceImpl impl;
+    JedisServiceImpl redis;
 
     @Before
     public void init() throws Exception {
-        impl = new JedisServiceImpl();
-        impl.start(impl.init(
+        redis = new JedisServiceImpl();
+        redis.start(redis.init(
                 Thread.currentThread().getContextClassLoader().getResourceAsStream("test/redis.properties"), true));
     }
 
     @Test
     public void testLoadConf() throws Exception {
-
-        Jedis j = impl.getJedis("t1");
+        Jedis j = redis.getJedis("t1");
         long l = j.incr("test.pay");
         System.out.println(l);
         j.del("test.pay");
 
-        j = impl.getJedis();
+        j = redis.getJedis();
         l = j.incr("test.pay.d");
         System.out.println(l);
         j.del("test.pay.d");
 
-        impl.stop();
+        j.close();
     }
 
     @Test
     public void testExpire() throws Exception {
         String key = "test.pay.expire";
-        Jedis j = impl.getJedis();
+        Jedis j = redis.getJedis();
         long l = j.incr(key);
         System.out.println(l);
         System.out.println(j.get(key));
         j.expire(key, 2);
         Thread.sleep(4 * 1000);
         System.out.println(j.get(key));
-        impl.stop();
+
+        j.close();
+    }
+
+    @Test
+    public void testString() throws Exception {
+//        redis.getJedis(name)
+    }
+
+    @After
+    public void stop() {
+        redis.stop();
     }
 
 }

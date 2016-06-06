@@ -9,10 +9,17 @@ import jframe.core.unit.Unit;
 
 /**
  * <p>
- * Frame Features:
+ * Features:
  * <li>Manage frame's life cycle</li>
  * <li>Manage units</li>
  * <li></li>
+ * </p>
+ * 
+ * <p>
+ * Life-cycle:
+ * <li>INIT -> START -> STOP</li>
+ * <li>STOP -> INIT -> START</li>
+ * <li>INIT -> STOP</li>
  * </p>
  * 
  * @author dzh
@@ -21,26 +28,30 @@ import jframe.core.unit.Unit;
  */
 public interface Frame {
 
-	void register(Unit u);
+    static enum FRAME_STATUS {
+        INIT, START, STOP
+    };
 
-	void unregister(Unit u);
+    void register(Unit u);
 
-	void init(Config conf);
+    void unregister(Unit u);
 
-	void start();
+    boolean init(Config conf);
 
-	void stop();
+    void start();
 
-	void restart();
+    void stop();
 
-	void broadcast(Signal sig);
+    void restart();
 
-	Config getConfig();
+    void broadcast(Signal sig);
 
-	/**
-	 * @param timeout
-	 * @return
-	 */
-	FrameEvent waitForStop(long timeout);
+    Config getConfig();
+
+    /**
+     * @param timeout
+     * @return
+     */
+    FrameEvent waitForStop(long timeout);
 
 }

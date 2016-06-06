@@ -45,7 +45,7 @@ public class FrameLauncher extends DefLauncher {
         final Frame frame = ff.createFrame(frameConfig);
         // TODO
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        Runtime.getRuntime().addShutdownHook(new Thread("FrameShutdownhookThread") {
             public void run() {
                 try {
                     if (frame != null) {

@@ -3,7 +3,7 @@
  */
 package jframe.core.util;
 
-import java.util.Collection;
+import java.util.Arrays;
 
 /**
  * @author dzh
@@ -17,31 +17,45 @@ public class MathUtil {
      * @param nums
      * @return a unused minimal natural number
      */
-    public static final int calcMinNum(Collection<Integer> nums) {
-        int sum = 0;
-        for (int n : nums) {
-            sum += n;
+    public static final int calcMinNum(int[] nums) {
+        if (nums == null || nums.length == 0)
+            return 1;
+        Arrays.sort(nums);
+        int min = 1;
+        for (int i = 0;; i++) {
+            if (nums[i] - min == 0) {
+                ++min;
+                continue;
+            }
+            break;
         }
-
-        int n = nums.size();
-        int sum_min = ((n + 1) * n) / 2;
-        if (sum == sum_min)
-            return n + 1;
-
-        int x_min = n - (sum - sum_min) + 1;
-        if (x_min < 1)
-            x_min = 1;
-        int x_max = n + (sum - sum_min);
-
-        int x = x_min;
-        while (x <= x_max) {
-            if (!nums.contains(x))
-                break;
-            x++;
-        }
-
-        return x;
+        return min;
     }
+    // public static final int calcMinNum(Collection<Integer> nums) {
+    // int sum = 0;
+    // for (int n : nums) {
+    // sum += n;
+    // }
+    //
+    // int n = nums.size();
+    // int sum_min = ((n + 1) * n) / 2;
+    // if (sum == sum_min)
+    // return n + 1;
+    //
+    // int x_min = n - (sum - sum_min) + 1;
+    // if (x_min < 1)
+    // x_min = 1;
+    // int x_max = n + (sum - sum_min);
+    //
+    // int x = x_min;
+    // while (x <= x_max) {
+    // if (!nums.contains(x)) // TODO
+    // break;
+    // x++;
+    // }
+    //
+    // return x;
+    // }
 
     /**
      * TODO 未使用，优化

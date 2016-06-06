@@ -4,7 +4,6 @@
 package jframe.core.unit;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,23 +52,29 @@ public class UnitManager {
         if (u == null)
             throw new UnitException("m->regUnit Unit is null");
 
-        synchronized (_units) {
-            if (_units.contains(u)) {
-                // delete old unit
-                unregUnit(_units.get(_units.indexOf(u)));
+        try {
+            synchronized (_units) {
+                if (_units.contains(u)) {
+                    // delete old unit
+                    unregUnit(_units.get(_units.indexOf(u)));
+                }
+                u.init(_conf.getFrame());
+                // calculate unique id
+                int i = 0;
+                int[] ids = new int[_units.size()];
+                for (Unit unit : _units) {
+                    ids[i] = unit.getID();
+                    i++;
+                }
+                u.setID(MathUtil.calcMinNum(ids));
+                _units.add(u);
             }
-            u.init(_conf.getFrame());
-            // calculate min and unused natural number
-            List<Integer> ids = new ArrayList<Integer>(_units.size());
-            for (Unit unit : _units) {
-                ids.add(unit.getID());
-            }
-            u.setID(MathUtil.calcMinNum(ids));
 
             u.start();
-            _units.add(u);
+        } catch (Exception e) {
+            unregUnit(u);
+            throw new UnitException(e.getMessage(), e.getCause());
         }
-
         LOG.info("m->regUnit u->{}", u);
         return u;
     }
@@ -83,12 +88,12 @@ public class UnitManager {
      */
     public Unit unregUnit(Unit u) throws UnitException {
         if (u == null)
-            throw new UnitException("Unit is null when invoking unregUnit()");
+            throw new UnitException("m->unregUnit Unit is null");
 
-        u.stop();
         synchronized (_units) {
             _units.remove(u);
         }
+        u.stop();
 
         LOG.info("m->unregUnit u->{}", u);
         return u;

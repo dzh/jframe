@@ -21,6 +21,7 @@ import jframe.core.unit.UnitManager;
  * @since 1.0
  */
 public class DefFrame implements Frame {
+
     private static final Logger LOG = LoggerFactory.getLogger(DefFrame.class);
 
     private Config _cnf;
@@ -28,19 +29,27 @@ public class DefFrame implements Frame {
 
     private final ThreadGate _gate = new ThreadGate();
 
-    public static enum FRAME_STATUS {
-        INIT, START, STOP
-    };
+    private volatile FRAME_STATUS _status = FRAME_STATUS.INIT;
 
-    private FRAME_STATUS _status = FRAME_STATUS.INIT;
+    private final Object _lock = new Object();
 
     /*
      * (non-Javadoc)
      * 
      * @see jframe.core.Frame#init(jframe.core.conf.Config)
      */
-    public void init(Config conf) {
-        _status = FRAME_STATUS.INIT;
+    public boolean init(Config conf) {
+        synchronized (_lock) {
+            if (_status == FRAME_STATUS.START) {
+                LOG.error("m->init Invalid status->{}", _status);
+                return false;
+            }
+            _status = FRAME_STATUS.INIT;
+        }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("DefFrame is initing");
+        }
         conf.setFrame(this);
 
         this._cnf = conf;
@@ -50,6 +59,7 @@ public class DefFrame implements Frame {
                 LOG.error(t.toString(), e);
             }
         });
+        return true;
     }
 
     /*
@@ -58,9 +68,16 @@ public class DefFrame implements Frame {
      * @see jframe.core.Frame#start()
      */
     public void start() {
-        if (_status != FRAME_STATUS.INIT)
-            return;
-        _status = FRAME_STATUS.START;
+        synchronized (_lock) {
+            if (_status != FRAME_STATUS.INIT) {
+                LOG.error("m->start Invalid status->{}", _status);
+                return;
+            }
+            _status = FRAME_STATUS.START;
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("DefFrame is starting");
+        }
         _gate.close();
 
         final UnitManager um = this._um;
@@ -68,7 +85,7 @@ public class DefFrame implements Frame {
             public void run() {
                 try {
                     um.start();
-                } catch (UnitException e) {
+                } catch (Exception e) {
                     LOG.error(e.getMessage(), e.fillInStackTrace());
                     // DefFrame.this.stop(); // Exit Frame
                     // TODO Exit daemon process
@@ -83,17 +100,20 @@ public class DefFrame implements Frame {
      * @see jframe.core.Frame#stop()
      */
     public void stop() {
-        LOG.debug("DefFrame is stopping");
-        if (_status == FRAME_STATUS.STOP)
-            return;
-        _status = FRAME_STATUS.STOP;
-        new Thread("DefFrameStopThread") {
-            public void run() {
-                _um.dispose();
-                _gate.open();
-                LOG.info("DefFrame stopped successfully!");
+        synchronized (_lock) {
+            if (_status == FRAME_STATUS.STOP) {
+                return;
             }
-        }.start();
+            _status = FRAME_STATUS.STOP;
+        }
+        LOG.debug("DefFrame is stopping");
+        try {
+            _um.dispose();
+            _gate.open();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
+        LOG.info("DefFrame stopped successfully!");
     }
 
     public FrameEvent waitForStop(long timeout) {

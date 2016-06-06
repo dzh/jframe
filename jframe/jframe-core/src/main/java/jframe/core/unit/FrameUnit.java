@@ -19,43 +19,43 @@ import jframe.core.signal.Signal;
  */
 public class FrameUnit extends AbstractUnit {
 
-	public FrameUnit() {
-		setName(FrameUnit.class.getSimpleName());
-	}
+    public FrameUnit() {
+        setName(FrameUnit.class.getSimpleName());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.unit.Unit#start()
-	 */
-	public void start() throws UnitException {
-		// String app_conf = getFrame().getConfig().getConfig(Config.APP_CONF);
-		// String app_lib = getFrame().getConfig().getConfig(Config.APP_LIB);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.core.unit.Unit#start()
+     */
+    public void start() throws UnitException {
+        // String app_conf = getFrame().getConfig().getConfig(Config.APP_CONF);
+        // String app_lib = getFrame().getConfig().getConfig(Config.APP_LIB);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.unit.Unit#stop()
-	 */
-	public void stop() throws UnitException {
-		sendSig(Signal.newSig(Signal.SIG_UNIT_STOP).setSource(this));
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.core.unit.Unit#stop()
+     */
+    public void stop() throws UnitException {
+        // sendSig(Signal.newSig(Signal.SIG_UNIT_STOP).setSource(this));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.unit.Unit#recvSig(jframe.core.signal.Signal)
-	 */
-	public void recvSig(Signal sig) {
-		switch (sig.getSigType()) {
-		case Signal.SIG_FRAME_RESTART:
-			_frame.restart();
-			break;
-		case Signal.SIG_FRAME_STOP:
-			_frame.stop();
-			break;
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.core.unit.Unit#recvSig(jframe.core.signal.Signal)
+     */
+    public void recvSig(Signal sig) {
+        switch (sig.getSigType()) {
+        case Signal.SIG_FRAME_RESTART:
+            _frame.restart();
+            break;
+        case Signal.SIG_FRAME_STOP:
+            _frame.stop();
+            break;
+        }
+    }
 
 }

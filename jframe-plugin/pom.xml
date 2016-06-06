@@ -32,6 +32,7 @@
 		<module>jframe-rongcloud</module>
 		<module>jframe-aliyun</module>
 		<module>jframe-umeng</module>
+		<module>jframe-zk</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
