@@ -4,6 +4,9 @@
 package zk;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.zookeeper.AsyncCallback.StringCallback;
 import org.apache.zookeeper.CreateMode;
@@ -42,6 +45,30 @@ public class TestApi {
     }
 
     @Test
+    public void testTimeZone() {
+        Date d = new Date();
+        System.out.println(d.getTime());
+
+        Calendar c = Calendar.getInstance();
+        System.out.println(c.getTimeZone());
+        System.out.println(c.getTimeInMillis());
+        System.out.println(c.getTimeZone().getRawOffset());
+        System.out.println(c.get(Calendar.HOUR_OF_DAY));
+
+        TimeZone t = TimeZone.getTimeZone("Asia/Tokyo");
+        c = Calendar.getInstance(t);
+        // c.setTimeZone(t);
+        System.out.println(c.getTimeZone());
+        System.out.println(c.getTimeInMillis());
+        System.out.println(c.getTimeZone().getRawOffset());
+        System.out.println(c.get(Calendar.HOUR_OF_DAY));
+
+        long l = 3600 * 1000;
+        d = new Date(l);
+        System.out.println(d.toString());
+
+    }
+
     public void testCreate() {
         class CreateCallback implements StringCallback {
             @Override
@@ -82,7 +109,22 @@ public class TestApi {
 
     }
 
-    @Test
+    public void testMultiop() {
+        // Op.check(path, version)
+        // Op.delete(path, version)
+        // zk.multi(ops, cb, ctx);
+        // zk.multi(ops)
+    }
+
+    public void testTransaction() {
+        // Transaction t = new Transaction();
+        // t.check(path, version);
+        // t.create(path, data, acl, createMode)
+        // t.delete(path, version);
+        // t.commit(cb, ctx);
+        // t.commit();
+    }
+
     public void testStat() throws KeeperException, InterruptedException {
         String path = "/";
         listStat(path);

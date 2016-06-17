@@ -47,9 +47,7 @@ public class DefFrame implements Frame {
             _status = FRAME_STATUS.INIT;
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("DefFrame is initing");
-        }
+        LOG.debug("DefFrame is initing");
         conf.setFrame(this);
 
         this._cnf = conf;
@@ -75,9 +73,7 @@ public class DefFrame implements Frame {
             }
             _status = FRAME_STATUS.START;
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("DefFrame is starting");
-        }
+        LOG.debug("DefFrame is starting");
         _gate.close();
 
         final UnitManager um = this._um;

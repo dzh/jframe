@@ -45,7 +45,8 @@ public class TestSort {
 
         ar = new int[6];
         for (int i = 0; i < ar.length;) {
-            ar[++i] = i;
+            ar[i] = i;
+            i++;
         }
         for (int i : ar) {
             System.out.println(i);

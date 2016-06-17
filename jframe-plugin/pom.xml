@@ -33,6 +33,8 @@
 		<module>jframe-aliyun</module>
 		<module>jframe-umeng</module>
 		<module>jframe-zk</module>
+		<module>jframe-netty-http</module>
+		<module>jframe-azure</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

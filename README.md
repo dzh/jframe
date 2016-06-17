@@ -72,7 +72,7 @@ dzh_11@qq.com                (personal)
 	* TODO Add RabbitmqDispatcher
 	* Improvement
 	* New Feature
-		* Refactor jframe-launcher, support Launcher interface
+		* jframe-launcher to support Launcher api
 	* New Plugin
 		* TODO jframe-activemq
 		* TODO jframe-activemq-client
