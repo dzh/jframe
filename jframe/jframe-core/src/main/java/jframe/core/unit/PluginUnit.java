@@ -46,6 +46,9 @@ public class PluginUnit extends AbstractUnit {
 
     private PluginClassLoaderContext _plc;
 
+    public PluginUnit() {
+    }
+
     @Override
     public void init(Frame frame) throws UnitException {
         super.init(frame);
@@ -98,7 +101,7 @@ public class PluginUnit extends AbstractUnit {
             String path_plugin = getFrame().getConfig().getConfig(Config.APP_PLUGIN);
             File dir_plugin = new File(path_plugin);// plug-in root directory
             if (!dir_plugin.exists()) {
-                LOG.error("Not found plugin path " + path_plugin);
+                LOG.warn("Not exist plugin path {}", path_plugin);
                 return pluginList;
             }
             File[] plugins = dir_plugin.listFiles(new FilenameFilter() {

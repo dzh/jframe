@@ -22,7 +22,7 @@ public class MathUtil {
             return 1;
         Arrays.sort(nums);
         int min = 1;
-        for (int i = 0;; i++) {
+        for (int i = 0; i < nums.length; i++) {
             if (nums[i] - min == 0) {
                 ++min;
                 continue;

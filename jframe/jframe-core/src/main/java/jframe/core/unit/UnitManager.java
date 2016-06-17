@@ -50,16 +50,16 @@ public class UnitManager {
      */
     public Unit regUnit(Unit u) throws UnitException {
         if (u == null)
-            throw new UnitException("m->regUnit Unit is null");
+            throw new UnitException("m-regUnit Unit is null");
 
         try {
             synchronized (_units) {
-                if (_units.contains(u)) {
+                if (u.getID() > 0 && _units.contains(u)) {
                     // delete old unit
                     unregUnit(_units.get(_units.indexOf(u)));
                 }
                 u.init(_conf.getFrame());
-                // calculate unique id
+                // TODO calculate unique id
                 int i = 0;
                 int[] ids = new int[_units.size()];
                 for (Unit unit : _units) {
@@ -70,12 +70,12 @@ public class UnitManager {
                 _units.add(u);
             }
 
+            LOG.info("m-regUnit u-{}", u);
             u.start();
         } catch (Exception e) {
             unregUnit(u);
             throw new UnitException(e.getMessage(), e.getCause());
         }
-        LOG.info("m->regUnit u->{}", u);
         return u;
     }
 
@@ -88,14 +88,14 @@ public class UnitManager {
      */
     public Unit unregUnit(Unit u) throws UnitException {
         if (u == null)
-            throw new UnitException("m->unregUnit Unit is null");
+            throw new UnitException("m-unregUnit Unit is null");
 
         synchronized (_units) {
             _units.remove(u);
         }
         u.stop();
 
-        LOG.info("m->unregUnit u->{}", u);
+        LOG.info("m-unregUnit u-{}", u);
         return u;
     }
 
@@ -143,12 +143,13 @@ public class UnitManager {
      */
     private void loadUnit(String file) throws UnitException {
         if (file == null) {
+            LOG.info("m-loadUnit reg default unit");
             regUnit(new FrameUnit());
             regUnit(new PluginUnit());
             return;
         }
 
-        LOG.info("m->loadUnit f->{}", file);
+        LOG.info("m-loadUnit f-{}", file);
         try {
             PropsConf props = new PropsConf();
             props.init(file);
@@ -162,7 +163,7 @@ public class UnitManager {
                 regUnit(unit);
             }
         } catch (Exception e) {
-            throw new UnitException("PropsConf.init error unit->" + file, e.getCause());
+            throw new UnitException("PropsConf.init error unit-" + file, e.getCause());
         }
     }
 

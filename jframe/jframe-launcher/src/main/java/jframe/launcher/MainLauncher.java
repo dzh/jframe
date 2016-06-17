@@ -127,7 +127,7 @@ public class MainLauncher extends DefLauncher {
         do {
             Process subp = launchInternal(config);//
             if (subp == null) {
-                LOG.error("Launch FrameMain Error! Are vmargs set the correct value?(win/linux)");
+                LOG.error("Launch MainLauncher Error! Are vmargs set the correct value?(win/linux)");
                 break;
             }
             Thread errT = redirectStream(subp.getErrorStream());
