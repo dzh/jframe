@@ -7,6 +7,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -85,6 +88,14 @@ public class TestHttpClientService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testEncode() throws UnsupportedEncodingException {
+        String url = "localhost/test?a=2016-07-08&b=11";
+        url = "http://testfirmware.blob.core.chinacloudapi.cn/channeltag/D453A67FF91F425A85AD6025CECE0685.gz?sp=rwdl&sr=c&sv=2014-02-14&se=2021-07-18T08%3A56%3A32Z&st=2016-07-18T08%3A56%3A32Z&sig=TnMMnXQvf0RnEQ53PcWk1qFfle8Erv2QO%2FAhobO%2BPQQ%3D";
+        System.out.println(url.length());
+        System.out.println(URLEncoder.encode(url, "utf-8"));
     }
 
 }

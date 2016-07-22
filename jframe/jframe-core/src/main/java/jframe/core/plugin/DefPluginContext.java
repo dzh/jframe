@@ -69,7 +69,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
                     _config.getConfig(ConfigConstants.CONTEXT_DISPATCHER_ID, "PluginContextDispatcher"), _config);
         } catch (Exception e) {
             _LOG.warn(e.getMessage(), e.fillInStackTrace());
-            
+
             d = DefDispatcher.newDispatcher("PluginContextDispatcher", getConfig());
         }
         return d;
@@ -405,6 +405,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
         Iterator<Plugin> iter = set.iterator();
         while (iter.hasNext()) {
             unregPlugin(iter.next());
+            iter.remove();
         }
     }
 

@@ -52,22 +52,29 @@ public class DefDispatcher extends AbstractDispatcher {
         final long sleep = Integer.parseInt(getConfig().getConfig("DefDispatcher.sleep", "0"));
         disptchThread = new Thread("DispatchThread") { // 分发线程
             public void run() {
-                final BlockingQueue<Msg<?>> queue = _queue;
-                while (true) {
-                    try {
-                        if (queue.isEmpty() && stop)
-                            break;
-                        dispatch(queue.take());
+                try {
+                    final BlockingQueue<Msg<?>> queue = _queue;
+                    while (true) {
+                        try {
+                            if (stop || isInterrupted())
+                                break;
+                            dispatch(queue.take());
 
-                        if (sleep > 0)
-                            Thread.sleep(sleep);
-                    } catch (Exception e) {
-                        LOG.warn(e.getMessage(), e.fillInStackTrace());
+                            if (sleep > 0)
+                                Thread.sleep(sleep);
+                        } catch (InterruptedException e) {
+                            LOG.warn(e.getMessage());
+                            break;
+                        } catch (Exception e) {
+                            LOG.error(e.getMessage(), e.fillInStackTrace());
+                        }
                     }
+                } finally {
+                    latch.countDown();
                 }
-                latch.countDown();
             }
         };
+        // disptchThread.setDaemon(true);
         disptchThread.start();
     }
 

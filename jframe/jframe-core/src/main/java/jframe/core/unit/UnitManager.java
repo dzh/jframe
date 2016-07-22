@@ -107,7 +107,8 @@ public class UnitManager {
 
     public void dispose() {
         synchronized (_units) {
-            for (Unit u : _units) {
+            Unit[] units = _units.toArray(new Unit[_units.size()]);
+            for (Unit u : units) {
                 try {
                     unregUnit(u);
                 } catch (UnitException e) {
@@ -128,7 +129,7 @@ public class UnitManager {
      */
     public void start() throws UnitException {
         String funit = _conf.getConfig("file.unit", _conf.getConfig(Config.APP_CONF + "/unit.properties"));
-        if (new File(funit).exists()) {
+        if (funit != null && new File(funit).exists()) {
             loadUnit(funit);
         } else {
             loadUnit(null);

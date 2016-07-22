@@ -1,0 +1,66 @@
+#assert
+-dsa
+#-Xlint:fallthrough 
+#-ea:jframe...
+
+#log configuration
+-Dlogback.configurationFile=${app.home}/conf/logback.xml
+
+# classpath
+-cp ${app.home}/lib/*;%CLASSPATH%
+
+#jmx
+#-Dcom.sun.management.config.file=${app.home}/conf/management.properties
+-Dcom.sun.management.jmxremote.port=10009
+#-Dcom.sun.management.jmxremote.access.file=${app.home}/conf/jmxremote.access
+#-Dcom.sun.management.jmxremote.password.file=${app.home}/conf/jmxremote.password
+-Djava.rmi.server.hostname=127.0.0.1
+-Dcom.sun.management.jmxremote.authenticate=false
+-Dcom.sun.management.jmxremote.ssl=false
+#-Dcom.sun.management.snmp.port=
+#-Djava.security.policy=<policy file>
+-Dcom.sun.management.jmxremote.local.only=false
+
+#jvm
+#-server
+-Xms64M
+-Xmx64M
+-Xmn50M
+-XX:PermSize=32M
+-XX:MaxPermSize=64M
+-XX:SurvivorRatio=9
+-XX:+DisableExplicitGC
+-XX:+HeapDumpOnOutOfMemoryError
+#-Xss4M
+#-XX:MaxDirectMemorySize=64M
+#-XX:NewSize=n
+#-XX:NewRatio=
+#-Xverify:none
+#-XX:ThreadStackSize=256K
+#-XX:HeapDumpPath=
+#-Xdump:system:events=throw,filter=java/lang/NullPointerException#com/ibm/example/Example.bad,range=2..4
+#-Xdump:system:events=catch,filter=java/lang/NullPointerException#com/ibm/example/Example.catch
+#-XX:ReservedCodeCacheSize=32m
+#-Xbootclasspath
+#-Xbootclasspath/p
+#-Xbootclasspath/a
+#-Xnoclassgc
+#-XX:+PrintGCTimeStamps
+#-XX:+PrintGCDetails
+#-verbose: gc、class、jni
+#-verbose:gc
+#-Xint
+#-Xloggc
+
+-XX:+UseConcMarkSweepGC
+#-XX:+CMSPermGenSweepingEnabled
+-XX:+CMSClassUnloadingEnabled
+-XX:+UseParNewGC
+-XX:CMSInitiatingOccupancyFraction=90
+
+#debug
+-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=6000,server=y,suspend=n
+
+#default dll path
+-Djava.library.path=${app.home}/lib
+

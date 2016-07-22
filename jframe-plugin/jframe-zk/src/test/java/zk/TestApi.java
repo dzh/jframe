@@ -66,7 +66,16 @@ public class TestApi {
         long l = 3600 * 1000;
         d = new Date(l);
         System.out.println(d.toString());
-
+        
+        d= new Date(1466145792000L);
+        System.out.println(d.toString());
+        //9
+        d= new Date(1466142192000L);
+        System.out.println(d.toString());
+        
+        //8
+        d= new Date(Long.MAX_VALUE);
+        System.out.println(d.toString());
     }
 
     public void testCreate() {

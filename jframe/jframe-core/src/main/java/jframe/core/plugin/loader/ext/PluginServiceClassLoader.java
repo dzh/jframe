@@ -7,15 +7,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.loader.PluginCase;
 import jframe.core.plugin.loader.PluginClassLoader;
 import jframe.core.plugin.loader.PluginClassLoaderContext;
 import jframe.core.plugin.service.Service;
 import jframe.core.plugin.service.ServiceContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author dzh
@@ -24,76 +24,69 @@ import org.slf4j.LoggerFactory;
  */
 public class PluginServiceClassLoader extends PluginClassLoader {
 
-	public PluginServiceClassLoader(PluginCase pc, PluginClassLoaderContext plc) {
-		super(pc, plc);
-	}
+    public PluginServiceClassLoader(PluginCase pc, PluginClassLoaderContext plc) {
+        super(pc, plc);
+    }
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(PluginServiceClassLoader.class);
-	
-	@Override
-	protected void injectAnnocation(Class<?> clazz) throws Exception {
-		if (clazz == null)
-			return;
-		super.injectAnnocation(clazz);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginServiceClassLoader.class);
 
-		Field[] fields = clazz.getDeclaredFields();
-		// inject service
-		for (Field f : fields) {
-			if (Modifier.isStatic(f.getModifiers())
-					&& f.isAnnotationPresent(InjectService.class)) {
-				injectImportService(f);
-			}
-		}
-	}
+    @Override
+    protected void injectAnnocation(Class<?> clazz) throws Exception {
+        if (clazz == null)
+            return;
+        super.injectAnnocation(clazz);
 
-	protected void injectImportService(Field f) {
-		ServiceContext context = plc.getServiceContext();
-		context.attachService(
-				context.getSvcById(f.getAnnotation(InjectService.class).id()),
-				f, true);
-	}
+        Field[] fields = clazz.getDeclaredFields();
+        // inject service
+        for (Field f : fields) {
+            if (Modifier.isStatic(f.getModifiers()) && f.isAnnotationPresent(InjectService.class)) {
+                injectImportService(f);
+            }
+        }
+    }
 
-	/**
-	 * register export-service
-	 * 
-	 * @param pc
-	 * @param p
-	 */
-	public void loadService(PluginCase pc) {
-		ServiceContext sc = plc.getServiceContext();
+    protected void injectImportService(Field f) {
+        ServiceContext context = plc.getServiceContext();
+        context.attachService(context.getSvcById(f.getAnnotation(InjectService.class).id()), f, true);
+    }
 
-		List<String> pluginService = pc.getPluginService();
-		for (String name : pluginService) {
-			try {
-				sc.regSvc(Service
-						.newInstance(
-								loadClass(name)
-										.getAnnotation(
-												jframe.core.plugin.annotation.Service.class))
-						.setName(name).setClassLoader(this));
-			} catch (Exception e) {
-				LOG.error("Create Annotation Service Error: {}", e.getMessage());
-				continue;
-			}
-		}
-	}
+    /**
+     * register export-service
+     * 
+     * @param pc
+     * @param p
+     */
+    public void loadService(PluginCase pc) {
+        ServiceContext sc = plc.getServiceContext();
 
-	public void dispose() {
-		detachPluginService();
-		super.dispose();
-	}
+        List<String> pluginService = pc.getPluginService();
+        for (String name : pluginService) {
+            try {
+                sc.regSvc(
+                        Service.newInstance(loadClass(name).getAnnotation(jframe.core.plugin.annotation.Service.class))
+                                .setName(name).setClassLoader(this));
+            } catch (Exception e) {
+                LOG.error("Create Annotation Service Error: {}", e.getMessage());
+                continue;
+            }
+        }
+    }
 
-	private void detachPluginService() {
-		ServiceContext context = plc.getServiceContext();
-		List<String> pluginService = getPluginCase().getPluginService();
+    public void dispose() {
+        detachPluginService();
+        super.dispose();
+    }
 
-		for (String svc : pluginService) {
-			Service s = context.getSvcByName(svc);
-			if (s == null)
-				continue;
-			context.detachService(s.getId());
-			context.unregSvc(s.getId());
-		}
-	}
+    private void detachPluginService() {
+        ServiceContext context = plc.getServiceContext();
+        List<String> pluginService = getPluginCase().getPluginService();
+
+        for (String svc : pluginService) {
+            Service s = context.getSvcByName(svc);
+            if (s == null)
+                continue;
+            context.detachService(s.getId());
+            context.unregSvc(s.getId());
+        }
+    }
 }

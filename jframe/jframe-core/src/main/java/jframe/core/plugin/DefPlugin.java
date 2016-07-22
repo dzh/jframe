@@ -3,7 +3,6 @@
  */
 package jframe.core.plugin;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jframe.core.plugin.loader.PluginClassLoader;
@@ -15,8 +14,6 @@ import jframe.core.plugin.loader.PluginClassLoader;
  */
 @jframe.core.plugin.annotation.Plugin
 public class DefPlugin implements Plugin {
-
-    private static final Logger _LOG = LoggerFactory.getLogger(DefPlugin.class);
 
     private PluginContext _context;
 
@@ -147,20 +144,20 @@ public class DefPlugin implements Plugin {
         return _context.getPlugin(_id);
     }
 
-    public void logWarn(String warn) {
-        _LOG.warn(warn);
+    public void logWarn(String msg) {
+        LoggerFactory.getLogger(getClass()).warn(msg);
     }
 
-    public void logError(String error) {
-        _LOG.error(error);
+    public void logError(String msg) {
+        LoggerFactory.getLogger(getClass()).error(msg);
     }
 
-    public void logInfo(String info) {
-        _LOG.info(info);
+    public void logInfo(String msg) {
+        LoggerFactory.getLogger(getClass()).info(msg);
     }
 
-    public void logDebug(String debug) {
-        _LOG.debug(debug);
+    public void logDebug(String msg) {
+        LoggerFactory.getLogger(getClass()).debug(msg);
     }
 
 }

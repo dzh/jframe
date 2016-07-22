@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+	<contextName>Application Daemon</contextName>
+	<!--<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" 
+		/> <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth"/> -->
+	<timestamp key="byDay" datePattern="yyyy-MM-dd"
+		timeReference="contextBirth" />
+
+	<property name="LOG_HOME" value="${app.home}/log" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="JFRAME"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- <file>${LOG_HOME}/log-daemon-${byDay}.log</file> -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/jfd-%d{yyyyMMdd}.log
+			</fileNamePattern>
+			<maxHistory>10</maxHistory>
+			<!-- <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> 
+				<maxFileSize>10MB</maxFileSize> </timeBasedFileNamingAndTriggeringPolicy> -->
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="jframe" additivity="true">
+		<appender-ref ref="JFRAME" />
+	</logger>
+
+	<root level="info">
+		<!-- <appender-ref ref="STDOUT" /> -->
+	</root>
+</configuration>

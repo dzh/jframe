@@ -35,6 +35,8 @@
 		<module>jframe-zk</module>
 		<module>jframe-netty-http</module>
 		<module>jframe-azure</module>
+		<module>jframe-yunsms</module>
+		<module>jframe-californium</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

@@ -127,7 +127,7 @@ public class PluginClassLoader extends URLClassLoader {
             } catch (ClassNotFoundException e) {
                 c = loadImportPlugin(name);
             } catch (Exception e) {
-                LOG.warn(e.getMessage());
+                LOG.warn(e.getMessage(), e.fillInStackTrace());
             }
         }
 
@@ -222,9 +222,12 @@ public class PluginClassLoader extends URLClassLoader {
             return;
 
         for (Field f : clazz.getDeclaredFields()) {
-            if (Modifier.isStatic(f.getModifiers()) && f.isAnnotationPresent(InjectPlugin.class)) {
-                injectPlugin(f);
-                break;
+            if (Modifier.isStatic(f.getModifiers())) {
+                if (f.isAnnotationPresent(InjectPlugin.class)) {
+                    injectPlugin(f);
+                    break;
+                }
+                
             }
         }
     }

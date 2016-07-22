@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageException;
@@ -22,13 +23,15 @@ import com.microsoft.azure.storage.blob.ListBlobItem;
 /**
  * @author dzh
  * @date Jun 15, 2016 2:53:42 PM
- * @since 1.0
+ * @since 1.0s
  */
 public class TestBlobService {
 
     public static final String storageConnectionString = "DefaultEndpointsProtocol=http;"
             + "AccountName=your_storage_account;" + "AccountKey=your_storage_account_key;"
             + "EndpointSuffix=core.chinacloudapi.cn";
+
+    public static final String containerName = "mycontainer";
 
     // String storageConnectionString =
     // RoleEnvironment.getConfigurationSettings().get("StorageConnectionString");
@@ -46,7 +49,7 @@ public class TestBlobService {
 
             // Get a reference to a container.
             // The container name must be lower case
-            container = blobClient.getContainerReference("mycontainer");
+            container = blobClient.getContainerReference(containerName);
 
             // Create the container if it does not exist.
             container.createIfNotExists();
@@ -79,6 +82,7 @@ public class TestBlobService {
 
             // Create or overwrite the "myimage.jpg" blob with contents from a
             // local file.
+            // container.getDirectoryReference("").
             CloudBlockBlob blob = container.getBlockBlobReference("myimage.jpg");
             File source = new File(filePath);
             blob.upload(new FileInputStream(source), source.length());
@@ -88,6 +92,7 @@ public class TestBlobService {
         }
     }
 
+    @Test
     public void testListBlob() {
         try {
             // Loop over blobs within the container and output the URI to each

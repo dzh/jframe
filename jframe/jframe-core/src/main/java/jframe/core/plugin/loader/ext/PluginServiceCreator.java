@@ -15,32 +15,31 @@ import jframe.core.plugin.loader.PluginCreator;
  */
 public class PluginServiceCreator extends PluginCreator {
 
-	public PluginServiceCreator(Config config) {
-		super(config);
-	}
+    public PluginServiceCreator(Config config) {
+        super(config);
+    }
 
-	@Override
-	protected void loadPlugin(PluginCase pc, Properties p) {
-		super.loadPlugin(pc, p);
-		if (p.getProperty(PluginCase.P_PLUGIN_SERVICE) != null) {
-			pc.setPluginService(parseList(p
-					.getProperty(PluginCase.P_PLUGIN_SERVICE)));
-		}
+    @Override
+    protected void loadPlugin(PluginCase pc, Properties p) {
+        super.loadPlugin(pc, p);
+        if (p.getProperty(PluginCase.P_PLUGIN_SERVICE) != null) {
+            pc.setPluginService(parseList(p.getProperty(PluginCase.P_PLUGIN_SERVICE)));
+        }
 
-		// if (p.getProperty(PluginCase.P_IMPORT_SERVICE) != null) {
-		// pc.setImportService(parseList(p
-		// .getProperty(PluginCase.P_IMPORT_SERVICE)));
-		// }
-	}
+        // if (p.getProperty(PluginCase.P_IMPORT_SERVICE) != null) {
+        // pc.setImportService(parseList(p
+        // .getProperty(PluginCase.P_IMPORT_SERVICE)));
+        // }
+    }
 
-	@Override
-	public void close() {
-		super.close();
-	}
+    @Override
+    public void close() {
+        super.close();
+    }
 
-	@Override
-	public PluginClassLoader createPluginClassLoader(PluginCase pc) {
-		return new PluginServiceClassLoader(pc, context);
-	}
+    @Override
+    public PluginClassLoader createPluginClassLoader(PluginCase pc) {
+        return new PluginServiceClassLoader(pc, context);
+    }
 
 }
