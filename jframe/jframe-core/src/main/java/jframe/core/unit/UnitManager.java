@@ -50,7 +50,7 @@ public class UnitManager {
      */
     public Unit regUnit(Unit u) throws UnitException {
         if (u == null)
-            throw new UnitException("m-regUnit Unit is null");
+            throw new UnitException("Unit is null");
 
         try {
             synchronized (_units) {
@@ -70,7 +70,7 @@ public class UnitManager {
                 _units.add(u);
             }
 
-            LOG.info("m-regUnit u-{}", u);
+            LOG.info("u-{}", u);
             u.start();
         } catch (Exception e) {
             unregUnit(u);
@@ -88,14 +88,14 @@ public class UnitManager {
      */
     public Unit unregUnit(Unit u) throws UnitException {
         if (u == null)
-            throw new UnitException("m-unregUnit Unit is null");
+            throw new UnitException("Unit is null");
 
         synchronized (_units) {
             _units.remove(u);
         }
         u.stop();
 
-        LOG.info("m-unregUnit u-{}", u);
+        LOG.info("u-{}", u);
         return u;
     }
 
@@ -144,13 +144,13 @@ public class UnitManager {
      */
     private void loadUnit(String file) throws UnitException {
         if (file == null) {
-            LOG.info("m-loadUnit reg default unit");
+            LOG.info("reg default unit");
             regUnit(new FrameUnit());
             regUnit(new PluginUnit());
             return;
         }
 
-        LOG.info("m-loadUnit f-{}", file);
+        LOG.info("f-{}", file);
         try {
             PropsConf props = new PropsConf();
             props.init(file);
