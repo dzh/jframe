@@ -12,7 +12,6 @@
 		<jframe.ext.version>1.2.1</jframe.ext.version>
 	</properties>
 	<modules>
-		<module>release</module>
 		<module>jframe-activemq</module>
 		<module>jframe-clrfile</module>
 		<module>jframe-datasource</module>
@@ -37,6 +36,7 @@
 		<module>jframe-azure</module>
 		<module>jframe-yunsms</module>
 		<module>jframe-californium</module>
+		<module>jframe-mqtt-client</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -59,7 +59,8 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<outputDirectory>${session.executionRootDirectory}/release/plugin/</outputDirectory>
+					<!-- <outputDirectory>${session.executionRootDirectory}/release/plugin/</outputDirectory> -->
+					<classifier>plugin</classifier>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -75,27 +76,12 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
-				<executions>
-					<execution>
-						<id>copy-lib</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${session.executionRootDirectory}/release/lib/</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeTransitive>true</excludeTransitive>
-							<excludeScope>provided</excludeScope>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> 
+				<version>2.8</version> <executions> <execution> <id>copy-lib</id> <phase>package</phase> 
+				<goals> <goal>copy-dependencies</goal> </goals> <configuration> <outputDirectory>${session.executionRootDirectory}/release/lib/</outputDirectory> 
+				<overWriteReleases>true</overWriteReleases> <overWriteSnapshots>true</overWriteSnapshots> 
+				<excludeTransitive>true</excludeTransitive> <excludeScope>provided</excludeScope> 
+				</configuration> </execution> </executions> </plugin> -->
 		</plugins>
 		<pluginManagement>
 			<plugins>

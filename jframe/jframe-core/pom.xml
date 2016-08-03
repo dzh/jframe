@@ -11,7 +11,6 @@
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-launcher</artifactId>
-			<version>${jframe.version}</version>
 		</dependency>
 	</dependencies>
 </project>

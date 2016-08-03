@@ -7,8 +7,6 @@ import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import jframe.core.msg.Msg;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Adapter;
@@ -32,6 +30,10 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jframe.core.msg.Msg;
 
 /**
  * @author dzh
@@ -40,248 +42,248 @@ import org.eclipse.swt.widgets.Text;
  */
 public class JframeApp {
 
-	private Queue<Msg<?>> queue = new LinkedBlockingQueue<Msg<?>>();
+    static Logger LOG = LoggerFactory.getLogger(JframeApp.class);
 
-	private Shell shell;
+    private Queue<Msg<?>> queue = new LinkedBlockingQueue<Msg<?>>();
 
-	private final CountDownLatch latch = new CountDownLatch(1);
-	volatile boolean disposed = false;
+    private Shell shell;
 
-	public JframeApp(Display display) {
-		this(display, SWT.SHELL_TRIM);
-	}
+    private final CountDownLatch latch = new CountDownLatch(1);
 
-	public JframeApp(Display display, int style) {
-		shell = new Shell(display, style);
-		configApp();
-	}
+    volatile boolean disposed = false;
 
-	protected void configApp() {
-		shell.setMaximized(true);
-		shell.setText("Jframe App");
-		// shell.setImage(new Image());
-		shell.setLayout(new GridLayout(1, true));
-		shell.setMenuBar(createMenuBar());
-		// createToolBar();
-		createContent();
-		// shell.layout();
-	}
+    public JframeApp(Display display) {
+        this(display, SWT.SHELL_TRIM);
+    }
 
-	/**
-	 * 
-	 */
-	protected void createContent() {
-		Composite content = new Composite(shell, SWT.NONE);
-		content.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		content.setLayout(new FillLayout());
-		// createTextDemo(content);
-		createTabFolder(content);
-	}
+    public JframeApp(Display display, int style) {
+        shell = new Shell(display, style);
+        configApp();
+    }
 
-	/**
-	 * @param content
-	 */
-	private void createTabFolder(Composite content) {
-		CTabFolder folder = new CTabFolder(content, SWT.BORDER | SWT.BOTTOM);
-		// folder.setSimple(false);
-		// folder.setUnselectedImageVisible(false);
-		// folder.setUnselectedCloseVisible(false);
-		// folder.setMinimizeVisible(true);
-		// folder.setMaximizeVisible(true);
-		// configuration
-		CTabItem startTab = new CTabItem(folder, SWT.NONE);
-		startTab.setText("TAB1");
-		Composite config = createMonitorConfig(folder);
-		startTab.setControl(config);
+    protected void configApp() {
+        shell.setMaximized(true);
+        shell.setText("Jframe App");
+        // shell.setImage(new Image());
+        shell.setLayout(new GridLayout(1, true));
+        shell.setMenuBar(createMenuBar());
+        // createToolBar();
+        createContent();
+        // shell.layout();
+    }
 
-		// monitor info
-		CTabItem item = new CTabItem(folder, SWT.NONE);
-		item.setText("TAB2");
-		Text text = new Text(folder, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL
-				| SWT.H_SCROLL);
-		text.setEditable(false);
-		showRecvMsg(text);
-		item.setControl(text);
+    /**
+     * 
+     */
+    protected void createContent() {
+        Composite content = new Composite(shell, SWT.NONE);
+        content.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        content.setLayout(new FillLayout());
+        // createTextDemo(content);
+        createTabFolder(content);
+    }
 
-		folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
-			@Override
-			public void close(CTabFolderEvent event) {
-				// if (event.item.equals(specialItem)) {
-				// event.doit = false;
-				// }
-			}
-		});
-		folder.setSelection(item);
+    /**
+     * @param content
+     */
+    private void createTabFolder(Composite content) {
+        CTabFolder folder = new CTabFolder(content, SWT.BORDER | SWT.BOTTOM);
+        // folder.setSimple(false);
+        // folder.setUnselectedImageVisible(false);
+        // folder.setUnselectedCloseVisible(false);
+        // folder.setMinimizeVisible(true);
+        // folder.setMaximizeVisible(true);
+        // configuration
+        CTabItem startTab = new CTabItem(folder, SWT.NONE);
+        startTab.setText("TAB1");
+        Composite config = createMonitorConfig(folder);
+        startTab.setControl(config);
 
-	}
+        // monitor info
+        CTabItem item = new CTabItem(folder, SWT.NONE);
+        item.setText("TAB2");
+        Text text = new Text(folder, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        text.setEditable(false);
+        showRecvMsg(text);
+        item.setControl(text);
 
-	/**
-	 * @param config
-	 */
-	private Composite createMonitorConfig(Composite folder) {
-		Composite config = new Composite(folder, SWT.NONE);
-		config.setLayout(new GridLayout(1, true));
+        folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
+            @Override
+            public void close(CTabFolderEvent event) {
+                // if (event.item.equals(specialItem)) {
+                // event.doit = false;
+                // }
+            }
+        });
+        folder.setSelection(item);
 
-		return config;
-	}
+    }
 
-	/**
-	 * @param text
-	 */
-	private void showRecvMsg(final Text text) {
-		new Thread("MonitorMsg") {
-			public void run() {
-				while (true) {
-					shell.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (!text.isDisposed()) {
-								Msg<?> msg = queue.poll();
-								if (msg != null) {
-									if (text.getText().equals(""))
-										text.setText(msg.toString());
-									else
-										text.setText(text.getText()
-												+ text.getLineDelimiter()
-												+ msg.toString());
-									text.setSelection(text.getCharCount());
-									text.showSelection();
-								}
-							}
-						}
-					});
-					if (isDisposed() && queue.isEmpty()) {
-						latch.countDown();
-						break;
-					}
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		}.start();
+    /**
+     * @param config
+     */
+    private Composite createMonitorConfig(Composite folder) {
+        Composite config = new Composite(folder, SWT.NONE);
+        config.setLayout(new GridLayout(1, true));
 
-	}
+        return config;
+    }
 
-	/**
-	 * @param content
-	 */
-	private void createTextDemo(Composite content) {
-		final Text text = new Text(content, SWT.MULTI | SWT.BORDER
-				| SWT.V_SCROLL | SWT.H_SCROLL);
-		text.setEditable(false);
+    /**
+     * @param text
+     */
+    private void showRecvMsg(final Text text) {
+        new Thread("MonitorMsg") {
+            public void run() {
+                while (true) {
+                    try {
+                        shell.getDisplay().asyncExec(new Runnable() {
+                            public void run() {
+                                if (!text.isDisposed()) {
+                                    Msg<?> msg = queue.poll();
+                                    if (msg != null) {
+                                        if (text.getText().equals(""))
+                                            text.setText(msg.toString());
+                                        else
+                                            text.setText(text.getText() + text.getLineDelimiter() + msg.toString());
+                                        text.setSelection(text.getCharCount());
+                                        text.showSelection();
+                                    }
+                                }
+                            }
+                        });
+                        if (isDisposed() && queue.isEmpty()) {
+                            latch.countDown();
+                            break;
+                        }
 
-		new Thread("HandleMsg") {
-			public void run() {
-				while (true) {
-					shell.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (!text.isDisposed()) {
-								Msg<?> msg = queue.poll();
-								if (msg != null) {
-									if (text.getText().equals(""))
-										text.setText(msg.toString());
-									else
-										text.setText(text.getText()
-												+ text.getLineDelimiter()
-												+ msg.toString());
-								}
-							}
-						}
-					});
-					if (isDisposed() && queue.isEmpty()) {
-						latch.countDown();
-						break;
-					}
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		}.start();
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        LOG.warn(e.getMessage(), e.fillInStackTrace());
+                        break;
+                    }
+                }
+            }
+        }.start();
 
-	}
+    }
 
-	public void recvMsg(Msg<?> msg) {
-		queue.add(msg);
-	}
+    /**
+     * @param content
+     */
+    private void createTextDemo(Composite content) {
+        final Text text = new Text(content, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        text.setEditable(false);
 
-	/**
-	 * 
-	 */
-	protected void createToolBar() {
-		CoolBar bar = new CoolBar(shell, SWT.FLAT);
-		bar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		bar.setLayout(new RowLayout());
+        new Thread("HandleMsg") {
+            public void run() {
+                while (true) {
+                    shell.getDisplay().asyncExec(new Runnable() {
+                        public void run() {
+                            if (!text.isDisposed()) {
+                                Msg<?> msg = queue.poll();
+                                if (msg != null) {
+                                    if (text.getText().equals(""))
+                                        text.setText(msg.toString());
+                                    else
+                                        text.setText(text.getText() + text.getLineDelimiter() + msg.toString());
+                                }
+                            }
+                        }
+                    });
+                    if (isDisposed() && queue.isEmpty()) {
+                        latch.countDown();
+                        break;
+                    }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        }.start();
 
-		CoolItem item = new CoolItem(bar, SWT.NONE);
-		Button button = new Button(bar, SWT.FLAT);
-		// button.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true));
-		button.setText("Button");
-		Point size = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		item.setPreferredSize(item.computeSize(size.x, size.y));
-		item.setControl(button);
+    }
 
-		Rectangle clientArea = shell.getClientArea();
-		bar.setLocation(clientArea.x, clientArea.y);
-		bar.pack();
-	}
+    public void recvMsg(Msg<?> msg) {
+        queue.add(msg);
+    }
 
-	/**
-	 * @return
-	 */
-	protected Menu createMenuBar() {
-		Menu bar = new Menu(shell, SWT.BAR);
-		// file
-		MenuItem fileItem = new MenuItem(bar, SWT.CASCADE);
-		fileItem.setText("&File");
-		Menu submenu = new Menu(shell, SWT.DROP_DOWN);
-		fileItem.setMenu(submenu);
-		MenuItem item = new MenuItem(submenu, SWT.PUSH);
-		item.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
+    /**
+     * 
+     */
+    protected void createToolBar() {
+        CoolBar bar = new CoolBar(shell, SWT.FLAT);
+        bar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+        bar.setLayout(new RowLayout());
 
-			}
-		});
-		item.setText("Select &All\tCtrl+A");
-		item.setAccelerator(SWT.MOD1 + 'A');
-		// edit
-		MenuItem editItem = new MenuItem(bar, SWT.CASCADE);
-		editItem.setText("&Edit");
-		// search
-		MenuItem searchItem = new MenuItem(bar, SWT.CASCADE);
-		searchItem.setText("&Search");
-		return bar;
-	}
+        CoolItem item = new CoolItem(bar, SWT.NONE);
+        Button button = new Button(bar, SWT.FLAT);
+        // button.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true));
+        button.setText("Button");
+        Point size = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        item.setPreferredSize(item.computeSize(size.x, size.y));
+        item.setControl(button);
 
-	public Shell getShell() {
-		return shell;
-	}
+        Rectangle clientArea = shell.getClientArea();
+        bar.setLocation(clientArea.x, clientArea.y);
+        bar.pack();
+    }
 
-	public void layout2Center() {
-		Monitor primary = shell.getDisplay().getPrimaryMonitor();
-		Rectangle bounds = primary.getBounds();
-		Rectangle rect = shell.getBounds();
-		int x = bounds.x + (bounds.width - rect.width) / 2;
-		int y = bounds.y + (bounds.height - rect.height) / 2;
-		shell.setLocation(x, y);
-	}
+    /**
+     * @return
+     */
+    protected Menu createMenuBar() {
+        Menu bar = new Menu(shell, SWT.BAR);
+        // file
+        MenuItem fileItem = new MenuItem(bar, SWT.CASCADE);
+        fileItem.setText("&File");
+        Menu submenu = new Menu(shell, SWT.DROP_DOWN);
+        fileItem.setMenu(submenu);
+        MenuItem item = new MenuItem(submenu, SWT.PUSH);
+        item.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event e) {
 
-	public void dispose() {
-		setDisposed(true);
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-		}
-		shell.close();
-	}
+            }
+        });
+        item.setText("Select &All\tCtrl+A");
+        item.setAccelerator(SWT.MOD1 + 'A');
+        // edit
+        MenuItem editItem = new MenuItem(bar, SWT.CASCADE);
+        editItem.setText("&Edit");
+        // search
+        MenuItem searchItem = new MenuItem(bar, SWT.CASCADE);
+        searchItem.setText("&Search");
+        return bar;
+    }
 
-	public boolean isDisposed() {
-		return disposed;
-	}
+    public Shell getShell() {
+        return shell;
+    }
 
-	public void setDisposed(boolean disposed) {
-		this.disposed = disposed;
-	}
+    public void layout2Center() {
+        Monitor primary = shell.getDisplay().getPrimaryMonitor();
+        Rectangle bounds = primary.getBounds();
+        Rectangle rect = shell.getBounds();
+        int x = bounds.x + (bounds.width - rect.width) / 2;
+        int y = bounds.y + (bounds.height - rect.height) / 2;
+        shell.setLocation(x, y);
+    }
+
+    public void dispose() {
+        setDisposed(true);
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+        }
+        shell.close();
+    }
+
+    public boolean isDisposed() {
+        return disposed;
+    }
+
+    public void setDisposed(boolean disposed) {
+        this.disposed = disposed;
+    }
 }

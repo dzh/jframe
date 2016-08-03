@@ -10,6 +10,7 @@
 		<module>jframe-core</module>
 		<module>jframe-release</module>
 		<module>jframe-ext</module>
+		<module>jframe-swt</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,6 +22,31 @@
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>cn</groupId>
+				<artifactId>jframe-core</artifactId>
+				<version>${jframe.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn</groupId>
+				<artifactId>jframe-ext</artifactId>
+				<version>${jframe.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn</groupId>
+				<artifactId>jframe-launcher</artifactId>
+				<version>${jframe.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn</groupId>
+				<artifactId>jframe-release</artifactId>
+				<version>${jframe.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn</groupId>
+				<artifactId>jframe-swt</artifactId>
+				<version>${jframe.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.jmockit</groupId>
 				<artifactId>jmockit</artifactId>
@@ -65,14 +91,9 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<outputDirectory>${session.executionRootDirectory}/jframe-release/jframe/lib/</outputDirectory>
-				</configuration>
-			</plugin>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
+				<version>2.4</version> <configuration> <outputDirectory>${session.executionRootDirectory}/jframe-release/jframe/lib/</outputDirectory> 
+				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -86,66 +107,7 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${session.executionRootDirectory}/jframe-release/jframe/lib/</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeTransitive>true</excludeTransitive>
-							<includeScope>compile</includeScope>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-dependency-plugin
-										</artifactId>
-										<versionRange>
-											[2.8,)
-										</versionRange>
-										<goals>
-											<goal>
-												copy-dependencies
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 	<dependencies>
 		<dependency>

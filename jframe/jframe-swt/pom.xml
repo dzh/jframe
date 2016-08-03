@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>cn</groupId>
 		<artifactId>jframe</artifactId>
-		<version>1.1.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<artifactId>jframe-swt</artifactId>
 
@@ -18,12 +18,13 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<outputDirectory>${session.executionRootDirectory}/jframe-release/jframe/plugin/</outputDirectory>
+					<!-- <outputDirectory>${session.executionRootDirectory}/jframe-release/jframe/plugin/</outputDirectory> -->
+					<classifier>plugin</classifier>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>linux64</id>
@@ -36,7 +37,7 @@
 			<properties>
 				<swt.groupId>org.eclipse.swt</swt.groupId>
 				<swt.artifactId>org.eclipse.swt.gtk.linux.x86_64</swt.artifactId>
-				<swt.version>3.8</swt.version>
+				<swt.version>4.3</swt.version>
 			</properties>
 		</profile>
 		<profile>
@@ -50,21 +51,21 @@
 			<properties>
 				<swt.groupId>org.eclipse.swt</swt.groupId>
 				<swt.artifactId>org.eclipse.swt.win32.win32.x86_64</swt.artifactId>
-				<swt.version>3.8</swt.version>
+				<swt.version>4.3</swt.version>
 			</properties>
 		</profile>
 		<profile>
-			<id>windows32</id>
+			<id>OS64</id>
 			<activation>
 				<os>
-					<family>windows</family>
-					<arch>x86</arch>
+					<family>Mac OS X</family>
+					<arch>x86_64</arch>
 				</os>
 			</activation>
 			<properties>
 				<swt.groupId>org.eclipse.swt</swt.groupId>
-				<swt.artifactId>org.eclipse.swt.win32.win32.x86</swt.artifactId>
-				<swt.version>3.8</swt.version>
+				<swt.artifactId>org.eclipse.swt.cocoa.macosx.x86_64</swt.artifactId>
+				<swt.version>4.3</swt.version>
 			</properties>
 		</profile>
 	</profiles>
@@ -79,14 +80,11 @@
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-core</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>${swt.groupId}</groupId>
 			<artifactId>${swt.artifactId}</artifactId>
 			<version>${swt.version}</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

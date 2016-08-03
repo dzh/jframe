@@ -11,5 +11,7 @@ import jframe.core.plugin.DefPlugin;
  * @since 1.0
  */
 public class RabbitClientPlugin extends DefPlugin {
+    
+    
 
 }
