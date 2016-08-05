@@ -9,6 +9,78 @@
 	<artifactId>release</artifactId>
 	<packaging>pom</packaging>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-lib</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/jframe-pay/lib/</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<excludeTransitive>false</excludeTransitive>
+							<includeScope>compile</includeScope>
+							<excludeClassifiers>plugin</excludeClassifiers>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-plugin</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/jframe-pay/plugin/</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<excludeTransitive>false</excludeTransitive>
+							<includeScope>compile</includeScope>
+							<includeClassifiers>plugin</includeClassifiers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId> org.apache.maven.plugins </groupId>
+										<artifactId> maven-dependency-plugin
+										</artifactId>
+										<versionRange> [2.8,) </versionRange>
+										<goals>
+											<goal> copy-dependencies
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn</groupId>
@@ -19,31 +91,31 @@
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-http</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-dao</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-alipay</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-upmp</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-wx</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 	</dependencies>
 </project>

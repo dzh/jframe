@@ -17,6 +17,18 @@
 		<module>jframe-pay-upmp</module>
 	</modules>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<classifier>plugin</classifier>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<artifactId>jframe-pay-domain</artifactId>
@@ -27,7 +39,7 @@
 			<groupId>cn</groupId>
 			<artifactId>jframe-memcached-client</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 	</dependencies>
 </project>

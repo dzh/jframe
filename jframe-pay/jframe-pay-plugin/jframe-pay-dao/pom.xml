@@ -13,13 +13,13 @@
 			<groupId>cn</groupId>
 			<artifactId>jframe-memcached-client</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-mybatis</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 	</dependencies>
 </project>

@@ -52,54 +52,6 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
-				<version>2.6</version> <executions> <execution> <id>copy-jframe-pay-lib</id> 
-				<phase>package</phase> <goals> <goal>jar</goal> </goals> <configuration> 
-				<includes>${session.executionRootDirectory}/jframe-pay-lib/**</includes> 
-				<outputDirectory>${session.executionRootDirectory}/release/jframe-pay/lib/</outputDirectory> 
-				</configuration> </execution> <execution> <id>copy-jframe-pay-plugin</id> 
-				<phase>package</phase> <goals> <goal>jar</goal> </goals> <configuration> 
-				<includes>${session.executionRootDirectory}/jframe-pay-plugin/**</includes> 
-				<outputDirectory>${session.executionRootDirectory}/release/jframe-pay/plugin/</outputDirectory> 
-				</configuration> </execution> </executions> </plugin> -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.10</version>
-				<executions>
-					<execution>
-						<id>copy-lib</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${session.executionRootDirectory}/release/jframe-pay/lib/</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeTransitive>false</excludeTransitive>
-							<includeScope>compile</includeScope>
-							<excludeScope>provided</excludeScope>
-							<excludeArtifactIds>junit,slf4j-simple,jframe-httpclient,jframe-memcached-client,
-								jframe-mybatis,jframe-pay-alipay,jframe-pay-dao,jframe-pay-upmp,jframe-pay-wx,jframe-pay-http</excludeArtifactIds>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-plugin</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${session.executionRootDirectory}/release/jframe-pay/plugin/</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeTransitive>true</excludeTransitive>
-							<includeScope>provided</includeScope>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -108,37 +60,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId> org.apache.maven.plugins </groupId>
-										<artifactId> maven-dependency-plugin
-										</artifactId>
-										<versionRange> [2.8,) </versionRange>
-										<goals>
-											<goal> copy-dependencies
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 	<modules>

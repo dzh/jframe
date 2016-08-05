@@ -24,25 +24,25 @@
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-alipay</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-dao</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-wx</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
-            <groupId>cn</groupId>
-            <artifactId>jframe-pay-upmp</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
-        </dependency>
+			<groupId>cn</groupId>
+			<artifactId>jframe-pay-upmp</artifactId>
+			<version>1.0.0</version>
+			<classifier>plugin</classifier>
+		</dependency>
 	</dependencies>
 </project>

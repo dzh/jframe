@@ -38,13 +38,13 @@
 			<groupId>cn</groupId>
 			<artifactId>jframe-pay-dao</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn</groupId>
 			<artifactId>jframe-httpclient</artifactId>
 			<version>1.0.0</version>
-			<scope>provided</scope>
+			<classifier>plugin</classifier>
 		</dependency>
 	</dependencies>
 </project>

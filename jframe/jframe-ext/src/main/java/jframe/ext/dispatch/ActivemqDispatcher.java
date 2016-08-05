@@ -19,14 +19,14 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import jframe.core.conf.Config;
-import jframe.core.dispatch.AbstractDispatcher;
-import jframe.core.msg.Msg;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jframe.core.conf.Config;
+import jframe.core.dispatch.AbstractDispatcher;
+import jframe.core.msg.Msg;
 
 /**
  * TODO 对于各种Msg类型的支持
@@ -36,6 +36,11 @@ import org.slf4j.LoggerFactory;
  * <li>Msg没有定义发送队列,则默认队列名由MqConf的DefMqSendQueue定义</li>
  * <li>Msg没有定义接收队列，则默认队列由MqConf的DefMqRecvQueue定义</li>
  * </p>
+ * <p>
+ * Pub/Sub
+ * <li></li>
+ * <li></li>
+ * </p>
  * 
  * @author dzh
  * @date Oct 15, 2014 4:35:17 PM
@@ -43,259 +48,243 @@ import org.slf4j.LoggerFactory;
  */
 public class ActivemqDispatcher extends AbstractDispatcher {
 
-	static Logger LOG = LoggerFactory.getLogger(ActivemqDispatcher.class);
+    static Logger LOG = LoggerFactory.getLogger(ActivemqDispatcher.class);
 
-	private PooledConnectionFactory poolFactory;
+    private PooledConnectionFactory poolFactory;
 
-	private BlockingQueue<Msg<?>> _queue;
+    private BlockingQueue<Msg<?>> _queue;
 
-	static String MQ_FILE = "file.dispatcher.mq";
+    static String MQ_FILE = "file.dispatcher.mq";
 
-	static final Boolean NON_TRANSACTED = false;
+    static final Boolean NON_TRANSACTED = false;
 
-	volatile boolean stop = false;
+    volatile boolean stop = false;
 
-	/**
-	 * 消息Key
-	 */
-	static String Msg_SendQueue = "d.mq.send.queue";
+    /**
+     * 消息Key
+     */
+    static String Msg_SendQueue = "d.mq.send.queue";
 
-	/**
-	 * 发送消息持久化
-	 */
-	static String Msg_DeliveryMode = "d.mq.delivery.mode";
+    /**
+     * 发送消息持久化
+     */
+    static String Msg_DeliveryMode = "d.mq.delivery.mode";
 
-	// static String Msg_RecvQueue = "d.mq.recv.queue";
-	private ExecutorService workPool;
+    // static String Msg_RecvQueue = "d.mq.recv.queue";
+    private ExecutorService workPool;
 
-	public ActivemqDispatcher(String id, Config config) {
-		super(id, config);
-	}
+    public ActivemqDispatcher(String id, Config config) {
+        super(id, config);
+    }
 
-	public void start() {
-		if (!initMqConf()) {
-			LOG.error("ActivemqDispatcher read conf error!");
-			return;
-		}
-		LOG.info("mq producer connect to {}", MqConf.MqUrl);
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
-				MqConf.MqUrl);
-		connectionFactory.setUseAsyncSend(MqConf.UseAsyncSend);
-		poolFactory = new PooledConnectionFactory();
-		poolFactory.setConnectionFactory(connectionFactory);
-		poolFactory
-				.setCreateConnectionOnStartup(MqConf.CreateConnectionOnStartup);
-		poolFactory.setMaxConnections(MqConf.MaxConnections);
-		poolFactory
-				.setMaximumActiveSessionPerConnection(MqConf.MaximumActiveSessionPerConnection);
-		poolFactory.start();
+    public void start() {
+        if (!initMqConf()) {
+            LOG.error("ActivemqDispatcher read conf error!");
+            return;
+        }
+        LOG.info("mq producer connect to {}", MqConf.MqUrl);
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(MqConf.MqUrl);
+        connectionFactory.setUseAsyncSend(MqConf.UseAsyncSend);
+        poolFactory = new PooledConnectionFactory();
+        poolFactory.setConnectionFactory(connectionFactory);
+        poolFactory.setCreateConnectionOnStartup(MqConf.CreateConnectionOnStartup);
+        poolFactory.setMaxConnections(MqConf.MaxConnections);
+        poolFactory.setMaximumActiveSessionPerConnection(MqConf.MaximumActiveSessionPerConnection);
+        poolFactory.start();
 
-		_queue = new LinkedBlockingQueue<Msg<?>>();
+        _queue = new LinkedBlockingQueue<Msg<?>>();
 
-		workPool = new ThreadPoolExecutor(1, Runtime.getRuntime()
-				.availableProcessors() + 1, 60L, TimeUnit.SECONDS,
-				new LinkedBlockingQueue<Runnable>());
+        workPool = new ThreadPoolExecutor(1, Runtime.getRuntime().availableProcessors() + 1, 60L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>());
 
-		new Thread("DispatcherSendMqThread") {
-			public void run() {
-				LOG.info("DispatcherSendMqThread starting");
+        new Thread("DispatcherSendMqThread") {
+            public void run() {
+                LOG.info("DispatcherSendMqThread starting");
 
-				final BlockingQueue<Msg<?>> queue = _queue;
-				while (!stop) {
-					try {
-						final Msg<?> msg = queue.take();
-						if (msg != null) {
-							workPool.execute(new Runnable() {
-								public void run() {
-									try {
-										sendMq(msg);
-									} catch (Exception e) {
-										LOG.warn(e.getMessage());
-									}
-								}
-							});
-						}
-						if (MqConf.SendSleepTime > 0)
-							Thread.sleep(MqConf.SendSleepTime);
-						if (LOG.isDebugEnabled()) {
-							LOG.debug(
-									"Mq send msg -> {}, sum -> {}, date-> {}",
-									msg.toString(), queue.size(), new Date());
-						}
-					} catch (Exception e) {
-						LOG.warn(e.getMessage());
-					}
-				}
-			}
-		}.start();
+                final BlockingQueue<Msg<?>> queue = _queue;
+                while (!stop) {
+                    try {
+                        final Msg<?> msg = queue.take();
+                        if (msg != null) {
+                            workPool.execute(new Runnable() {
+                                public void run() {
+                                    try {
+                                        sendMq(msg);
+                                    } catch (Exception e) {
+                                        LOG.warn(e.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                        if (MqConf.SendSleepTime > 0)
+                            Thread.sleep(MqConf.SendSleepTime);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Mq send msg -> {}, sum -> {}, date-> {}", msg.toString(), queue.size(),
+                                    new Date());
+                        }
+                    } catch (Exception e) {
+                        LOG.warn(e.getMessage());
+                    }
+                }
+            }
+        }.start();
 
-		new Thread("DispatcherRecvMqThread") {
-			public void run() {
-				LOG.info("DispatcherRecvMqThread starting");
+        new Thread("DispatcherRecvMqThread") {
+            public void run() {
+                LOG.info("DispatcherRecvMqThread starting");
 
-				Connection connection = null;
-				try {
-					connection = poolFactory.createConnection();
-					connection.start();
+                Connection connection = null;
+                try {
+                    connection = poolFactory.createConnection();
+                    connection.start();
 
-					Session session = connection.createSession(NON_TRANSACTED,
-							Session.AUTO_ACKNOWLEDGE);
-					Destination destination = session
-							.createQueue(MqConf.DefMqRecvQueue);
-					final MessageConsumer consumer = session
-							.createConsumer(destination);
+                    Session session = connection.createSession(NON_TRANSACTED, Session.AUTO_ACKNOWLEDGE);
+                    Destination destination = session.createQueue(MqConf.DefMqRecvQueue);
+                    final MessageConsumer consumer = session.createConsumer(destination);
 
-					final MsgTransfer msgTransfer = MqConf.Transfer;
-					while (!stop) {
-						try {
-							final Message message = consumer
-									.receive(MqConf.ConsumerTimeout);
-							if (message != null)
-								workPool.execute(new Runnable() {
-									public void run() {
-										try {
-											if (message instanceof TextMessage) {
-												String text = ((TextMessage) message)
-														.getText();
-												dispatch(msgTransfer
-														.decode(text));
-												if (LOG.isDebugEnabled()) {
-													LOG.debug(
-															"Mq dispatch msg -> {}, date-> {}",
-															text, new Date());
-												}
-											}
-										} catch (Exception e) {
-											LOG.warn(e.getMessage());
-										}
-									}
-								});
-							if (MqConf.RecvSleepTime > 0)
-								Thread.sleep(MqConf.RecvSleepTime);
-						} catch (Exception e) {
-							LOG.error(e.getMessage());
-						}
-					}
-					consumer.close();
-					session.close();
-				} catch (Exception e) {
-					LOG.error(e.getMessage());
-				} finally {
-					if (connection != null)
-						try {
-							connection.close();
-						} catch (JMSException e) {
-						}
-				}
+                    final MsgTransfer msgTransfer = MqConf.Transfer;
+                    while (!stop) {
+                        try {
+                            final Message message = consumer.receive(MqConf.ConsumerTimeout);
+                            if (message != null)
+                                workPool.execute(new Runnable() {
+                                    public void run() {
+                                        try {
+                                            if (message instanceof TextMessage) {
+                                                String text = ((TextMessage) message).getText();
+                                                dispatch(msgTransfer.decode(text));
+                                                if (LOG.isDebugEnabled()) {
+                                                    LOG.debug("Mq dispatch msg -> {}, date-> {}", text, new Date());
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            LOG.warn(e.getMessage());
+                                        }
+                                    }
+                                });
+                            if (MqConf.RecvSleepTime > 0)
+                                Thread.sleep(MqConf.RecvSleepTime);
+                        } catch (Exception e) {
+                            LOG.error(e.getMessage());
+                        }
+                    }
+                    consumer.close();
+                    session.close();
+                } catch (Exception e) {
+                    LOG.error(e.getMessage());
+                } finally {
+                    if (connection != null)
+                        try {
+                            connection.close();
+                        } catch (JMSException e) {
+                        }
+                }
 
-				if (!stop) {
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
+                if (!stop) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
 
-					}
-					run();
-				}
-			}
-		}.start();
-		LOG.info("ActivemqDispatcher start successfully!");
-	}
+                    }
+                    run();
+                }
+            }
+        }.start();
+        LOG.info("ActivemqDispatcher start successfully!");
+    }
 
-	private void sendMq(Msg<?> msg) {
-		Connection connection = null;
-		try {
-			connection = poolFactory.createConnection();
-			connection.start();
+    private void sendMq(Msg<?> msg) {
+        Connection connection = null;
+        try {
+            connection = poolFactory.createConnection();
+            connection.start();
 
-			Session session = connection.createSession(NON_TRANSACTED,
-					Session.AUTO_ACKNOWLEDGE);
-			Destination destination = session
-					.createQueue(getSendQueueName(msg));
-			MessageProducer producer = session.createProducer(destination);
-			producer.setDeliveryMode(getDeliveryMode(msg));
+            Session session = connection.createSession(NON_TRANSACTED, Session.AUTO_ACKNOWLEDGE);
+            Destination destination = session.createQueue(getSendQueueName(msg));
+            MessageProducer producer = session.createProducer(destination);
+            producer.setDeliveryMode(getDeliveryMode(msg));
 
-			TextMessage message = session.createTextMessage(MqConf.Transfer
-					.encode(msg));
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("produce msg {}", message.getText());
-			}
-			producer.send(message);
+            TextMessage message = session.createTextMessage(MqConf.Transfer.encode(msg));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("produce msg {}", message.getText());
+            }
+            producer.send(message);
 
-			producer.close();
-			session.close();
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-		} finally {
-			if (connection != null)
-				try {
-					connection.close();
-				} catch (JMSException e) {
-				}
-		}
-	}
+            producer.close();
+            session.close();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        } finally {
+            if (connection != null)
+                try {
+                    connection.close();
+                } catch (JMSException e) {
+                }
+        }
+    }
 
-	private int getDeliveryMode(Msg<?> msg) {
-		try {
-			if (msg.getMeta(Msg_DeliveryMode) == null) {
-				return javax.jms.DeliveryMode.PERSISTENT;
-			}
-			return Integer.parseInt(msg.getMeta(Msg_DeliveryMode));
-		} catch (Exception e) {
+    private int getDeliveryMode(Msg<?> msg) {
+        try {
+            if (msg.getMeta(Msg_DeliveryMode) == null) {
+                return javax.jms.DeliveryMode.PERSISTENT;
+            }
+            return Integer.parseInt(msg.getMeta(Msg_DeliveryMode));
+        } catch (Exception e) {
 
-		}
-		return javax.jms.DeliveryMode.PERSISTENT;
-	}
+        }
+        return javax.jms.DeliveryMode.PERSISTENT;
+    }
 
-	public String getSendQueueName(Msg<?> msg) {
-		String queue = msg.getMeta(Msg_SendQueue);
-		return queue == null ? MqConf.DefMqSendQueue : queue;
-	}
+    public String getSendQueueName(Msg<?> msg) {
+        String queue = msg.getMeta(Msg_SendQueue);
+        return queue == null ? MqConf.DefMqSendQueue : queue;
+    }
 
-	// public String getRecvQueueName(Msg<?> msg) {
-	// String queue = msg.getMeta(Msg_RecvQueue);
-	// return queue == null ? MqConf.DefMqRecvQueue : queue;
-	// }
+    // public String getRecvQueueName(Msg<?> msg) {
+    // String queue = msg.getMeta(Msg_RecvQueue);
+    // return queue == null ? MqConf.DefMqRecvQueue : queue;
+    // }
 
-	private boolean initMqConf() {
-		Config config = getConfig();
-		try {
-			MqConf.init(config.getConfig(MQ_FILE));
-			return true;
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-		}
-		return false;
-	}
+    private boolean initMqConf() {
+        Config config = getConfig();
+        try {
+            MqConf.init(config.getConfig(MQ_FILE));
+            return true;
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
+        return false;
+    }
 
-	public void receive(final Msg<?> msg) {
-		if (msg == null || stop)
-			return;
-		try {
-			_queue.offer(msg, 60, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			LOG.error(e.getMessage());
-			// TODO 数据丢失问题
-		}
-	}
+    public void receive(final Msg<?> msg) {
+        if (msg == null || stop)
+            return;
+        try {
+            _queue.offer(msg, 60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            LOG.error(e.getMessage());
+            // TODO 数据丢失问题
+        }
+    }
 
-	/**
-	 * 
-	 */
-	@Override
-	public void close() {
-		stop = true;
-		super.close();
-		try {
-			if (poolFactory != null) {
-				poolFactory.stop();
-			}
+    /**
+     * 
+     */
+    @Override
+    public void close() {
+        stop = true;
+        super.close();
+        try {
+            if (poolFactory != null) {
+                poolFactory.stop();
+            }
 
-			if (workPool != null) {
-				workPool.shutdown();
-				workPool.awaitTermination(60, TimeUnit.SECONDS);
-			}
-		} catch (InterruptedException e) {
-		}
-		LOG.info("ActivemqDispatcher stopped!");
-	}
+            if (workPool != null) {
+                workPool.shutdown();
+                workPool.awaitTermination(60, TimeUnit.SECONDS);
+            }
+        } catch (InterruptedException e) {
+        }
+        LOG.info("ActivemqDispatcher stopped!");
+    }
 }
