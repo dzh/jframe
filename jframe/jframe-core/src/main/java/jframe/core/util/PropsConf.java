@@ -129,6 +129,13 @@ public class PropsConf {
         return Integer.parseInt(val);
     }
 
+    public synchronized boolean getConfBool(String group, String key, String defVal) {
+        String val = getConf(group, key, defVal);
+        if (val == null)
+            return false;
+        return Boolean.parseBoolean(val);
+    }
+
     public synchronized long getConfLong(String group, String key, String defVal) {
         String val = getConf(group, key, defVal);
         if (val == null)

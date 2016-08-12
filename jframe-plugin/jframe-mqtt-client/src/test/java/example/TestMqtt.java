@@ -3,6 +3,8 @@
  */
 package example;
 
+import java.util.Date;
+
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -19,6 +21,7 @@ import org.junit.Test;
  * @date Jul 31, 2016 7:25:04 PM
  * @since 1.0
  */
+@Ignore
 public class TestMqtt {
 
     int qos = 2;
@@ -58,7 +61,7 @@ public class TestMqtt {
             subClient.subscribe("x/+/z", new IMqttMessageListener() {
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    System.out.println(topic + "-" + message.toString());
+                    System.out.println(topic + "-" + message.toString() + "-" + new Date());
                 }
             });
 
@@ -88,6 +91,14 @@ public class TestMqtt {
             subClient.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                pubClient.close();
+                subClient.close();
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

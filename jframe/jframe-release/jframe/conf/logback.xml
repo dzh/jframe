@@ -10,8 +10,7 @@
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-			</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-4level ${HOSTNAME} %C %M - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -19,21 +18,19 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<!-- <file>${LOG_HOME}/log-${byDay}.log</file> -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_HOME}/jf-%d{yyyyMMdd}.log
-			</fileNamePattern>
+			<fileNamePattern>${LOG_HOME}/jf-%d{yyyyMMdd}.log</fileNamePattern>
 			<maxHistory>10</maxHistory>
 		</rollingPolicy>
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
-			</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-4level ${HOSTNAME} %C %M - %msg%n</pattern>
 		</encoder>
 	</appender>
-	
-	<logger name="jframe" additivity="true">
-		<appender-ref ref="JFRAME" />
-	</logger>
+
+	<!-- <logger name="jframe" additivity="true"> <appender-ref ref="JFRAME" 
+		/> </logger> -->
 
 	<root level="debug">
+		<appender-ref ref="JFRAME" />
 		<!-- <appender-ref ref="STDOUT" /> -->
 	</root>
 </configuration>

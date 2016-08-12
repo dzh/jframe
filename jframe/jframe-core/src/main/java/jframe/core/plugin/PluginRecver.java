@@ -17,48 +17,47 @@ import jframe.core.plugin.annotation.MsgRecv;
 @Message(isRecver = true)
 public abstract class PluginRecver extends DefPlugin {
 
-	public PluginRecver() {
-		super();
-	}
+    public PluginRecver() {
+        super();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.dispatch.DispatchTarget#receive(jframe.core.msg.Msg)
-	 */
-	@MsgRecv
-	public void receive(Msg<?> msg) {
-		doRecvMsg(msg);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.core.dispatch.DispatchTarget#receive(jframe.core.msg.Msg)
+     */
+    @MsgRecv
+    public void receive(Msg<?> msg) {
+        doRecvMsg(msg);
+    }
 
-	/**
-	 * @param msg
-	 */
-	abstract protected void doRecvMsg(Msg<?> msg);
+    /**
+     * @param msg
+     */
+    abstract protected void doRecvMsg(Msg<?> msg);
 
-	/**
-	 * message's meta information
-	 */
-	public static final String MSG_PLUGIN_ID = "PluginId";
+    /**
+     * message's meta information
+     */
+    public static final String MSG_PLUGIN_ID = "PluginId";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.dispatch.DispatchTarget#interestMsg(jframe.core.msg.Msg)
-	 */
-	@MsgInterest
-	public boolean interestMsg(Msg<?> msg) {
-		// don't receive itself
-		if (msg == null || PluginStatus.STOP == getStatus()
-				|| getName().equals(msg.getMeta(PluginMsg.PluginName)))
-			return false;
-		return canRecvMsg(msg);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jframe.core.dispatch.DispatchTarget#interestMsg(jframe.core.msg.Msg)
+     */
+    @MsgInterest
+    public boolean interestMsg(Msg<?> msg) {
+        // don't receive itself
+        if (msg == null || PluginStatus.STOP == getStatus() || getName().equals(msg.getMeta(PluginMsg.PluginName)))
+            return false;
+        return canRecvMsg(msg);
+    }
 
-	/**
-	 * @param msg
-	 * @return
-	 */
-	abstract protected boolean canRecvMsg(Msg<?> msg);
+    /**
+     * @param msg
+     * @return
+     */
+    abstract protected boolean canRecvMsg(Msg<?> msg);
 
 }

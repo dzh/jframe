@@ -75,12 +75,12 @@ main()
         $1
 }
 
-if [ $1 = "start" ]; then
+if [ "$1" = start ]; then
     start
-elif [ $1 = "stop" ]; then 
+elif [ "$1" = stop ]; then 
     stop
-elif [ $1 = "-m" ]; then
-    main $2
+elif [ "$1" = "-m" ]; then
+    main "$2"
 else
     usage
 fi

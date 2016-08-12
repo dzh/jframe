@@ -3,6 +3,10 @@
  */
 package jframe.mqtt.client.service;
 
+import org.eclipse.paho.client.mqttv3.IMqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import jframe.core.plugin.annotation.Service;
 
 /**
@@ -12,5 +16,11 @@ import jframe.core.plugin.annotation.Service;
  */
 @Service(clazz = "jframe.mqtt.client.service.impl.Mqttv3ClientImpl", id = "jframe.service.mqttv3client")
 public interface Mqttv3Client {
+
+    IMqttDeliveryToken publish(String id, String topic, MqttMessage message);
+
+    IMqttAsyncClient borrowMqttClient(String id);
+
+    void returnMqttClient(String id, IMqttAsyncClient mqttClient);
 
 }
