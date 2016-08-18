@@ -4,6 +4,8 @@
 package jframe.yunsms.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,36 +45,52 @@ public class YunsmsServiceImpl implements YunsmsService {
     static Map<String, String> HTTP_PARAS = new HashMap<String, String>(1, 1);
 
     static {
-        HTTP_PARAS.put(HttpClientService.P_MIMETYPE, "application/x-www-form-urlencoded");
+        // HTTP_PARAS.put(HttpClientService.P_MIMETYPE,
+        // "application/x-www-form-urlencoded");
         // HTTP_PARAS.put(HttpClientService.P_METHOD, "post");
     }
 
     @Override
     public boolean send(String id, String mobile, String content) {
-        
+        String data;
+        try {
+            data = "uid=" + _config.getConf(id, YunsmsConfig.Uid) + "&pwd=" + _config.getConf(id, YunsmsConfig.Pwd)
+                    + "&mobile=" + mobile + "&content=" + java.net.URLEncoder.encode(content, "utf-8") + "&encode=utf8";
+
+            String res = _http.<String>send(id, _config.getConf(id, YunsmsConfig.HttpTx), data, null, HTTP_PARAS);
+            LOG.debug("id-{} mobile-{} res-{}", id, mobile, res);
+
+            return "100".equals(res) ? true : false;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e.fillInStackTrace());
+        }
         return false;
     }
 
     @Start
     void start() {
-        String conf = plugin.getConfig(FILE_CONF);
-        if (!new File(conf).exists()) {
-            LOG.error("Not found yunsms.properties -> {}", conf);
-            return;
-        }
-
         try {
-            _config.init(conf);
+            String conf = plugin.getConfig(FILE_CONF);
+            if (!new File(conf).exists()) {
+                LOG.error("Not found yunsms.properties -> {}", conf);
+                return;
+            }
+
+            start(new FileInputStream(conf));
+            LOG.info("YunsmsService start successfully!");
         } catch (Exception e) {
-            LOG.error(e.getMessage());
-            return;
+            LOG.error(e.getMessage(), e.fillInStackTrace());
         }
-        LOG.info("YunsmsService start successfully!");
+    }
+
+    public void start(InputStream is) throws Exception {
+        _config.init(is);
+        HTTP_PARAS.put("rsp.charset", _config.getConf(null, YunsmsConfig.HttpEncode, "gbk"));
     }
 
     @Stop
     void stop() {
-
+        _config = null;
     }
 
 }

@@ -53,9 +53,7 @@ public class ServiceContext {
         synchronized (_svcDef) {
             _svcDef.put(s.getId(), s);
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Create Service Instance {}.", s.toString());
-        }
+        LOG.debug("Create Service Instance {}.", s.toString());
     }
 
     /**
@@ -152,6 +150,13 @@ public class ServiceContext {
         }
     }
 
+    /**
+     * TODO error if plug-in has not started
+     * 
+     * @param svc
+     * @param f
+     * @param reg
+     */
     public void attachService(Service svc, Field f, boolean reg) {
         if (svc == null || f == null)
             return;
@@ -162,17 +167,14 @@ public class ServiceContext {
         try {
             f.setAccessible(true);
             f.set(null, svc.getSingle());
+            if (reg) {
+                regSvcRef(svc.getId(), f.getDeclaringClass());
+            }
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e.fillInStackTrace());
         }
 
-        if (reg) {
-            regSvcRef(svc.getId(), f.getDeclaringClass());
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("AttachService {} -> {}", svc.toString(), f.getDeclaringClass());
-        }
+        LOG.debug("AttachService {} -> {}", svc.toString(), f.getDeclaringClass());
     }
 
     boolean hasInjected(Service svc, Class<?> clazz) {
@@ -215,9 +217,7 @@ public class ServiceContext {
             unregSvcRef(svc.getId(), clazz);
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("DetachService {} -> {}", svc.toString(), clazz);
-        }
+        LOG.debug("DetachService {} -> {}", svc.toString(), clazz);
     }
 
     /**
@@ -242,7 +242,7 @@ public class ServiceContext {
             try {
                 Service.invokeServiceMethod(svc.getSingle(), Stop.class);
             } catch (Exception e) {
-                LOG.warn("Stop service {} waring!", svc.getName());
+                LOG.warn("Stop service {}!", svc.toString());
             }
         }
     }

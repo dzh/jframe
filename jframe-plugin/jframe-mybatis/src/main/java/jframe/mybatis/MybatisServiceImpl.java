@@ -9,15 +9,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
+import jframe.core.plugin.annotation.Start;
+import jframe.core.plugin.annotation.Stop;
 
 /**
  * @author dzh
@@ -27,52 +27,51 @@ import org.slf4j.LoggerFactory;
 @Injector
 class MybatisServiceImpl implements MybatisService {
 
-	static Logger LOG = LoggerFactory.getLogger(MybatisServiceImpl.class);
+    static Logger LOG = LoggerFactory.getLogger(MybatisServiceImpl.class);
 
-	/**
-	 * mybatis config
-	 */
-	static String FILE_MYBATIS = "file.mybatis";
+    /**
+     * mybatis config
+     */
+    static String FILE_MYBATIS = "file.mybatis";
 
-	@InjectPlugin
-	static MybatisPlugin plugin;
+    @InjectPlugin
+    static MybatisPlugin plugin;
 
-	private SqlSessionFactory sqlSessionFactory;
+    private SqlSessionFactory sqlSessionFactory;
 
-	@Start
-	void start() {
-		File mcFile = new File(plugin.getConfig(FILE_MYBATIS, ""));
-		if (!mcFile.exists()) {
-			LOG.error("Not found mybatis-config, {}" + mcFile.getAbsolutePath());
-			return;
-		}
+    @Start
+    void start() {
+        File mcFile = new File(plugin.getConfig(FILE_MYBATIS, ""));
+        if (!mcFile.exists()) {
+            LOG.error("Not found mybatis-config, {}" + mcFile.getAbsolutePath());
+            return;
+        }
 
-		Reader mybatis = null;
-		try {
-			mybatis = new InputStreamReader(new FileInputStream(mcFile),
-					"utf-8");
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatis);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-		} finally {
-			if (mybatis != null)
-				try {
-					mybatis.close();
-				} catch (IOException e) {
-				}
-		}
-		LOG.info("MybatisServiceImpl start successfully!");
-	}
+        Reader mybatis = null;
+        try {
+            mybatis = new InputStreamReader(new FileInputStream(mcFile), "utf-8");
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatis);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        } finally {
+            if (mybatis != null)
+                try {
+                    mybatis.close();
+                } catch (IOException e) {
+                }
+        }
+        LOG.info("MybatisServiceImpl start successfully!");
+    }
 
-	@Stop
-	void Stop() {
-		sqlSessionFactory = null;
-		LOG.info("MybatisServiceImpl stop successfully!");
-	}
+    @Stop
+    void Stop() {
+        sqlSessionFactory = null;
+        LOG.info("MybatisServiceImpl stop successfully!");
+    }
 
-	@Override
-	public SqlSessionFactory getSqlSessionFactory() {
-		return sqlSessionFactory;
-	}
+    @Override
+    public SqlSessionFactory getSqlSessionFactory() {
+        return sqlSessionFactory;
+    }
 
 }

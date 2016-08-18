@@ -7,16 +7,16 @@ import java.io.File;
 import java.util.Date;
 import java.util.Properties;
 
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.whalin.MemCached.MemCachedClient;
 import com.whalin.MemCached.SockIOPool;
+
+import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
+import jframe.core.plugin.annotation.Start;
+import jframe.core.plugin.annotation.Stop;
 
 /**
  * TODO 对于没有找到的處理
@@ -30,8 +30,7 @@ public class MemcachedServiceImpl implements MemcachedService {
 
     static final String FILE_CONF = "file.memcached";
 
-    static final Logger LOG = LoggerFactory
-            .getLogger(MemcachedServiceImpl.class);
+    static final Logger LOG = LoggerFactory.getLogger(MemcachedServiceImpl.class);
 
     private SockIOPool _pool;
 
@@ -59,8 +58,8 @@ public class MemcachedServiceImpl implements MemcachedService {
     static MemcachedPlugin plugin;
 
     /**
-	 * 
-	 */
+     * 
+     */
     @Start
     public void start() {
         String path = plugin.getConfig(FILE_CONF, "");
@@ -87,33 +86,24 @@ public class MemcachedServiceImpl implements MemcachedService {
         String[] memServers = new String[servers.length];
         Integer[] memWeights = new Integer[servers.length];
         for (int i = 0; i < servers.length; i++) {
-            memServers[i] = _conf.getProperty("mem.server." + servers[i].trim()
-                    + ".host", "127.0.0.1")
-                    + ":"
-                    + _conf.getProperty("mem.server." + servers[i].trim()
-                            + ".port", "11211");
-            memWeights[i] = Integer.parseInt(_conf.getProperty("mem."
-                    + servers[i] + ".weight", "1"));
+            memServers[i] = _conf.getProperty("mem.server." + servers[i].trim() + ".host", "127.0.0.1") + ":"
+                    + _conf.getProperty("mem.server." + servers[i].trim() + ".port", "11211");
+            memWeights[i] = Integer.parseInt(_conf.getProperty("mem." + servers[i] + ".weight", "1"));
 
             LOG.info("memcached -> {}", memServers[i]);
         }
         _pool.setServers(memServers);
         _pool.setWeights(memWeights);
 
-        _pool.setInitConn(Integer.parseInt(_conf.getProperty("mem.initconn",
-                "10")));
+        _pool.setInitConn(Integer.parseInt(_conf.getProperty("mem.initconn", "10")));
         _pool.setMinConn(Integer.parseInt(_conf.getProperty("mem.minconn", "5")));
-        _pool.setMaxConn(Integer.parseInt(_conf.getProperty("mem.maxconn",
-                "250")));
-        _pool.setMaxIdle(Integer.parseInt(_conf.getProperty("mem.maxidle",
-                "3600000")));
+        _pool.setMaxConn(Integer.parseInt(_conf.getProperty("mem.maxconn", "250")));
+        _pool.setMaxIdle(Integer.parseInt(_conf.getProperty("mem.maxidle", "3600000")));
 
         _pool.setMaintSleep(30);
         _pool.setNagle(false);
-        _pool.setSocketTO(Integer.parseInt(_conf.getProperty(
-                "mem.timeout.read", "3000")));
-        _pool.setSocketConnectTO(Integer.parseInt(_conf.getProperty(
-                "mem.timeout.conn", "3000")));
+        _pool.setSocketTO(Integer.parseInt(_conf.getProperty("mem.timeout.read", "3000")));
+        _pool.setSocketConnectTO(Integer.parseInt(_conf.getProperty("mem.timeout.conn", "3000")));
         return _pool;
     }
 

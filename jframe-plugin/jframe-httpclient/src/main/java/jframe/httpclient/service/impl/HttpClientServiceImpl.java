@@ -5,9 +5,11 @@ package jframe.httpclient.service.impl;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.Consts;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -224,15 +226,13 @@ public class HttpClientServiceImpl implements HttpClientService {
     @Override
     public <T> T send(String id, String path, String data, Map<String, String> headers, Map<String, String> paras)
             throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("HttpClientServiceImpl.send {} {}", id, data);
-        }
+        LOG.debug("HttpClientServiceImpl.send {} {} {}", id, path, data);
 
         //
         String ip = paras != null && paras.containsKey("ip") ? paras.get("ip")
                 : HttpClientConfig.getConf(id, HttpClientConfig.IP);
         String port = paras != null && paras.containsKey("port") ? paras.get("port")
-                : HttpClientConfig.getConf(id, HttpClientConfig.PORT, "-1");
+                : HttpClientConfig.getConf(id, HttpClientConfig.PORT, "80");
 
         HttpHost target = new HttpHost(ip, Integer.parseInt(port), HttpHost.DEFAULT_SCHEME_NAME);
 
@@ -254,8 +254,9 @@ public class HttpClientServiceImpl implements HttpClientService {
             }
         }
 
-        CloseableHttpResponse resp = null;
+        CloseableHttpResponse rsp = null;
         try {
+            rsp = httpClient.execute(request);
             // ResponseHandler<String> responseHandler = new
             // ResponseHandler<String>() {
             //
@@ -274,17 +275,27 @@ public class HttpClientServiceImpl implements HttpClientService {
             // }
             //
             // };
-            resp = httpClient.execute(request);
-            HttpEntity entity = resp.getEntity();
+            HttpEntity entity = rsp.getEntity();
+            ContentType contentType = ContentType.get(entity);
+            if (contentType == null) {
+                contentType = ContentType.APPLICATION_JSON;
+            }
 
-            Reader reader = new InputStreamReader(entity.getContent(), ContentType.getOrDefault(entity).getCharset());
+            Charset charset = paras.containsKey("rsp.charset") ? Charset.forName(paras.get("rsp.charset"))
+                    : contentType.getCharset();
             // TODO decode by mime-type
-
-            return GSON.fromJson(reader, new TypeToken<T>() {
-            }.getType());
+            if ("application/json".equalsIgnoreCase(contentType.getMimeType())) {
+                Reader reader = new InputStreamReader(entity.getContent(), charset == null ? Consts.UTF_8 : charset);
+                return GSON.fromJson(reader, new TypeToken<T>() {
+                }.getType());
+                //
+            } else {
+                return (T) EntityUtils.toString(entity, charset);
+            }
         } finally {
-            if (resp != null) {
-                EntityUtils.consume(resp.getEntity());
+            if (rsp != null) {
+                EntityUtils.consume(rsp.getEntity());
+                rsp.close();
             }
         }
     }
