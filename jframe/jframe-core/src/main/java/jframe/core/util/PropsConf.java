@@ -69,8 +69,8 @@ public class PropsConf {
     public synchronized void replace(VarHandler vh) {
         if (conf == null)
             return;
-        for (String key : conf.keySet()) {
-            conf.put(key, vh.replace(conf.get(key)));
+        for (Entry<String, String> e : conf.entrySet()) {
+            conf.put(e.getKey(), vh.replace(e.getValue()));
         }
     }
 

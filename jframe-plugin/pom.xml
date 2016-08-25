@@ -37,6 +37,8 @@
 		<module>jframe-yunsms</module>
 		<module>jframe-californium</module>
 		<module>jframe-mqtt-client</module>
+		<module>jframe-wx</module>
+		<module>jframe-freemarker</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
