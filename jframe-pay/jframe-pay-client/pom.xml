@@ -8,6 +8,18 @@
 	</parent>
 	<artifactId>jframe-pay-client</artifactId>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<classifier>plugin</classifier>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn</groupId>

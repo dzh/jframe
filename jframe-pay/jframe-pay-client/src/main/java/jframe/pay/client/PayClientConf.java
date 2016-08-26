@@ -3,7 +3,7 @@
  */
 package jframe.pay.client;
 
-import jframe.ext.util.PropertiesConfig;
+import jframe.core.util.PropsConf;
 
 /**
  * <p>
@@ -14,7 +14,7 @@ import jframe.ext.util.PropertiesConfig;
  * @date Oct 22, 2015 9:54:52 AM
  * @since 1.0
  */
-public class PayClientConf extends PropertiesConfig {
+public class PayClientConf extends PropsConf {
 
     /**
      * define request parameters if req-map not found

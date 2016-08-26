@@ -92,4 +92,9 @@ public class WeixinServiceImpl implements WeixinService {
         LOG.info("WeixinService stopped!");
     }
 
+    @Override
+    public String getAppid(String id) {
+        return _conf.getConf(id, WxPropsConf.P_appId);
+    }
+
 }

@@ -16,4 +16,6 @@ public interface WeixinService {
 
     WxMpService getWxMpService(String id);
 
+    String getAppid(String id);
+
 }
