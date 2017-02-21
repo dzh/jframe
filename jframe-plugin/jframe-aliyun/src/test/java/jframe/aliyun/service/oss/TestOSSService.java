@@ -25,9 +25,7 @@ public class TestOSSService {
 
     @Test
     public void test() throws OSSException, ClientException, IOException {
-        OSSClient client = new OSSClient("oss-cn-hangzhou.aliyuncs.com", "",
-                "",
-                "");
+        OSSClient client = new OSSClient("oss-cn-hangzhou.aliyuncs.com", "", "", "");
         // BucketInfo info = client.getBucketInfo("edrmry");
         boolean exists = client.doesBucketExist("edrmry");
         System.out.println(exists);

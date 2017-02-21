@@ -83,7 +83,7 @@ public class MainLauncher extends DefLauncher {
             list.add(0, "-Dfile.config=" + conf);
         }
         list.add(0, "-Dapp.home=" + config.getConfig(Config.APP_HOME));
-        list.add(0, "-Dlauncher=" + config.getConfig(Config.APP_LAUNCHER));
+        list.add(0, "-Dlauncher=" + config.getConfig(Config.APP_LAUNCHER, "jframe.core.FrameLauncher"));
         list.add(0, "java");
         list.add(mainClazz);
         ProcessBuilder pb = new ProcessBuilder();
@@ -127,12 +127,12 @@ public class MainLauncher extends DefLauncher {
         do {
             Process subp = launchInternal(config);//
             if (subp == null) {
-                LOG.error("Launch MainLauncher Error! Are vmargs set the correct value?(win/linux)");
+                LOG.error("Launch MainLauncher Error! Maybe incorrect value in vmargs[-win]");
                 break;
             }
             Thread errT = redirectStream(subp.getErrorStream());
             Thread stdT = redirectStream(subp.getInputStream());
-            LOG.info("Startup daemon process successfully!");
+            LOG.info("Startup sub process successfully!");
             try {
                 exit = subp.waitFor();
             } catch (Exception e) {
@@ -144,7 +144,7 @@ public class MainLauncher extends DefLauncher {
                 if (stdT != null)
                     stdT.interrupt();
             }
-            LOG.info("Shutdown daemon process Successfully!");
+            LOG.info("Shutdown sub process Successfully! -{}", exit);
         } while (exit != 0 && exit != 143);
     }
 
@@ -161,8 +161,7 @@ public class MainLauncher extends DefLauncher {
             public void run() {
                 BufferedReader br = null;
                 try {
-                    br = new BufferedReader(
-                            new InputStreamReader(inputStream, config(Config.FILE_CONFIG, Config.UTF8)));
+                    br = new BufferedReader(new InputStreamReader(inputStream, config(Config.FILE_CONFIG, Config.UTF8)));
                     while (!Thread.interrupted()) {
                         try {
                             String str = br.readLine();

@@ -22,6 +22,13 @@ MAIN_LAUNCHER="jframe.launcher.MainLauncher"
 JVM_OPT="-Xmx60M -Xms60M -Xmn50M -XX:MaxPermSize=100M -XX:+HeapDumpOnOutOfMemoryError"
 JVM_OPT_DEBUG="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=7000,server=y,suspend=n"
 
+# local jre
+JRE_LOCAL=${APP_HOME}/jre
+if [ -x "${JRE_LOCAL}" ]; then
+    export PATH=${JRE_LOCAL}/bin:$PATH 
+    export CLASSPATH=.:${JRE_LOCAL}/lib/rt.jar 
+fi
+
 usage()
 {
     echo "Usage: ${0##*/}  {start|stop} "
@@ -75,11 +82,11 @@ main()
         $1 $2 $3 $4 $5
 }
 
-if [ $1 = "start" ]; then
+if [ "$1" = "start" ]; then
     start
-elif [ $1 = "stop" ]; then 
+elif [ "$1" = "stop" ]; then 
     stop
-elif [ $1 = "-m" ]; then
+elif [ "$1" = "-m" ]; then
     main $2 $3 $4 $5 $6
 else
     usage

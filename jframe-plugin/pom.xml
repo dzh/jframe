@@ -39,6 +39,7 @@
 		<module>jframe-mqtt-client</module>
 		<module>jframe-wx</module>
 		<module>jframe-freemarker</module>
+		<module>jframe-elasticsearch</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

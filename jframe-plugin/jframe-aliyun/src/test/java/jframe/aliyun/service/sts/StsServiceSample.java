@@ -15,8 +15,8 @@ public class StsServiceSample {
     // 当前 STS API 版本
     public static final String STS_API_VERSION = "2015-04-01";
 
-    static AssumeRoleResponse assumeRole(String accessKeyId, String accessKeySecret, String roleArn,
-            String roleSessionName, String policy, ProtocolType protocolType) throws ClientException {
+    static AssumeRoleResponse assumeRole(String accessKeyId, String accessKeySecret, String roleArn, String roleSessionName, String policy,
+            ProtocolType protocolType) throws ClientException {
         try {
             // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
             IClientProfile profile = DefaultProfile.getProfile(REGION_CN_HANGZHOU, accessKeyId, accessKeySecret);
@@ -63,8 +63,8 @@ public class StsServiceSample {
         // String policy = "{\"Statement\": [{\"Action\": \"oss:*\", "
         // + "\"Effect\": \"Allow\",\"Resource\": \"*\"}],\"Version\": \"1\"}";
         String policy = "{" + " \"Statement\": [ " + "             { " + "                \"Action\": \"oss:*\", "
-                + "                 \"Effect\": \"Allow\", " + "                \"Resource\": \"*\" " + "            } "
-                + "          ], " + "        \"Version\": \"1\" " + "     } ";
+                + "                 \"Effect\": \"Allow\", " + "                \"Resource\": \"*\" " + "            } " + "          ], "
+                + "        \"Version\": \"1\" " + "     } ";
 
         // String policy = "{\"Statement\": [{\"Action\": \"sts:AssumeRole\","
         // + "\"Effect\": \"Allow\",\"Principal\":{\"Service\":
@@ -72,11 +72,8 @@ public class StsServiceSample {
         // 此处必须为 HTTPS
         ProtocolType protocolType = ProtocolType.HTTPS;
 
-        try
-
-        {
-            final AssumeRoleResponse response = assumeRole(accessKeyId, accessKeySecret, roleArn, roleSessionName,
-                    policy, protocolType);
+        try {
+            final AssumeRoleResponse response = assumeRole(accessKeyId, accessKeySecret, roleArn, roleSessionName, policy, protocolType);
 
             System.out.println("Expiration: " + response.getCredentials().getExpiration());
             System.out.println("Access Key Id: " + response.getCredentials().getAccessKeyId());

@@ -33,7 +33,7 @@
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:HeapDumpPath=${app.home}/temp
 #-Xss4M
-#-XX:MaxDirectMemorySize=64M
+-XX:MaxDirectMemorySize=256M
 #-XX:NewSize=n
 #-XX:NewRatio=
 #-Xverify:none
@@ -60,7 +60,7 @@
 -XX:+CMSPermGenSweepingEnabled
 
 #debug
-#-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=7777,server=y,suspend=n
+-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=7777,server=y,suspend=n
 
 #default dll path
 -Djava.library.path=${app.home}/lib

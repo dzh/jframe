@@ -54,12 +54,16 @@
 #-Xloggc
 #-XX:GCTimeRatio=16
 #-XX:MaxTenuringThreshold=7
+#-XX:+HeapDumpBeforeFullGC
+#-XX:+HeapDumpAfterFullGC
 
 -XX:+UseConcMarkSweepGC
 #-XX:+CMSPermGenSweepingEnabled
+-XX:+CMSParallelRemarkEnabled
+-XX:+UseCMSCompactAtFullCollection
 -XX:+CMSClassUnloadingEnabled
 -XX:+UseParNewGC
--XX:CMSInitiatingOccupancyFraction=90
+-XX:CMSInitiatingOccupancyFraction=80
 
 #debug
 #-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=6000,server=y,suspend=n

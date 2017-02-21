@@ -1,0 +1,50 @@
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xmlns='http://www.ehcache.org/v3' xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+	xsi:schemaLocation="
+        http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd
+        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
+
+	<thread-pools>
+		<thread-pool alias="defaultDiskPool" min-size="1"
+			max-size="3" />
+		<thread-pool alias="defaultWriteBehindPool" min-size="1"
+			max-size="3" />
+		<thread-pool alias="cache2Pool" min-size="2" max-size="2" />
+	</thread-pools>
+
+	<event-dispatch thread-pool="defaultEventPool" />
+	<write-behind thread-pool="defaultWriteBehindPool" />
+	<disk-store thread-pool="defaultDiskPool" />
+
+	<cache alias="cache1">
+		<key-type>java.lang.Long</key-type>
+		<value-type>java.lang.String</value-type>
+
+		<resources>
+			<heap unit="entries">10</heap>
+			<disk unit="MB">10</disk>
+		</resources>
+	</cache>
+
+	<cache alias="cache2">
+		<key-type>java.lang.Long</key-type>
+		<value-type>java.lang.String</value-type>
+
+		<loader-writer>
+			<class>org.ehcache.docs.plugs.ListenerObject</class>
+			<write-behind thread-pool="cache2Pool">
+				<batching batch-size="5">
+					<max-write-delay unit="seconds">10</max-write-delay>
+				</batching>
+			</write-behind>
+		</loader-writer>
+		<listeners dispatcher-thread-pool="cache2Pool" />
+		<resources>
+			<heap unit="entries">10</heap>
+			<disk unit="MB">10</disk>
+		</resources>
+		<disk-store-settings thread-pool="cache2Pool"
+			writer-concurrency="2" />
+	</cache>
+
+</config>

@@ -99,7 +99,7 @@ public class DefPlugin implements Plugin {
      * @see jframe.core.plugin.Plugin#stop()
      */
     public void stop() throws PluginException {
-        logInfo("Plugin " + getName() + " stoping.");
+        logInfo("Plugin " + getName() + " stopping.");
         setStatus(PluginStatus.STOP);
     }
 

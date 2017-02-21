@@ -4,7 +4,7 @@
 package jframe.aliyun.service.oss;
 
 import jframe.aliyun.AliyunField;
-import jframe.ext.util.PropertiesConfig;
+import jframe.core.util.PropsConf;
 
 /**
  * TODO 配置文件验证
@@ -13,6 +13,6 @@ import jframe.ext.util.PropertiesConfig;
  * @date Dec 3, 2014 11:07:29 AM
  * @since 1.0
  */
-public class OSSConfig extends PropertiesConfig implements AliyunField {
+public class OSSConfig extends PropsConf implements AliyunField {
 
 }

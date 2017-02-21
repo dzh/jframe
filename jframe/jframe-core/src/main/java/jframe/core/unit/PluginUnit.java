@@ -47,6 +47,7 @@ public class PluginUnit extends AbstractUnit {
     private PluginClassLoaderContext _plc;
 
     public PluginUnit() {
+        setName(PluginUnit.class.getSimpleName());
     }
 
     @Override

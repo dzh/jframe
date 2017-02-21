@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -93,10 +94,16 @@ public class Mqttv3ClientImpl implements Mqttv3Client {
 
     @Override
     public IMqttDeliveryToken publish(String id, String topic, MqttMessage message) {
+        return publish(id, topic, message, null, null);
+    }
+
+    @Override
+    public IMqttDeliveryToken publish(String id, String topic, MqttMessage message, Object userContext,
+            IMqttActionListener callback) {
         IMqttAsyncClient mqtt = null;
         try {
             mqtt = clnt.get(id).borrowObject();
-            return mqtt.publish(topic, message);
+            return mqtt.publish(topic, message, userContext, callback);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e.fillInStackTrace());
         } finally {

@@ -63,10 +63,9 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     private Dispatcher createDefaultDispatcher() {
         Dispatcher d = null;
         try {
-            Class<?> clazz = Class
-                    .forName(_config.getConfig(ConfigConstants.CONTEXT_DISPATCHER, DefDispatcher.class.getName()));
-            d = (Dispatcher) clazz.getConstructor(String.class, Config.class).newInstance(
-                    _config.getConfig(ConfigConstants.CONTEXT_DISPATCHER_ID, "PluginContextDispatcher"), _config);
+            Class<?> clazz = Class.forName(_config.getConfig(ConfigConstants.CONTEXT_DISPATCHER, DefDispatcher.class.getName()));
+            d = (Dispatcher) clazz.getConstructor(String.class, Config.class)
+                    .newInstance(_config.getConfig(ConfigConstants.CONTEXT_DISPATCHER_ID, "PluginContextDispatcher"), _config);
         } catch (Exception e) {
             _LOG.warn(e.getMessage(), e.fillInStackTrace());
 
@@ -115,7 +114,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
             plugin.start();
         } catch (Exception e) {
             unregPlugin(plugin);
-            _LOG.error("Plugin start error: " + plugin.getName() + e.getLocalizedMessage());
+            _LOG.error("Plugin start error: {} {}", plugin.getName(), e.getLocalizedMessage());
             return null;
         }
         return ref;
@@ -148,8 +147,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     private void createDispatchTarget(PluginRef ref) {
         Object pdt = ref.getPolicy(PluginRef.DispatchTarget);
         if (pdt == null) {
-            pdt = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { DispatchTarget.class },
-                    new DispatchTargetHandler(ref));
+            pdt = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { DispatchTarget.class }, new DispatchTargetHandler(ref));
             ref.regPolicy(PluginRef.DispatchTarget, pdt);
             if (getDispatcher() != null)
                 getDispatcher().addDispatchTarget((DispatchTarget) pdt);
@@ -165,8 +163,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     private void createDispatchSource(PluginRef ref) {
         Object pds = ref.getPolicy(PluginRef.DispatchSource); // null is normal
         if (pds == null) {
-            pds = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { DispatchSource.class },
-                    new DispatchSourceHandler(ref));
+            pds = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { DispatchSource.class }, new DispatchSourceHandler(ref));
             ref.regPolicy(PluginRef.DispatchSource, pds);
             if (getDispatcher() != null)
                 getDispatcher().addDispatchSource((DispatchSource) pds);
@@ -376,8 +373,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
             try {
                 regPlugin(p);
             } catch (Exception e) {
-                _LOG.error(
-                        "When invoke pluginContext.regPlugin(), plugin name is " + p.getName() + " " + e.getMessage());
+                _LOG.error("When invoke pluginContext.regPlugin(), plugin name is " + p.getName() + " " + e.getMessage());
                 unregPlugin(p);
             }
             iter.remove();
@@ -428,10 +424,8 @@ public class DefPluginContext implements PluginContext, Dispatchable {
          */
         public int compare(Plugin o1, Plugin o2) {
             int v = 0;
-            jframe.core.plugin.annotation.Plugin ap1 = o1.getClass()
-                    .getAnnotation(jframe.core.plugin.annotation.Plugin.class);
-            jframe.core.plugin.annotation.Plugin ap2 = o2.getClass()
-                    .getAnnotation(jframe.core.plugin.annotation.Plugin.class);
+            jframe.core.plugin.annotation.Plugin ap1 = o1.getClass().getAnnotation(jframe.core.plugin.annotation.Plugin.class);
+            jframe.core.plugin.annotation.Plugin ap2 = o2.getClass().getAnnotation(jframe.core.plugin.annotation.Plugin.class);
             switch (type) {
             case START: {
                 v = minus(ap1.startOrder(), ap2.startOrder());
