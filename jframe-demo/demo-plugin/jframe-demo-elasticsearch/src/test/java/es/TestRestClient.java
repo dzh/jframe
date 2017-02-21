@@ -15,9 +15,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHeader;
@@ -74,9 +71,10 @@ public class TestRestClient {
                 // }
                 // })
                 .build();
-        
-//        Credentials credentials = new UsernamePasswordCredentials("root", "dzh");
-//        client.getState().setCredentials(AuthScope.ANY, credentials);
+
+        // Credentials credentials = new UsernamePasswordCredentials("root",
+        // "dzh");
+        // client.getState().setCredentials(AuthScope.ANY, credentials);
     }
 
     @Test

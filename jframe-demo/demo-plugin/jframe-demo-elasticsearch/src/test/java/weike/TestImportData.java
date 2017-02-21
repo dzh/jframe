@@ -31,17 +31,16 @@ import org.junit.Test;
 public class TestImportData {
 
     RestClient client;
-    
+
     @Test
-    public void testFile(){
+    public void testFile() {
         File f = new File("dzh.txt");
         System.out.println(f.getAbsolutePath());
     }
 
     @Before
     public void init() {
-        client = RestClient
-                .builder(new HttpHost("121.199.167.226", 30002, "http"), new HttpHost("121.199.167.226", 30002, "http"))
+        client = RestClient.builder(new HttpHost("121.199.167.226", 30002, "http"), new HttpHost("121.199.167.226", 30002, "http"))
                 .setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
                     @Override
                     public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
@@ -69,12 +68,9 @@ public class TestImportData {
         // System.out.println(EntityUtils.toString(response.getEntity()));
 
         // index a document
-        HttpEntity entity = new NStringEntity(
-                "{\"sellerId\":1," + "\"user\" : \"kimchy\"," + "\"post_date\" : \"2009-11-15T14:12:12\","
-                        + "    \"message\" : \"trying out Elasticsearch\",\"mobile\":\"18616020611\"" + "}",
-                ContentType.APPLICATION_JSON);
-        Response indexResponse = client.performRequest("POST", "/weike/member/", Collections.<String, String>emptyMap(),
-                entity);
+        HttpEntity entity = new NStringEntity("{\"sellerId\":1," + "\"user\" : \"kimchy\"," + "\"post_date\" : \"2009-11-15T14:12:12\","
+                + "    \"message\" : \"trying out Elasticsearch\",\"mobile\":\"18616020611\"" + "}", ContentType.APPLICATION_JSON);
+        Response indexResponse = client.performRequest("POST", "/weike/member/", Collections.<String, String> emptyMap(), entity);
 
     }
 

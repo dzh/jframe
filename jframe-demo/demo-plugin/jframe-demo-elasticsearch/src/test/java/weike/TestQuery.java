@@ -76,8 +76,8 @@ public class TestQuery {
         int number_of_replicas = 1;
         // query("DELETE", null, "/index2", "delete");
         // add
-        String json = "{\"settings\":{\"index\":{\"number_of_shards\" : " + number_of_shards
-                + ",\"number_of_replicas\" : " + number_of_replicas + "}}}";
+        String json = "{\"settings\":{\"index\":{\"number_of_shards\" : " + number_of_shards + ",\"number_of_replicas\" : " + number_of_replicas
+                + "}}}";
         query("PUT", json, "/index1", "add");
         // get _settings, _mappings, _warmers and _aliases
         query("GET", null, "/index1", "get");
@@ -108,8 +108,8 @@ public class TestQuery {
         int number_of_shards = 3;
         int number_of_replicas = 1;
         // add index
-        String json = "{\"settings\":{\"index\":{\"number_of_shards\" : " + number_of_shards
-                + ",\"number_of_replicas\" : " + number_of_replicas + "}}}";
+        String json = "{\"settings\":{\"index\":{\"number_of_shards\" : " + number_of_shards + ",\"number_of_replicas\" : " + number_of_replicas
+                + "}}}";
         // query("DELETE", null, "/test1", "delete");
         // query("DELETE", null, "/test2", "delete");
         query("PUT", json, "/test1", "add");
@@ -127,8 +127,7 @@ public class TestQuery {
         query("HEAD", null, "/test1/_aliases/alias1", "exist");
         // update
         json = "{\"actions\" : [" + "{ \"remove\" : { \"index\" : \"test1\", \"alias\" :\"alias1\" } },"
-                + "{ \"add\" : { \"index\" : \"test1\", \"alias\" : \"alias2\" ,\"index_routing\" : \"2\",\"search_routing\" : \"1\"} }"
-                + "]}";
+                + "{ \"add\" : { \"index\" : \"test1\", \"alias\" : \"alias2\" ,\"index_routing\" : \"2\",\"search_routing\" : \"1\"} }" + "]}";
         query("POST", json, "/_aliases", "update");
         query("GET", null, "/_aliases/alias2", "get");
         query("HEAD", null, "/*/_aliases/alias2", "exist");
@@ -162,8 +161,7 @@ public class TestQuery {
 
         long startTime = System.currentTimeMillis();
         HttpEntity entity = new NStringEntity(json.toString(), ContentType.APPLICATION_JSON);
-        Response response = client.performRequest("GET", "/weike/member/_count",
-                Collections.singletonMap("pretty", "true"), entity);
+        Response response = client.performRequest("GET", "/weike/member/_count", Collections.singletonMap("pretty", "true"), entity);
 
         // LOG.info(XContentFactory.jsonBuilder().startObject().field("gender",
         // "male").endObject().string());
@@ -196,8 +194,7 @@ public class TestQuery {
 
         long startTime = System.currentTimeMillis();
         HttpEntity entity = new NStringEntity(json, ContentType.APPLICATION_JSON);
-        Response response = client.performRequest("GET", "/weike/member/_search",
-                Collections.singletonMap("pretty", "true"), entity);
+        Response response = client.performRequest("GET", "/weike/member/_search", Collections.singletonMap("pretty", "true"), entity);
         LOG.info("search-{} {}ms", EntityUtils.toString(response.getEntity()), System.currentTimeMillis() - startTime);
     }
 
@@ -212,8 +209,7 @@ public class TestQuery {
         String result = null;
         if (response.getEntity() != null)
             result = EntityUtils.toString(response.getEntity());
-        LOG.info("{} rsp-{} {} {}ms", log, response.getStatusLine().getStatusCode(), result,
-                System.currentTimeMillis() - startTime);
+        LOG.info("{} rsp-{} {} {}ms", log, response.getStatusLine().getStatusCode(), result, System.currentTimeMillis() - startTime);
         return result;
     }
 
@@ -249,10 +245,8 @@ public class TestQuery {
 
         long startTime = System.currentTimeMillis();
         HttpEntity entity = new NStringEntity(json, ContentType.APPLICATION_JSON);
-        Response response = client.performRequest("DELETE", "/weike/member/_search/scroll",
-                Collections.singletonMap("pretty", "true"), entity);
-        LOG.info("scroll search-{} {}ms", EntityUtils.toString(response.getEntity()),
-                System.currentTimeMillis() - startTime);
+        Response response = client.performRequest("DELETE", "/weike/member/_search/scroll", Collections.singletonMap("pretty", "true"), entity);
+        LOG.info("scroll search-{} {}ms", EntityUtils.toString(response.getEntity()), System.currentTimeMillis() - startTime);
     }
 
     @Test

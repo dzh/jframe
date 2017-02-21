@@ -68,10 +68,9 @@ public class TestTransportClient {
 
     @Before
     public void init() throws Exception {
-        Settings settings = Settings.settingsBuilder().put("cluster.name", "elasticsearch")
-                .put("client.transport.sniff", true).put("client.transport.ignore_cluster_name", false)
-                .put("client.transport.ping_timeout", "5s").put("client.transport.nodes_sampler_interval", "5s")
-                .build();
+        Settings settings = Settings.settingsBuilder().put("cluster.name", "elasticsearch").put("client.transport.sniff", true)
+                .put("client.transport.ignore_cluster_name", false).put("client.transport.ping_timeout", "5s")
+                .put("client.transport.nodes_sampler_interval", "5s").build();
 
         TransportAddress addr = new InetSocketTransportAddress(InetAddress.getByName(null), 9300);
         client = TransportClient.builder().settings(settings).build()
@@ -90,10 +89,8 @@ public class TestTransportClient {
 
     @Test
     public void testIndex() throws IOException {
-        IndexResponse response = client.prepareIndex("twitter", "tweet", "1")
-                .setSource(XContentFactory.jsonBuilder().startObject().field("user", "kimchy")
-                        .field("postDate", new Date()).field("message", "trying out Elasticsearch").endObject())
-                .get();
+        IndexResponse response = client.prepareIndex("twitter", "tweet", "1").setSource(XContentFactory.jsonBuilder().startObject()
+                .field("user", "kimchy").field("postDate", new Date()).field("message", "trying out Elasticsearch").endObject()).get();
         // Index name
         String _index = response.getIndex();
         // Type name
@@ -111,8 +108,7 @@ public class TestTransportClient {
     }
 
     public void testIndexJsonString() {
-        String json = "{" + "\"user\":\"kimchy\"," + "\"postDate\":\"2013-01-30\","
-                + "\"message\":\"trying out Elasticsearch\"" + "}";
+        String json = "{" + "\"user\":\"kimchy\"," + "\"postDate\":\"2013-01-30\"," + "\"message\":\"trying out Elasticsearch\"" + "}";
 
         IndexResponse response = client.prepareIndex("twitter", "tweet").setSource(json).get();
 
@@ -138,29 +134,26 @@ public class TestTransportClient {
         UpdateResponse response = client.update(updateRequest).get();
         System.out.println(response.toString());
 
-        client.prepareUpdate("ttl", "doc", "1")
-                .setScript(new Script("ctx._source.gender = \"male\"", ScriptService.ScriptType.INLINE, null, null))
+        client.prepareUpdate("ttl", "doc", "1").setScript(new Script("ctx._source.gender = \"male\"", ScriptService.ScriptType.INLINE, null, null))
                 .get();
 
-        client.prepareUpdate("ttl", "doc", "1")
-                .setDoc(XContentFactory.jsonBuilder().startObject().field("gender", "male").endObject()).get();
+        client.prepareUpdate("ttl", "doc", "1").setDoc(XContentFactory.jsonBuilder().startObject().field("gender", "male").endObject()).get();
     }
 
     @Test
     public void testUpsert() throws Exception {
-        IndexRequest indexRequest = new IndexRequest("index", "type", "1").source(XContentFactory.jsonBuilder()
-                .startObject().field("name", "Joe Smith").field("gender", "male").endObject());
+        IndexRequest indexRequest = new IndexRequest("index", "type", "1")
+                .source(XContentFactory.jsonBuilder().startObject().field("name", "Joe Smith").field("gender", "male").endObject());
         UpdateRequest updateRequest = new UpdateRequest("index", "type", "1")
-                .doc(XContentFactory.jsonBuilder().startObject().field("gender", "male").endObject())
-                .upsert(indexRequest);
+                .doc(XContentFactory.jsonBuilder().startObject().field("gender", "male").endObject()).upsert(indexRequest);
         UpdateResponse response = client.update(updateRequest).get();
         System.out.println(response.getGetResult().sourceAsString());
     }
 
     @Test
     public void testMultiGet() {
-        MultiGetResponse multiGetItemResponses = client.prepareMultiGet().add("twitter", "tweet", "1")
-                .add("twitter", "tweet", "2", "3", "4").add("another", "type", "foo").get();
+        MultiGetResponse multiGetItemResponses = client.prepareMultiGet().add("twitter", "tweet", "1").add("twitter", "tweet", "2", "3", "4")
+                .add("another", "type", "foo").get();
 
         for (MultiGetItemResponse itemResponse : multiGetItemResponses) {
             GetResponse response = itemResponse.getResponse();
@@ -177,13 +170,11 @@ public class TestTransportClient {
 
         // either use client#prepare, or use Requests# to directly build
         // index/delete requests
-        bulkRequest.add(client.prepareIndex("twitter", "tweet", "1")
-                .setSource(XContentFactory.jsonBuilder().startObject().field("user", "kimchy")
-                        .field("postDate", new Date()).field("message", "trying out Elasticsearch").endObject()));
+        bulkRequest.add(client.prepareIndex("twitter", "tweet", "1").setSource(XContentFactory.jsonBuilder().startObject().field("user", "kimchy")
+                .field("postDate", new Date()).field("message", "trying out Elasticsearch").endObject()));
 
-        bulkRequest.add(client.prepareIndex("twitter", "tweet", "2")
-                .setSource(XContentFactory.jsonBuilder().startObject().field("user", "kimchy")
-                        .field("postDate", new Date()).field("message", "another post").endObject()));
+        bulkRequest.add(client.prepareIndex("twitter", "tweet", "2").setSource(XContentFactory.jsonBuilder().startObject().field("user", "kimchy")
+                .field("postDate", new Date()).field("message", "another post").endObject()));
 
         BulkResponse bulkResponse = bulkRequest.get();
         if (bulkResponse.hasFailures()) {
@@ -205,9 +196,8 @@ public class TestTransportClient {
             @Override
             public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
             }
-        }).setBulkActions(10000).setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
-                .setFlushInterval(TimeValue.timeValueSeconds(5)).setConcurrentRequests(1)
-                .setBackoffPolicy(BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3)).build();
+        }).setBulkActions(10000).setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB)).setFlushInterval(TimeValue.timeValueSeconds(5))
+                .setConcurrentRequests(1).setBackoffPolicy(BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3)).build();
 
         bulkProcessor.add(new IndexRequest("twitter", "tweet", "1").source(""));
         bulkProcessor.add(new DeleteRequest("twitter", "tweet", "2"));
@@ -218,8 +208,8 @@ public class TestTransportClient {
 
     @Test
     public void testSearch() {
-        SearchResponse response = client.prepareSearch("index1", "index2").setTypes("type1", "type2")
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH).setQuery(QueryBuilders.termQuery("multi", "test")) // Query
+        SearchResponse response = client.prepareSearch("index1", "index2").setTypes("type1", "type2").setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(QueryBuilders.termQuery("multi", "test")) // Query
                 .setPostFilter(QueryBuilders.rangeQuery("age").from(12).to(18)) // Filter
                 .setFrom(0).setSize(60).setExplain(true).execute().actionGet();
     }
@@ -229,17 +219,15 @@ public class TestTransportClient {
         QueryBuilder qb = QueryBuilders.termQuery("multi", "test");
 
         // 100 hits per shard will be returned for each scroll
-        SearchResponse scrollResp = client.prepareSearch("index1")
-                .addSort(SortParseElement.DOC_FIELD_NAME, SortOrder.ASC).setScroll(new TimeValue(60000)).setQuery(qb)
-                .setSize(100).execute().actionGet();
+        SearchResponse scrollResp = client.prepareSearch("index1").addSort(SortParseElement.DOC_FIELD_NAME, SortOrder.ASC)
+                .setScroll(new TimeValue(60000)).setQuery(qb).setSize(100).execute().actionGet();
         // Scroll until no hits are returned
         while (true) {
 
             for (SearchHit hit : scrollResp.getHits().getHits()) {
                 // Handle the hit...
             }
-            scrollResp = client.prepareSearchScroll(scrollResp.getScrollId()).setScroll(new TimeValue(60000)).execute()
-                    .actionGet();
+            scrollResp = client.prepareSearchScroll(scrollResp.getScrollId()).setScroll(new TimeValue(60000)).execute().actionGet();
             // Break condition: No hits are returned
             if (scrollResp.getHits().getHits().length == 0) {
                 break;
@@ -249,10 +237,8 @@ public class TestTransportClient {
 
     @Test
     public void testMultiSearch() {
-        SearchRequestBuilder srb1 = client.prepareSearch().setQuery(QueryBuilders.queryStringQuery("elasticsearch"))
-                .setSize(1);
-        SearchRequestBuilder srb2 = client.prepareSearch().setQuery(QueryBuilders.matchQuery("name", "kimchy"))
-                .setSize(1);
+        SearchRequestBuilder srb1 = client.prepareSearch().setQuery(QueryBuilders.queryStringQuery("elasticsearch")).setSize(1);
+        SearchRequestBuilder srb2 = client.prepareSearch().setQuery(QueryBuilders.matchQuery("name", "kimchy")).setSize(1);
 
         MultiSearchResponse sr = client.prepareMultiSearch().add(srb1).add(srb2).execute().actionGet();
 
@@ -269,9 +255,7 @@ public class TestTransportClient {
     public void testAggregation() {
         SearchResponse sr = client.prepareSearch().setQuery(QueryBuilders.matchAllQuery())
                 .addAggregation(AggregationBuilders.terms("agg1").field("field"))
-                .addAggregation(
-                        AggregationBuilders.dateHistogram("agg2").field("birth").interval(DateHistogramInterval.YEAR))
-                .execute().actionGet();
+                .addAggregation(AggregationBuilders.dateHistogram("agg2").field("birth").interval(DateHistogramInterval.YEAR)).execute().actionGet();
 
         // Get your facet results
         Terms agg1 = sr.getAggregations().get("agg1");
@@ -300,14 +284,10 @@ public class TestTransportClient {
         AdminClient adminClient = client.admin();
         IndicesAdminClient indicesAdminClient = client.admin().indices();
         client.admin().indices().prepareCreate("twitter")
-                .setSettings(Settings.builder().put("index.number_of_shards", 3).put("index.number_of_replicas", 2))
-                .get();
+                .setSettings(Settings.builder().put("index.number_of_shards", 3).put("index.number_of_replicas", 2)).get();
 
-        client.admin().indices().prepareCreate("twitter")
-                .addMapping("tweet",
-                        "{\n" + "    \"tweet\": {\n" + "      \"properties\": {\n" + "        \"message\": {\n"
-                                + "          \"type\": \"string\"\n" + "        }\n" + "      }\n" + "    }\n" + "  }")
-                .get();
+        client.admin().indices().prepareCreate("twitter").addMapping("tweet", "{\n" + "    \"tweet\": {\n" + "      \"properties\": {\n"
+                + "        \"message\": {\n" + "          \"type\": \"string\"\n" + "        }\n" + "      }\n" + "    }\n" + "  }").get();
 
         ClusterAdminClient clusterAdminClient = client.admin().cluster();
         ClusterHealthResponse healths = client.admin().cluster().prepareHealth().get();
@@ -325,11 +305,9 @@ public class TestTransportClient {
         client.admin().cluster().prepareHealth().setWaitForYellowStatus().get();
         client.admin().cluster().prepareHealth("company").setWaitForGreenStatus().get();
 
-        client.admin().cluster().prepareHealth("employee").setWaitForGreenStatus()
-                .setTimeout(TimeValue.timeValueSeconds(2)).get();
+        client.admin().cluster().prepareHealth("employee").setWaitForGreenStatus().setTimeout(TimeValue.timeValueSeconds(2)).get();
 
-        ClusterHealthResponse response = client.admin().cluster().prepareHealth("company").setWaitForGreenStatus()
-                .get();
+        ClusterHealthResponse response = client.admin().cluster().prepareHealth("company").setWaitForGreenStatus().get();
 
         ClusterHealthStatus status = response.getIndices().get("company").getStatus();
         if (!status.equals(ClusterHealthStatus.GREEN)) {

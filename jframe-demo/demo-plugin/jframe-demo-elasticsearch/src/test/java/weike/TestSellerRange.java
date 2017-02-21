@@ -64,10 +64,9 @@ public class TestSellerRange {
                 }
             }
         }
-        LOG.info(" [1-20)-{},[20,50w)-{},[50,100)-{},[100,200)-{},[200,300)-{},[300,400)-{},[400,500)-{},[500,)-{}", count[0],
-                count[1], count[2], count[3], count[4], count[5], count[6],count[7]);
-        LOG.info("stop doRange-{} matchSeller-{} notMatchSeller-{} totalMember->{}", file, matchCount, notMatchCount,
-                totalMember);
+        LOG.info(" [1-20)-{},[20,50w)-{},[50,100)-{},[100,200)-{},[200,300)-{},[300,400)-{},[400,500)-{},[500,)-{}", count[0], count[1], count[2],
+                count[3], count[4], count[5], count[6], count[7]);
+        LOG.info("stop doRange-{} matchSeller-{} notMatchSeller-{} totalMember->{}", file, matchCount, notMatchCount, totalMember);
     }
 
     @Test
