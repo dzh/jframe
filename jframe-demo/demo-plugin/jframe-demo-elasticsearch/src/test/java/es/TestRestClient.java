@@ -39,7 +39,7 @@ import jframe.demo.elasticsearch.weike.MemberDO;
  * @date Sep 23, 2016 11:13:08 AM
  * @since 1.0
  */
-// @Ignore
+@Ignore
 public class TestRestClient {
 
     static Logger LOG = LoggerFactory.getLogger(TestRestClient.class);

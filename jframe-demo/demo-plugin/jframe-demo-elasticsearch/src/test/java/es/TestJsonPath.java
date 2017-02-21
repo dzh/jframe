@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -21,8 +22,9 @@ import jframe.demo.elasticsearch.weike.MemberDO;
  * @date Oct 20, 2016 4:44:43 PM
  * @since 1.0
  */
+@Ignore
 public class TestJsonPath {
-    
+
     static Gson Gson = new Gson();
 
     @Test
@@ -32,33 +34,32 @@ public class TestJsonPath {
         DocumentContext context = JsonPath.parse(json);
         List<MemberDO> source = context.read("$.hits.hits.._source");
         String scrollId = context.read("$._scroll_id");
-        int total = context.<Integer>read("$.hits.total");
+        int total = context.<Integer> read("$.hits.total");
         System.out.println(System.currentTimeMillis() - start);
 
-//        System.out.println(scrollId);
+        // System.out.println(scrollId);
         System.out.println(total);
-//        System.out.println(source);
-        
-        
+        // System.out.println(source);
+
         start = System.currentTimeMillis();
         Gson gson = new Gson();
-        Map<String,String> obj = gson.fromJson(json,HashMap.class);
+        Map<String, String> obj = gson.fromJson(json, HashMap.class);
         System.out.println(System.currentTimeMillis() - start);
         System.out.println(obj.get("_scroll_id"));
-//        System.out.println((obj.get("hits")).get("total"));
-//        System.out.println(source);
-        
-        List<Map<String,String>> list = new LinkedList<Map<String,String>>();
-        Map map= new HashMap<>();
+        // System.out.println((obj.get("hits")).get("total"));
+        // System.out.println(source);
+
+        List<Map<String, String>> list = new LinkedList<Map<String, String>>();
+        Map map = new HashMap<>();
         map.put("a", "1");
         list.add(map);
-        map= new HashMap<>();
+        map = new HashMap<>();
         map.put("a", "2");
         list.add(map);
         json = Gson.toJson(list);
-         context = JsonPath.parse(json);
-        System.out.println(context.<List>read("$..a"));
-        
+        context = JsonPath.parse(json);
+        System.out.println(context.<List> read("$..a"));
+
     }
-    
+
 }

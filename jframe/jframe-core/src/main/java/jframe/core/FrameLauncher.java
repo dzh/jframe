@@ -4,7 +4,6 @@
 package jframe.core;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ public class FrameLauncher extends DefLauncher {
         try {
             LOG.info("write pid file: " + pid);
             Program.writePID(Program.getPID(), pid);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage());
             frameConfig.clearConfig();
             exit(-1);
@@ -43,7 +42,6 @@ public class FrameLauncher extends DefLauncher {
 
         FrameFactory ff = getFrameFactory();
         final Frame frame = ff.createFrame(frameConfig);
-        // TODO
 
         Runtime.getRuntime().addShutdownHook(new Thread("FrameShutdownhookThread") {
             public void run() {

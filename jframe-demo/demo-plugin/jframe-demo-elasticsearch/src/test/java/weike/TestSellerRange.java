@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * @date Oct 13, 2016 10:31:07 AM
  * @since 1.0
  */
+@Ignore
 public class TestSellerRange {
 
     static Logger LOG = LoggerFactory.getLogger(TestSellerRange.class);

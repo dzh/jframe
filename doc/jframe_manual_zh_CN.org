@@ -169,10 +169,27 @@ suspend=n jvm启动后直接运行，若y则jvm启动后挂起，在调试客户
 address=6666 jvm调试服务端监听端口6666
 #+END_EXAMPLE
 - eclipse配置远程调试(以上面的配置为例)
-[[./images/eclipse-jframe-debug-remote.png]]
+[[./images/eclipse-jframe-debug-remote.jpeg]]
 
 
 ** 本地调试
+*** 在Eclipse中调式jframe项目
+/注: 以下说明以jframe/jframe-demo工程为例/
+- 构建工程，如cd jframe-demo | mvn install， 打包目录在jframe-demo/demo-release
+- 配置Eclipse Debug选项，如jframe-demo-debug
+  - Main选项,配置启动Main函数
+  #+attr_html: :width 600
+  [[./images/debug-local-tab-main.png]]
+  - Arguments选项, 主要配置3项: app.home应用根目录,launcher默认FrameLauncher,logback.configurationFile日志文件(可选,示例使用logback)
+  #+attr_html: :width 600
+  [[./images/debug-local-tab-argu.png]]
+  - Classpath选项, 在User Entries里加入构建时项目依赖的jar，如示例demo-release/lib/*.jar
+  #+attr_html: :width 600
+  [[./images/debug-local-tab-path.png]]
+  - Source添加调式项目源码
+  #+attr_html: :width 600
+  [[./images/debug-local-tab-source.png]]
+- 上述配置配好，控制台会有日志输出，在源码中设置断点就可以debug
 
 
 

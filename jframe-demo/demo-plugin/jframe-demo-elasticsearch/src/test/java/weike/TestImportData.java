@@ -27,7 +27,7 @@ import org.junit.Test;
  * @date Sep 29, 2016 2:45:58 PM
  * @since 1.0
  */
-// @Ignore
+@Ignore
 public class TestImportData {
 
     RestClient client;
@@ -40,7 +40,7 @@ public class TestImportData {
 
     @Before
     public void init() {
-        client = RestClient.builder(new HttpHost("121.199.167.226", 30002, "http"), new HttpHost("121.199.167.226", 30002, "http"))
+        client = RestClient.builder(new HttpHost("127.0.0.1", 30002, "http"), new HttpHost("127.0.0.1", 30002, "http"))
                 .setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
                     @Override
                     public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {

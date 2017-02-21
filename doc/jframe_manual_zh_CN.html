@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Jframe Manual</title>
-<!-- 2015-10-20 Tue 15:47 -->
+<!-- 2017-02-21 Tue 19:23 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="dzh" />
@@ -167,66 +167,95 @@ for the JavaScript code in this tag.
 <li><a href="#sec-3-4">3.4. vmargs[-win]</a></li>
 </ul>
 </li>
-<li><a href="#sec-4">4. Plugin</a>
+<li><a href="#sec-4">4. Jframe</a>
 <ul>
-<li><a href="#sec-4-1">4.1. 插件示例</a></li>
-<li><a href="#sec-4-2">4.2. 开发插件</a></li>
-<li><a href="#sec-4-3">4.3. 插件使用技巧</a>
+<li><a href="#sec-4-1">4.1. jframe-launcher</a>
 <ul>
-<li><a href="#sec-4-3-1">4.3.1. 插件间交互~Policy</a></li>
-<li><a href="#sec-4-3-2">4.3.2. 插件间交互~Message</a></li>
-<li><a href="#sec-4-3-3">4.3.3. 插件间交互~Service</a></li>
-<li><a href="#sec-4-3-4">4.3.4. Policy vs Message vs Service</a></li>
-<li><a href="#sec-4-3-5">4.3.5. 获取配置更新</a></li>
+<li><a href="#sec-4-1-1">4.1.1. 启动过程</a></li>
+<li><a href="#sec-4-1-2">4.1.2. </a></li>
+<li><a href="#sec-4-1-3">4.1.3. jframe.launcher.api</a></li>
+<li><a href="#sec-4-1-4">4.1.4. use launcher</a></li>
 </ul>
 </li>
-<li><a href="#sec-4-4">4.4. 插件注解说明</a>
+<li><a href="#sec-4-2">4.2. jframe-core</a>
 <ul>
-<li><a href="#sec-4-4-1">4.4.1. 插件相关</a></li>
-<li><a href="#sec-4-4-2">4.4.2. 服务相关</a></li>
-<li><a href="#sec-4-4-3">4.4.3. 注入</a></li>
+<li><a href="#sec-4-2-1">4.2.1. jframe状态机</a></li>
+<li><a href="#sec-4-2-2">4.2.2. UnitManager</a></li>
+<li><a href="#sec-4-2-3">4.2.3. PluginClassloader</a></li>
+<li><a href="#sec-4-2-4">4.2.4. </a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#sec-5">5. 调试/性能</a>
+<li><a href="#sec-5">5. Plugin</a>
 <ul>
-<li><a href="#sec-5-1">5.1. 远程调试</a>
+<li><a href="#sec-5-1">5.1. 插件示例</a></li>
+<li><a href="#sec-5-2">5.2. 开发插件</a>
 <ul>
-<li><a href="#sec-5-1-1">5.1.1. 调试守护进程(Main)</a></li>
-<li><a href="#sec-5-1-2">5.1.2. 调试框架进程(FrameMain)</a></li>
+<li><a href="#sec-5-2-1">5.2.1. 定义插件类</a></li>
+<li><a href="#sec-5-2-2">5.2.2. 插件配置文件 - plugin.properties</a></li>
 </ul>
 </li>
-<li><a href="#sec-5-2">5.2. 本地调试</a></li>
-<li><a href="#sec-5-3">5.3. 使用jvisualvm</a></li>
+<li><a href="#sec-5-3">5.3. 插件使用技巧</a>
+<ul>
+<li><a href="#sec-5-3-1">5.3.1. 插件间交互~Policy</a></li>
+<li><a href="#sec-5-3-2">5.3.2. 插件间交互~Message</a></li>
+<li><a href="#sec-5-3-3">5.3.3. 插件间交互~Service</a></li>
+<li><a href="#sec-5-3-4">5.3.4. Policy vs Message vs Service</a></li>
+<li><a href="#sec-5-3-5">5.3.5. 获取配置更新</a></li>
 </ul>
 </li>
-<li><a href="#sec-6">6. 核心插件</a>
+<li><a href="#sec-5-4">5.4. 插件注解说明</a>
 <ul>
-<li><a href="#sec-6-1">6.1. jframe-watch</a>
-<ul>
-<li><a href="#sec-6-1-1">6.1.1. 功能</a></li>
-<li><a href="#sec-6-1-2">6.1.2. 配置</a></li>
+<li><a href="#sec-5-4-1">5.4.1. 插件相关</a></li>
+<li><a href="#sec-5-4-2">5.4.2. 服务相关</a></li>
+<li><a href="#sec-5-4-3">5.4.3. 注入</a></li>
 </ul>
 </li>
-<li><a href="#sec-6-2">6.2. jframe-upg</a></li>
-<li><a href="#sec-6-3">6.3. jframe-rcp</a></li>
 </ul>
 </li>
-<li><a href="#sec-7">7. 高级主题</a>
+<li><a href="#sec-6">6. 调试/性能</a>
 <ul>
-<li><a href="#sec-7-1">7.1. 管理jframe</a></li>
-<li><a href="#sec-7-2">7.2. 扩展jframe</a></li>
+<li><a href="#sec-6-1">6.1. 远程调试</a>
+<ul>
+<li><a href="#sec-6-1-1">6.1.1. 调试守护进程(Main)</a></li>
+<li><a href="#sec-6-1-2">6.1.2. 调试框架进程(FrameMain)</a></li>
 </ul>
 </li>
-<li><a href="#sec-8">8. 源码分析</a>
+<li><a href="#sec-6-2">6.2. 本地调试</a>
 <ul>
-<li><a href="#sec-8-1">8.1. 启动/关闭</a></li>
-<li><a href="#sec-8-2">8.2. 加载插件</a></li>
-<li><a href="#sec-8-3">8.3. 消息分发</a>
+<li><a href="#sec-6-2-1">6.2.1. 在Eclipse中调式jframe项目</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-3">6.3. 使用jvisualvm</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7. 核心插件</a>
 <ul>
-<li><a href="#sec-8-3-1">8.3.1. 进程内分发</a></li>
-<li><a href="#sec-8-3-2">8.3.2. 队列分发</a></li>
+<li><a href="#sec-7-1">7.1. jframe-watch</a>
+<ul>
+<li><a href="#sec-7-1-1">7.1.1. 功能</a></li>
+<li><a href="#sec-7-1-2">7.1.2. 配置</a></li>
+</ul>
+</li>
+<li><a href="#sec-7-2">7.2. jframe-upg</a></li>
+<li><a href="#sec-7-3">7.3. jframe-rcp</a></li>
+</ul>
+</li>
+<li><a href="#sec-8">8. 高级主题</a>
+<ul>
+<li><a href="#sec-8-1">8.1. 管理jframe</a></li>
+<li><a href="#sec-8-2">8.2. 扩展jframe</a></li>
+</ul>
+</li>
+<li><a href="#sec-9">9. 源码分析</a>
+<ul>
+<li><a href="#sec-9-1">9.1. 启动/关闭</a></li>
+<li><a href="#sec-9-2">9.2. 加载插件</a></li>
+<li><a href="#sec-9-3">9.3. 消息分发</a>
+<ul>
+<li><a href="#sec-9-3-1">9.3.1. 进程内分发</a></li>
+<li><a href="#sec-9-3-2">9.3.2. 队列分发</a></li>
 </ul>
 </li>
 </ul>
@@ -276,7 +305,7 @@ git clone <a href="https://github.com/dzh/jframe.git">https://github.com/dzh/jfr
         - update                    #默认系统更新目录,upg更新插件使用
     - jframe-swt                    #jframe的swt插件实现,这个示例还没做好,目前演示了将jframe用于C端的方式
     - jframe-watch                  #资源更新插件,跟踪配置文件的修改并通知其他插件
-  - jframe-plugins                  #jframe实现的一些插件
+  - jframe-plugin                   #jframe实现的一些插件
 </pre>
 </div>
 </div>
@@ -355,24 +384,91 @@ git clone <a href="https://github.com/dzh/jframe.git">https://github.com/dzh/jfr
 </div>
 
 <div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> Plugin</h2>
+<h2 id="sec-4"><span class="section-number-2">4</span> Jframe</h2>
 <div class="outline-text-2" id="text-4">
 </div><div id="outline-container-sec-4-1" class="outline-3">
-<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 插件示例</h3>
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> jframe-launcher</h3>
+<div class="outline-text-3" id="text-4-1">
+</div><div id="outline-container-sec-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><span class="section-number-4">4.1.1</span> 启动过程</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<ul class="org-ul">
+<li>Main 守护进程main函数
+</li>
+<li>FrameMain
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-4-1-2" class="outline-4">
+<h4 id="sec-4-1-2"><span class="section-number-4">4.1.2</span> </h4>
+<div class="outline-text-4" id="text-4-1-2">
+<ul class="org-ul">
+<li>v1.2.0版本开始功能, 和jframe-core的依赖关系倒置
+</li>
+<li>设计目标让launcher
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-4-1-3" class="outline-4">
+<h4 id="sec-4-1-3"><span class="section-number-4">4.1.3</span> jframe.launcher.api</h4>
+</div>
+<div id="outline-container-sec-4-1-4" class="outline-4">
+<h4 id="sec-4-1-4"><span class="section-number-4">4.1.4</span> use launcher</h4>
+</div>
 </div>
 <div id="outline-container-sec-4-2" class="outline-3">
-<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 开发插件</h3>
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> jframe-core</h3>
+<div class="outline-text-3" id="text-4-2">
+</div><div id="outline-container-sec-4-2-1" class="outline-4">
+<h4 id="sec-4-2-1"><span class="section-number-4">4.2.1</span> jframe状态机</h4>
 </div>
-<div id="outline-container-sec-4-3" class="outline-3">
-<h3 id="sec-4-3"><span class="section-number-3">4.3</span> 插件使用技巧</h3>
-<div class="outline-text-3" id="text-4-3">
-</div><div id="outline-container-sec-4-3-1" class="outline-4">
-<h4 id="sec-4-3-1"><span class="section-number-4">4.3.1</span> 插件间交互~Policy</h4>
+<div id="outline-container-sec-4-2-2" class="outline-4">
+<h4 id="sec-4-2-2"><span class="section-number-4">4.2.2</span> UnitManager</h4>
+<div class="outline-text-4" id="text-4-2-2">
+</div><ol class="org-ol"><li><a id="sec-4-2-2-1" name="sec-4-2-2-1"></a>signal<br  /></li></ol>
+</div>
+<div id="outline-container-sec-4-2-3" class="outline-4">
+<h4 id="sec-4-2-3"><span class="section-number-4">4.2.3</span> PluginClassloader</h4>
+<div class="outline-text-4" id="text-4-2-3">
+</div><ol class="org-ol"><li><a id="sec-4-2-3-1" name="sec-4-2-3-1"></a>类加载过程<br  /></li></ol>
+</div>
+<div id="outline-container-sec-4-2-4" class="outline-4">
+<h4 id="sec-4-2-4"><span class="section-number-4">4.2.4</span> </h4>
+</div>
+</div>
 </div>
 
-<div id="outline-container-sec-4-3-2" class="outline-4">
-<h4 id="sec-4-3-2"><span class="section-number-4">4.3.2</span> 插件间交互~Message</h4>
-<div class="outline-text-4" id="text-4-3-2">
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Plugin</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> 插件示例</h3>
+</div>
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> 开发插件</h3>
+<div class="outline-text-3" id="text-5-2">
+</div><div id="outline-container-sec-5-2-1" class="outline-4">
+<h4 id="sec-5-2-1"><span class="section-number-4">5.2.1</span> 定义插件类</h4>
+</div>
+
+<div id="outline-container-sec-5-2-2" class="outline-4">
+<h4 id="sec-5-2-2"><span class="section-number-4">5.2.2</span> 插件配置文件 - plugin.properties</h4>
+</div>
+</div>
+
+<div id="outline-container-sec-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> 插件使用技巧</h3>
+<div class="outline-text-3" id="text-5-3">
+</div><div id="outline-container-sec-5-3-1" class="outline-4">
+<h4 id="sec-5-3-1"><span class="section-number-4">5.3.1</span> 插件间交互~Policy</h4>
+</div>
+
+<div id="outline-container-sec-5-3-2" class="outline-4">
+<h4 id="sec-5-3-2"><span class="section-number-4">5.3.2</span> 插件间交互~Message</h4>
+<div class="outline-text-4" id="text-5-3-2">
 <ul class="org-ul">
 <li>消息说明
 <ul class="org-ul">
@@ -429,9 +525,9 @@ Message机制实现异步调度, 解藕系统部件间的依赖, 实现可插拔
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-3" class="outline-4">
-<h4 id="sec-4-3-3"><span class="section-number-4">4.3.3</span> 插件间交互~Service</h4>
-<div class="outline-text-4" id="text-4-3-3">
+<div id="outline-container-sec-5-3-3" class="outline-4">
+<h4 id="sec-5-3-3"><span class="section-number-4">5.3.3</span> 插件间交互~Service</h4>
+<div class="outline-text-4" id="text-5-3-3">
 <ul class="org-ul">
 <li>插件服务特性说明
 <ul class="org-ul">
@@ -479,9 +575,9 @@ Service机制实现同步调度,
 </div>
 
 
-<div id="outline-container-sec-4-3-4" class="outline-4">
-<h4 id="sec-4-3-4"><span class="section-number-4">4.3.4</span> Policy vs Message vs Service</h4>
-<div class="outline-text-4" id="text-4-3-4">
+<div id="outline-container-sec-5-3-4" class="outline-4">
+<h4 id="sec-5-3-4"><span class="section-number-4">5.3.4</span> Policy vs Message vs Service</h4>
+<div class="outline-text-4" id="text-5-3-4">
 <ul class="org-ul">
 <li>Policy 消息共享
 </li>
@@ -493,19 +589,19 @@ Service机制实现同步调度,
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-5" class="outline-4">
-<h4 id="sec-4-3-5"><span class="section-number-4">4.3.5</span> 获取配置更新</h4>
+<div id="outline-container-sec-5-3-5" class="outline-4">
+<h4 id="sec-5-3-5"><span class="section-number-4">5.3.5</span> 获取配置更新</h4>
 </div>
 </div>
 
 
 
-<div id="outline-container-sec-4-4" class="outline-3">
-<h3 id="sec-4-4"><span class="section-number-3">4.4</span> 插件注解说明</h3>
-<div class="outline-text-3" id="text-4-4">
-</div><div id="outline-container-sec-4-4-1" class="outline-4">
-<h4 id="sec-4-4-1"><span class="section-number-4">4.4.1</span> 插件相关</h4>
-<div class="outline-text-4" id="text-4-4-1">
+<div id="outline-container-sec-5-4" class="outline-3">
+<h3 id="sec-5-4"><span class="section-number-3">5.4</span> 插件注解说明</h3>
+<div class="outline-text-3" id="text-5-4">
+</div><div id="outline-container-sec-5-4-1" class="outline-4">
+<h4 id="sec-5-4-1"><span class="section-number-4">5.4.1</span> 插件相关</h4>
+<div class="outline-text-4" id="text-5-4-1">
 <ul class="org-ul">
 <li>@Plugin 插件配置
 </li>
@@ -515,9 +611,9 @@ Service机制实现同步调度,
 </div>
 </div>
 
-<div id="outline-container-sec-4-4-2" class="outline-4">
-<h4 id="sec-4-4-2"><span class="section-number-4">4.4.2</span> 服务相关</h4>
-<div class="outline-text-4" id="text-4-4-2">
+<div id="outline-container-sec-5-4-2" class="outline-4">
+<h4 id="sec-5-4-2"><span class="section-number-4">5.4.2</span> 服务相关</h4>
+<div class="outline-text-4" id="text-5-4-2">
 <ul class="org-ul">
 <li>@Service 定义插件
 </li>
@@ -528,9 +624,9 @@ Service机制实现同步调度,
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-4-4-3" class="outline-4">
-<h4 id="sec-4-4-3"><span class="section-number-4">4.4.3</span> 注入</h4>
-<div class="outline-text-4" id="text-4-4-3">
+<div id="outline-container-sec-5-4-3" class="outline-4">
+<h4 id="sec-5-4-3"><span class="section-number-4">5.4.3</span> 注入</h4>
+<div class="outline-text-4" id="text-5-4-3">
 <ul class="org-ul">
 <li>@Injector 说明类使用注入功能，类没有这个注解的则下面的注解无效
 </li>
@@ -547,19 +643,19 @@ Service机制实现同步调度,
 
 
 
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> 调试/性能</h2>
-<div class="outline-text-2" id="text-5">
-</div><div id="outline-container-sec-5-1" class="outline-3">
-<h3 id="sec-5-1"><span class="section-number-3">5.1</span> 远程调试</h3>
-<div class="outline-text-3" id="text-5-1">
-</div><div id="outline-container-sec-5-1-1" class="outline-4">
-<h4 id="sec-5-1-1"><span class="section-number-4">5.1.1</span> 调试守护进程(Main)</h4>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 调试/性能</h2>
+<div class="outline-text-2" id="text-6">
+</div><div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> 远程调试</h3>
+<div class="outline-text-3" id="text-6-1">
+</div><div id="outline-container-sec-6-1-1" class="outline-4">
+<h4 id="sec-6-1-1"><span class="section-number-4">6.1.1</span> 调试守护进程(Main)</h4>
 </div>
 
-<div id="outline-container-sec-5-1-2" class="outline-4">
-<h4 id="sec-5-1-2"><span class="section-number-4">5.1.2</span> 调试框架进程(FrameMain)</h4>
-<div class="outline-text-4" id="text-5-1-2">
+<div id="outline-container-sec-6-1-2" class="outline-4">
+<h4 id="sec-6-1-2"><span class="section-number-4">6.1.2</span> 调试框架进程(FrameMain)</h4>
+<div class="outline-text-4" id="text-6-1-2">
 <ul class="org-ul">
 <li>conf/vmargs或vmargs-win文件中，开启jvm远程调试
 </li>
@@ -578,7 +674,7 @@ address=6666 jvm调试服务端监听端口6666
 </ul>
 
 <div class="figure">
-<p><img src="./images/eclipse-jframe-debug-remote.png" alt="eclipse-jframe-debug-remote.png" />
+<p><img src="./images/eclipse-jframe-debug-remote.jpeg" alt="eclipse-jframe-debug-remote.jpeg" />
 </p>
 </div>
 </div>
@@ -586,15 +682,68 @@ address=6666 jvm调试服务端监听端口6666
 </div>
 
 
-<div id="outline-container-sec-5-2" class="outline-3">
-<h3 id="sec-5-2"><span class="section-number-3">5.2</span> 本地调试</h3>
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> 本地调试</h3>
+<div class="outline-text-3" id="text-6-2">
+</div><div id="outline-container-sec-6-2-1" class="outline-4">
+<h4 id="sec-6-2-1"><span class="section-number-4">6.2.1</span> 在Eclipse中调式jframe项目</h4>
+<div class="outline-text-4" id="text-6-2-1">
+<p>
+<i>注: 以下说明以jframe/jframe-demo工程为例</i>
+</p>
+<ul class="org-ul">
+<li>构建工程，如cd jframe-demo | mvn install， 打包目录在jframe-demo/demo-release
+</li>
+<li>配置Eclipse Debug选项，如jframe-demo-debug
+<ul class="org-ul">
+<li>Main选项,配置启动Main函数
+</li>
+</ul>
+
+<div class="figure">
+<p><img src="./images/debug-local-tab-main.png" alt="debug-local-tab-main.png" width="600" />
+</p>
+</div>
+<ul class="org-ul">
+<li>Arguments选项, 主要配置3项: app.home应用根目录,launcher默认FrameLauncher,logback.configurationFile日志文件(可选,示例使用logback)
+</li>
+</ul>
+
+<div class="figure">
+<p><img src="./images/debug-local-tab-argu.png" alt="debug-local-tab-argu.png" width="600" />
+</p>
+</div>
+<ul class="org-ul">
+<li>Classpath选项, 在User Entries里加入构建时项目依赖的jar，如示例demo-release/lib/*.jar
+</li>
+</ul>
+
+<div class="figure">
+<p><img src="./images/debug-local-tab-path.png" alt="debug-local-tab-path.png" width="600" />
+</p>
+</div>
+<ul class="org-ul">
+<li>Source添加调式项目源码
+</li>
+</ul>
+
+<div class="figure">
+<p><img src="./images/debug-local-tab-source.png" alt="debug-local-tab-source.png" width="600" />
+</p>
+</div>
+</li>
+<li>上述配置配好，控制台会有日志输出，在源码中设置断点就可以debug
+</li>
+</ul>
+</div>
+</div>
 </div>
 
 
 
-<div id="outline-container-sec-5-3" class="outline-3">
-<h3 id="sec-5-3"><span class="section-number-3">5.3</span> 使用jvisualvm</h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-sec-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> 使用jvisualvm</h3>
+<div class="outline-text-3" id="text-6-3">
 <ul class="org-ul">
 <li>性能监控配置
 </li>
@@ -604,65 +753,65 @@ address=6666 jvm调试服务端监听端口6666
 </div>
 </div>
 
-<div id="outline-container-sec-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> 核心插件</h2>
-<div class="outline-text-2" id="text-6">
-</div><div id="outline-container-sec-6-1" class="outline-3">
-<h3 id="sec-6-1"><span class="section-number-3">6.1</span> jframe-watch</h3>
-<div class="outline-text-3" id="text-6-1">
-</div><div id="outline-container-sec-6-1-1" class="outline-4">
-<h4 id="sec-6-1-1"><span class="section-number-4">6.1.1</span> 功能</h4>
-</div>
-<div id="outline-container-sec-6-1-2" class="outline-4">
-<h4 id="sec-6-1-2"><span class="section-number-4">6.1.2</span> 配置</h4>
-</div>
-</div>
-
-<div id="outline-container-sec-6-2" class="outline-3">
-<h3 id="sec-6-2"><span class="section-number-3">6.2</span> jframe-upg</h3>
-</div>
-
-<div id="outline-container-sec-6-3" class="outline-3">
-<h3 id="sec-6-3"><span class="section-number-3">6.3</span> jframe-rcp</h3>
-</div>
-</div>
-
 <div id="outline-container-sec-7" class="outline-2">
-<h2 id="sec-7"><span class="section-number-2">7</span> 高级主题</h2>
+<h2 id="sec-7"><span class="section-number-2">7</span> 核心插件</h2>
 <div class="outline-text-2" id="text-7">
 </div><div id="outline-container-sec-7-1" class="outline-3">
-<h3 id="sec-7-1"><span class="section-number-3">7.1</span> 管理jframe</h3>
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> jframe-watch</h3>
+<div class="outline-text-3" id="text-7-1">
+</div><div id="outline-container-sec-7-1-1" class="outline-4">
+<h4 id="sec-7-1-1"><span class="section-number-4">7.1.1</span> 功能</h4>
+</div>
+<div id="outline-container-sec-7-1-2" class="outline-4">
+<h4 id="sec-7-1-2"><span class="section-number-4">7.1.2</span> 配置</h4>
+</div>
 </div>
 
 <div id="outline-container-sec-7-2" class="outline-3">
-<h3 id="sec-7-2"><span class="section-number-3">7.2</span> 扩展jframe</h3>
+<h3 id="sec-7-2"><span class="section-number-3">7.2</span> jframe-upg</h3>
+</div>
+
+<div id="outline-container-sec-7-3" class="outline-3">
+<h3 id="sec-7-3"><span class="section-number-3">7.3</span> jframe-rcp</h3>
 </div>
 </div>
 
 <div id="outline-container-sec-8" class="outline-2">
-<h2 id="sec-8"><span class="section-number-2">8</span> 源码分析</h2>
+<h2 id="sec-8"><span class="section-number-2">8</span> 高级主题</h2>
 <div class="outline-text-2" id="text-8">
 </div><div id="outline-container-sec-8-1" class="outline-3">
-<h3 id="sec-8-1"><span class="section-number-3">8.1</span> 启动/关闭</h3>
-</div>
-<div id="outline-container-sec-8-2" class="outline-3">
-<h3 id="sec-8-2"><span class="section-number-3">8.2</span> 加载插件</h3>
+<h3 id="sec-8-1"><span class="section-number-3">8.1</span> 管理jframe</h3>
 </div>
 
-<div id="outline-container-sec-8-3" class="outline-3">
-<h3 id="sec-8-3"><span class="section-number-3">8.3</span> 消息分发</h3>
-<div class="outline-text-3" id="text-8-3">
-</div><div id="outline-container-sec-8-3-1" class="outline-4">
-<h4 id="sec-8-3-1"><span class="section-number-4">8.3.1</span> 进程内分发</h4>
-<div class="outline-text-4" id="text-8-3-1">
+<div id="outline-container-sec-8-2" class="outline-3">
+<h3 id="sec-8-2"><span class="section-number-3">8.2</span> 扩展jframe</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> 源码分析</h2>
+<div class="outline-text-2" id="text-9">
+</div><div id="outline-container-sec-9-1" class="outline-3">
+<h3 id="sec-9-1"><span class="section-number-3">9.1</span> 启动/关闭</h3>
+</div>
+<div id="outline-container-sec-9-2" class="outline-3">
+<h3 id="sec-9-2"><span class="section-number-3">9.2</span> 加载插件</h3>
+</div>
+
+<div id="outline-container-sec-9-3" class="outline-3">
+<h3 id="sec-9-3"><span class="section-number-3">9.3</span> 消息分发</h3>
+<div class="outline-text-3" id="text-9-3">
+</div><div id="outline-container-sec-9-3-1" class="outline-4">
+<h4 id="sec-9-3-1"><span class="section-number-4">9.3.1</span> 进程内分发</h4>
+<div class="outline-text-4" id="text-9-3-1">
 <p>
 jframe.core.dispatch.DefDispatcher
 </p>
 </div>
 </div>
-<div id="outline-container-sec-8-3-2" class="outline-4">
-<h4 id="sec-8-3-2"><span class="section-number-4">8.3.2</span> 队列分发</h4>
-<div class="outline-text-4" id="text-8-3-2">
+<div id="outline-container-sec-9-3-2" class="outline-4">
+<h4 id="sec-9-3-2"><span class="section-number-4">9.3.2</span> 队列分发</h4>
+<div class="outline-text-4" id="text-9-3-2">
 <p>
 jframe.ext.dispatch.ActivemqDispatcher
 </p>
@@ -676,7 +825,7 @@ jframe.ext.dispatch.ActivemqDispatcher
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: dzh</p>
-<p class="date">Created: 2015-10-20 Tue 15:47</p>
+<p class="date">Created: 2017-02-21 Tue 19:23</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

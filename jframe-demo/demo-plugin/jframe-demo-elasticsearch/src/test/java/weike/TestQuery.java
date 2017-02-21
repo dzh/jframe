@@ -31,6 +31,7 @@ import com.google.gson.Gson;
  * @date Sep 29, 2016 2:46:23 PM
  * @since 1.0
  */
+@Ignore
 public class TestQuery {
     static Logger LOG = LoggerFactory.getLogger(TestQuery.class);
 
@@ -38,7 +39,7 @@ public class TestQuery {
 
     @Before
     public void init() {
-        HttpHost host = new HttpHost("121.199.167.226", 30002, "http");
+        HttpHost host = new HttpHost("127.0.0.1", 30002, "http");
         // HttpHost host = new HttpHost("127.0.0.1", 9002, "http");
         client = RestClient.builder(host).setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
             @Override
