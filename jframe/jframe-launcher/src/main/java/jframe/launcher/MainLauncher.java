@@ -144,7 +144,7 @@ public class MainLauncher extends DefLauncher {
                 if (stdT != null)
                     stdT.interrupt();
             }
-            LOG.info("Shutdown sub process Successfully! -{}", exit);
+            LOG.info("Shutdown sub process Successfully! exit-{}", exit);
         } while (exit != 0 && exit != 143);
     }
 

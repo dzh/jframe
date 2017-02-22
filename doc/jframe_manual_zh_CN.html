@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Jframe Manual</title>
-<!-- 2017-02-21 Tue 19:31 -->
+<!-- 2017-02-22 Wed 14:39 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="dzh" />
@@ -692,6 +692,14 @@ address=6666 jvm调试服务端监听端口6666
 <i>注: 以下说明以jframe/jframe-demo工程为例</i>
 </p>
 <ul class="org-ul">
+<li>思路
+<ul class="org-ul">
+<li>MainLauncher行为是读取配置文件启动Frame进程
+</li>
+<li>通过eclipse调式配置，直接启动FrameLauncher
+</li>
+</ul>
+</li>
 <li>构建工程，如cd jframe-demo | mvn install， 打包目录在jframe-demo/demo-release
 </li>
 <li>配置Eclipse Debug选项，如jframe-demo-debug
@@ -732,7 +740,7 @@ address=6666 jvm调试服务端监听端口6666
 </p>
 </div>
 </li>
-<li>上述配置配好，控制台会有日志输出，在源码中设置断点就可以debug
+<li>上述配置配好，点击debug按钮，控制台会有日志输出，在源码中需要的地方设置断点就可以。
 </li>
 </ul>
 </div>
@@ -747,11 +755,11 @@ address=6666 jvm调试服务端监听端口6666
 <ul class="org-ul">
 <li>性能监控配置
 </li>
-<li></li>
 </ul>
 </div>
 </div>
 </div>
+
 
 <div id="outline-container-sec-7" class="outline-2">
 <h2 id="sec-7"><span class="section-number-2">7</span> 核心插件</h2>
@@ -825,7 +833,7 @@ jframe.ext.dispatch.ActivemqDispatcher
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: dzh</p>
-<p class="date">Created: 2017-02-21 Tue 19:31</p>
+<p class="date">Created: 2017-02-22 Wed 14:39</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

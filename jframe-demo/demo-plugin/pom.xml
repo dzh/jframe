@@ -32,6 +32,5 @@
 		<module>jframe-example-plugin</module>
 		<module>jframe-example-plugin2</module>
 		<module>jframe-demo-elasticsearch</module>
-		
 	</modules>
 </project>

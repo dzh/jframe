@@ -3,7 +3,6 @@
  */
 package jframe.example.plugin;
 
-import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jframe.core.msg.Msg;
-import jframe.core.msg.TextMsg;
 import jframe.core.plugin.PluginException;
 import jframe.core.plugin.PluginSenderRecver;
 import jframe.core.plugin.annotation.Injector;
@@ -41,13 +39,14 @@ public class ExamplePlugin extends PluginSenderRecver {
 
     public void start() throws PluginException {
         super.start();
-        threads.scheduleAtFixedRate(() -> {
-            try {
-                send(new TextMsg().setType(randomType(3)).setValue(new Date().toString()));
-            } catch (Exception e) {
-                LOG.error(e.getMessage());
-            }
-        }, 0, 6, TimeUnit.SECONDS);
+        // threads.scheduleAtFixedRate(() -> {
+        // try {
+        // send(new TextMsg().setType(randomType(3)).setValue("ExamplePlugin-" +
+        // new Date().toString()));
+        // } catch (Exception e) {
+        // LOG.error(e.getMessage());
+        // }
+        // }, 0, 6, TimeUnit.SECONDS);
 
         threads.scheduleAtFixedRate(() -> {
             try {
