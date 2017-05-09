@@ -22,13 +22,24 @@
 -Dcom.sun.management.jmxremote.local.only=false
 
 #jvm
-#-server
--Xms64M
--Xmx64M
--Xmn50M
+#-client
+-server
+-XX:+TieredCompilation
+#-XX:+PrintCompilation
+#-XX:ReservedCodeCacheSize=
+#-XX:InitialCodeCacheSize=
+#-XX:CompileThreshold=10000
+
+-Xms128M
+-Xmx128M
+-Xmn100M
 -XX:PermSize=32M
--XX:MaxPermSize=64M
--XX:SurvivorRatio=9
+-XX:MaxPermSize=128M
+#-XX:InitialSurvivorRatio=8
+#-XX:SurvivorRatio=9
+#-XX:TargetSurvivorRatia=
+#-XX:InitialTenuringThreshold=7
+#-XX:MaxTenuringThredhold=15
 -XX:+DisableExplicitGC
 -XX:+HeapDumpOnOutOfMemoryError
 #-Xss4M
@@ -36,7 +47,7 @@
 #-XX:NewSize=n
 #-XX:NewRatio=
 #-Xverify:none
--XstartOnFirstThread
+#-XstartOnFirstThread
 #-XX:ThreadStackSize=256K
 #-XX:HeapDumpPath=
 #-Xdump:system:events=throw,filter=java/lang/NullPointerException#com/ibm/example/Example.bad,range=2..4
@@ -45,28 +56,67 @@
 #-Xbootclasspath
 #-Xbootclasspath/p
 #-Xbootclasspath/a
+
 #-Xnoclassgc
 #-XX:+PrintGCTimeStamps
-#-XX:+PrintGCDetails
+-XX:+PrintGCDateStamps
+-XX:+PrintGCDetails
 #-verbose: gc、class、jni
-#-verbose:gc
+-verbose:gc
 #-Xint
-#-Xloggc
+-Xloggc:${app.home}/log/gc.log
+#-XX:+PrintGCApplicationStoppedTime
 #-XX:GCTimeRatio=16
-#-XX:MaxTenuringThreshold=7
-#-XX:+HeapDumpBeforeFullGC
-#-XX:+HeapDumpAfterFullGC
+#-XX:+UseGCLogfileRotation
+#-XX:+NumberOfGCLogfiles=N
+-XX:+PrintTenuringDistribution
+-XX:+HeapDumpBeforeFullGC
+-XX:+HeapDumpAfterFullGC
+#-XX:+GCTimeLimit=98
+#-XX:+GCHeapFreeLimit=2
 
+#-XX:-UseTLAB
+#-XX:MinTLABSize=
+#-XX:TLABSize=
+#-XX:-ResizeTLAB
+#-XX:TLABWasteTargetPercent=N
+#-XX:TLABWasteIncrement=N
+
+## throughput
+#-XX:GCTimeRatio=99
+#-XX:MaxGCPauseMillis=50
+
+## CMS
 -XX:+UseConcMarkSweepGC
 #-XX:+CMSPermGenSweepingEnabled
 -XX:+CMSParallelRemarkEnabled
 -XX:+UseCMSCompactAtFullCollection
 -XX:+CMSClassUnloadingEnabled
 -XX:+UseParNewGC
--XX:CMSInitiatingOccupancyFraction=80
+-XX:CMSInitiatingOccupancyFraction=60
+#-XX:UseCMSInitiatingOccupancyOnly=true
+#-XX:ConcGCThreads=2
+
+## jdk7
+#-XX:StringTableSize=60013
+#-XX:+PrintStringTableStatistics
+
+## jdk8
+#-XX:MetaspaceSize
+#-XX:MaxMetaspaceSize
+#-XX:MinMetaspaceFreeRatio
+#-XX:MaxMetaspaceFreeRatio
+## g1
+#-XX:MaxGCPauseMillis=200
+#-XX:InitiatingHeapOccupancyPercent=45
+#-XX:G1MixedGCCountTarget=8
+#-XX:ConcGCThreads=1
+#-XX:G1HeapRegionSize=
+#-XX:G1MixedGCLiveThresholdPercent=85
+#-XX:G1HeapWastePercent=
 
 #debug
-#-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=6000,server=y,suspend=n
+-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=6000,server=y,suspend=n
 
 #default dll path
 -Djava.library.path=${app.home}/lib

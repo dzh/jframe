@@ -124,7 +124,9 @@ public class SwtPlugin extends PluginSenderRecver {
 
         public void run() {
             try {
-                Display display = Display.getDefault();
+                Display display = Display.getCurrent();
+                if (display == null)
+                    display = Display.getDefault();
                 display.addFilter(SWT.Close, new Listener() {
                     public void handleEvent(Event event) {
                         event.doit = false;

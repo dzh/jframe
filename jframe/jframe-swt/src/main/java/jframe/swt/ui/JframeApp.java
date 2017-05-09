@@ -271,12 +271,18 @@ public class JframeApp {
     }
 
     public void dispose() {
-        setDisposed(true);
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
+        if (shell != null) {
+            shell.getDisplay().syncExec(new Runnable() {
+                public void run() {
+                    setDisposed(true);
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                    }
+                    shell.close();
+                }
+            });
         }
-        shell.close();
     }
 
     public boolean isDisposed() {
