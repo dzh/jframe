@@ -36,3 +36,7 @@ jframe-demo/demo-release/plugin/
 jframe-demo/demo-release/temp/
 jframe-demo/demo-release/log/
 jframe-demo/demo-release/conf/cache/
+
+# idea
+*.iml
+.idea/

@@ -29,6 +29,7 @@
 #-XX:ReservedCodeCacheSize=
 #-XX:InitialCodeCacheSize=
 #-XX:CompileThreshold=10000
+-XX:NativeMemoryTracking=summary
 
 -Xms128M
 -Xmx128M
@@ -40,7 +41,7 @@
 #-XX:TargetSurvivorRatia=
 #-XX:InitialTenuringThreshold=7
 #-XX:MaxTenuringThredhold=15
--XX:+DisableExplicitGC
+#-XX:+DisableExplicitGC
 -XX:+HeapDumpOnOutOfMemoryError
 #-Xss4M
 #-XX:MaxDirectMemorySize=64M
@@ -61,6 +62,7 @@
 #-XX:+PrintGCTimeStamps
 -XX:+PrintGCDateStamps
 -XX:+PrintGCDetails
+-XX:+PrintReferenceGC
 #-verbose: gc、class、jni
 -verbose:gc
 #-Xint
@@ -74,6 +76,11 @@
 -XX:+HeapDumpAfterFullGC
 #-XX:+GCTimeLimit=98
 #-XX:+GCHeapFreeLimit=2
+#-XX:SoftRefLRUPolicyMSPerMB=1000
+#-XX:+UseLargePages
+#-XX:LargePageSizeInBytes=2M
+#-XX:+UseCompressedOops
+#-XX:ParallelGCThreads
 
 #-XX:-UseTLAB
 #-XX:MinTLABSize=
@@ -86,6 +93,12 @@
 #-XX:GCTimeRatio=99
 #-XX:MaxGCPauseMillis=50
 
+## native space
+# off|summary|detail
+-XX:NativeMemoryTracking=summary
+#-XX:+PrintNMTStatistics
+#-XX:+UnlockDiagnosticVMOptions
+
 ## CMS
 -XX:+UseConcMarkSweepGC
 #-XX:+CMSPermGenSweepingEnabled
@@ -96,6 +109,7 @@
 -XX:CMSInitiatingOccupancyFraction=60
 #-XX:UseCMSInitiatingOccupancyOnly=true
 #-XX:ConcGCThreads=2
+#-XX:CMSFullGCsBeforeCompaction=0
 
 ## jdk7
 #-XX:StringTableSize=60013
