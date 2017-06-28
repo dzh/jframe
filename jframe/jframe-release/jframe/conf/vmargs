@@ -21,7 +21,7 @@
 #-Djava.security.policy=<policy file>
 -Dcom.sun.management.jmxremote.local.only=false
 
-#jvm
+#jit
 #-client
 -server
 -XX:+TieredCompilation
@@ -29,7 +29,7 @@
 #-XX:ReservedCodeCacheSize=
 #-XX:InitialCodeCacheSize=
 #-XX:CompileThreshold=10000
--XX:NativeMemoryTracking=summary
+#-XX:+CICompilerCount=
 
 -Xms128M
 -Xmx128M
@@ -38,14 +38,15 @@
 -XX:MaxPermSize=128M
 #-XX:InitialSurvivorRatio=8
 #-XX:SurvivorRatio=9
-#-XX:TargetSurvivorRatia=
+#-XX:TargetSurvivorRatio=10
 #-XX:InitialTenuringThreshold=7
 #-XX:MaxTenuringThredhold=15
 #-XX:+DisableExplicitGC
 -XX:+HeapDumpOnOutOfMemoryError
-#-Xss4M
-#-XX:MaxDirectMemorySize=64M
-#-XX:NewSize=n
+-XX:HeapDumpPath=${app.home}/temp
+#-XX:MaxDirectMemorySize=512M
+#-XX:NewSize=
+#-XX:MaxNewSize=
 #-XX:NewRatio=
 #-Xverify:none
 #-XstartOnFirstThread
@@ -57,30 +58,13 @@
 #-Xbootclasspath
 #-Xbootclasspath/p
 #-Xbootclasspath/a
-
-#-Xnoclassgc
-#-XX:+PrintGCTimeStamps
--XX:+PrintGCDateStamps
--XX:+PrintGCDetails
--XX:+PrintReferenceGC
-#-verbose: gc、class、jni
--verbose:gc
-#-Xint
--Xloggc:${app.home}/log/gc.log
-#-XX:+PrintGCApplicationStoppedTime
-#-XX:GCTimeRatio=16
-#-XX:+UseGCLogfileRotation
-#-XX:+NumberOfGCLogfiles=N
--XX:+PrintTenuringDistribution
 -XX:+HeapDumpBeforeFullGC
 -XX:+HeapDumpAfterFullGC
-#-XX:+GCTimeLimit=98
-#-XX:+GCHeapFreeLimit=2
-#-XX:SoftRefLRUPolicyMSPerMB=1000
 #-XX:+UseLargePages
 #-XX:LargePageSizeInBytes=2M
+#-XX:SoftRefLRUPolicyMSPerMB=1000
+#-XX:+StringTableSize=N
 #-XX:+UseCompressedOops
-#-XX:ParallelGCThreads
 
 #-XX:-UseTLAB
 #-XX:MinTLABSize=
@@ -89,9 +73,43 @@
 #-XX:TLABWasteTargetPercent=N
 #-XX:TLABWasteIncrement=N
 
-## throughput
+#thread
+#-Xss4M
+#-XX:-BiasedLocking
+
+# gc
+#-XX:+UseSerialGC
+#-XX:+UseParallelOldGC
+#-XX:+UseParallelGC
+
+# throughput
 #-XX:GCTimeRatio=99
 #-XX:MaxGCPauseMillis=50
+#-XX:-AggressiveHeap
+
+# gc log
+#-Xnoclassgc
+#-XX:+PrintGCTimeStamps
+-XX:+PrintGCDateStamps
+#-XX:+PrintGC
+-XX:+PrintGCDetails
+-XX:+PrintReferenceGC
+#-verbose: gc、class、jni
+-verbose:gc
+#-Xint
+-Xloggc:${app.home}/log/gc.log
+-XX:+UseGCLogFileRotation
+-XX:NumberOfGCLogFiles=7
+-XX:GCLongFileSize=100M
+#-XX:+PrintGCApplicationStoppedTime
+#-XX:GCTimeRatio=16
+#-XX:+GCTimeLimit=98
+#-XX:+GCHeapFreeLimit=2
+#-XX:+UseCompressedOops
+#-XX:ParallelGCThreads=2
+#-XX:+UseAdaptiveSizePolicy
+#-XX:+PrintAdaptiveSizePolicy
+-XX:+PrintTenuringDistribution
 
 ## native space
 # off|summary|detail
@@ -102,6 +120,7 @@
 ## CMS
 -XX:+UseConcMarkSweepGC
 #-XX:+CMSPermGenSweepingEnabled
+#-XX:CMSInitiatingPermOccupancyFraction=N
 -XX:+CMSParallelRemarkEnabled
 -XX:+UseCMSCompactAtFullCollection
 -XX:+CMSClassUnloadingEnabled
@@ -110,24 +129,45 @@
 #-XX:UseCMSInitiatingOccupancyOnly=true
 #-XX:ConcGCThreads=2
 #-XX:CMSFullGCsBeforeCompaction=0
+#-XX:+CMSIncrementalMode
+#-XX:CMSIncrementalModeSafetyFactor=N
+#-XX:+CMSIncrementalDutyCycle
+#-XX:CMSIncrementalDutyCycleMin=N
+#-XX:CMSIncrementalDutyCycleMax=N
 
 ## jdk7
 #-XX:StringTableSize=60013
 #-XX:+PrintStringTableStatistics
 
 ## jdk8
-#-XX:MetaspaceSize
-#-XX:MaxMetaspaceSize
+#-XX:MetaspaceSize=
+#-XX:MaxMetaspaceSize=
 #-XX:MinMetaspaceFreeRatio
 #-XX:MaxMetaspaceFreeRatio
+
 ## g1
+#-XX:+UseG1GC
 #-XX:MaxGCPauseMillis=200
-#-XX:InitiatingHeapOccupancyPercent=45
+#-XX:InitiatingHeapOccupancyPercent=50
 #-XX:G1MixedGCCountTarget=8
-#-XX:ConcGCThreads=1
+#-XX:ConcGCThreads=2
 #-XX:G1HeapRegionSize=
-#-XX:G1MixedGCLiveThresholdPercent=85
+#-XX:G1MixedGCLiveThresholdPercent=80
 #-XX:G1HeapWastePercent=
+
+# classloader
+#-XX:+AlwayslockClassLoader
+#-XX:StackTraceInThrowable
+
+#-XX:-EnableContented
+#-XX:-RestrictContended
+#-XX:+AggressiveOpts
+#-javaagent:path/name.jar
+
+#-XX:+FlightRecorder
+#-XX:+FlightRecorderOptions=name=name,defaultrecording=<true|false>,settings=path,delay=time,duration=time,filename=path,compress=<true|false>,maxage=time,maxsize=1M
+#-XX:+UnlockCommercialFeatures
+
 
 #debug
 -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=6000,server=y,suspend=n
