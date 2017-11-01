@@ -103,6 +103,7 @@ public class TestEhcache {
         Cache<Long, String> usesConfiguredInCache = cacheManager.getCache("usesConfiguredInCache", Long.class,
                 String.class);
         usesConfiguredInCache.put(1L, "one");
+        
         // assertThat(usesConfiguredInCache.get(1L), equalTo("one"));
 
         Cache<Long, String> usesDefaultSizeOfEngine = cacheManager.getCache("usesDefaultSizeOfEngine", Long.class,

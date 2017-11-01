@@ -18,12 +18,11 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 public class TestEviction {
 
     public void evictionTest() {
-        CacheConfiguration<Long, String> cacheConfiguration = CacheConfigurationBuilder
-                .newCacheConfigurationBuilder(Long.class, String.class, ResourcePoolsBuilder.heap(2L))
-                .withEvictionAdvisor(new OddKeysEvictionAdvisor<Long, String>()).build();
+        CacheConfiguration<Long, String> cacheConfiguration =
+                CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class, ResourcePoolsBuilder.heap(2L)).build();
+        // .withEvictionAdvisor(new OddKeysEvictionAdvisor<Long, String>()).build();
 
-        CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().withCache("cache", cacheConfiguration)
-                .build(true);
+        CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().withCache("cache", cacheConfiguration).build(true);
 
         Cache<Long, String> cache = cacheManager.getCache("cache", Long.class, String.class);
 
