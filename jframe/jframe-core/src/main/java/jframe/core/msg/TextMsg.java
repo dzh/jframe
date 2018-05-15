@@ -10,8 +10,10 @@ package jframe.core.msg;
  */
 public class TextMsg extends PluginMsg<String> {
 
-	public static PluginMsg<String> build(int type) {
-		return new TextMsg().setType(type);
-	}
+    public static TextMsg build(int type) {
+        TextMsg msg = new TextMsg();
+        msg.setType(type);
+        return msg;
+    }
 
 }

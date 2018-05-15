@@ -65,7 +65,6 @@ public class PluginUnit extends AbstractUnit {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.unit.Unit#start()
      */
     public void start() throws UnitException {
@@ -128,8 +127,8 @@ public class PluginUnit extends AbstractUnit {
             // create plugin
             for (PluginCase pc : pcMap.keySet()) {
                 Plugin p = _creator.createPlugin(pcMap.get(pc), pc);
-                if (p != null)
-                    pluginList.add(p);
+                // LOG.debug("plugin {}", p);
+                if (p != null) pluginList.add(p);
             }
         } finally {
             _creator.close();
@@ -139,7 +138,6 @@ public class PluginUnit extends AbstractUnit {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.unit.Unit#stop()
      */
     public void stop() throws UnitException {
@@ -154,7 +152,6 @@ public class PluginUnit extends AbstractUnit {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.unit.Unit#recvSig(jframe.core.signal.Signal)
      */
     public void recvSig(Signal sig) {

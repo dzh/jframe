@@ -3,6 +3,7 @@
  */
 package jframe.core.plugin;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jframe.core.plugin.loader.PluginClassLoader;
@@ -15,18 +16,18 @@ import jframe.core.plugin.loader.PluginClassLoader;
 @jframe.core.plugin.annotation.Plugin
 public class DefPlugin implements Plugin {
 
+    static Logger LOG = LoggerFactory.getLogger(DefPlugin.class);
+
     private PluginContext _context;
 
     private int _id;
 
     private PluginStatus _status = PluginStatus.DESTROY;
 
-    public DefPlugin() {
-    }
+    public DefPlugin() {}
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#getStatus()
      */
     public PluginStatus getStatus() {
@@ -39,7 +40,6 @@ public class DefPlugin implements Plugin {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#init(jframe.core.plugin.PluginContext)
      */
     public void init(PluginContext context) throws PluginException {
@@ -49,7 +49,6 @@ public class DefPlugin implements Plugin {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#getID()
      */
     public int getID() {
@@ -58,7 +57,6 @@ public class DefPlugin implements Plugin {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#getName()
      */
     public String getName() {
@@ -72,7 +70,6 @@ public class DefPlugin implements Plugin {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#getPluginClassLoader()
      */
     public PluginClassLoader getPluginClassLoader() {
@@ -85,38 +82,34 @@ public class DefPlugin implements Plugin {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#start()
      */
     public void start() throws PluginException {
-        logInfo("Plugin " + getName() + " starting.");
+        LOG.info("start plugin {}", getName());
         setStatus(PluginStatus.START);
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#stop()
      */
     public void stop() throws PluginException {
-        logInfo("Plugin " + getName() + " stopping.");
+        LOG.info("stop plugin {}", getName());
         setStatus(PluginStatus.STOP);
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#destroy()
      */
     public void destroy() throws PluginException {
-        logInfo("Plugin " + getName() + " destroying.");
+        LOG.info("destroy plugin {}", getName());
         setStatus(PluginStatus.DESTROY);
         getPluginClassLoader().dispose();
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.plugin.Plugin#setID(int)
      */
     public void setID(int id) {

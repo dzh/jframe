@@ -35,7 +35,6 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#init(jframe.core.conf.Config)
      */
     public boolean init(Config conf) {
@@ -62,7 +61,6 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#start()
      */
     public void start() {
@@ -77,7 +75,7 @@ public class DefFrame implements Frame {
         _gate.close();
 
         final UnitManager um = this._um;
-        new Thread("DefFrameStartThread") {
+        new Thread("DefFrameStart") {
             public void run() {
                 try {
                     um.start();
@@ -92,14 +90,11 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#stop()
      */
     public void stop() {
         synchronized (_lock) {
-            if (_status == FRAME_STATUS.STOP) {
-                return;
-            }
+            if (_status == FRAME_STATUS.STOP) { return; }
             _status = FRAME_STATUS.STOP;
         }
         LOG.debug("DefFrame is stopping");
@@ -136,7 +131,6 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#restart()
      */
     public void restart() {
@@ -151,7 +145,6 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#broadcast(jframe.core.signal.Signal)
      */
     public void broadcast(Signal sig) {
@@ -162,7 +155,6 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#register(jframe.core.unit.Unit)
      */
     public void register(Unit u) {
@@ -175,7 +167,6 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#unregister(jframe.core.unit.Unit)
      */
     public void unregister(Unit u) {
@@ -188,7 +179,6 @@ public class DefFrame implements Frame {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.core.Frame#getConfig()
      */
     public Config getConfig() {

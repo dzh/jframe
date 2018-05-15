@@ -25,7 +25,6 @@ public class FrameLauncher extends DefLauncher {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.launcher.api.Launcher#launch(jframe.launcher.api.Config)
      */
     public void launch(Config config) throws LauncherException {
@@ -43,7 +42,7 @@ public class FrameLauncher extends DefLauncher {
         FrameFactory ff = getFrameFactory();
         final Frame frame = ff.createFrame(frameConfig);
 
-        Runtime.getRuntime().addShutdownHook(new Thread("FrameShutdownhookThread") {
+        Runtime.getRuntime().addShutdownHook(new Thread("FrameShutdownHook") {
             public void run() {
                 try {
                     if (frame != null) {
@@ -51,10 +50,10 @@ public class FrameLauncher extends DefLauncher {
                         new File(pid).deleteOnExit();
 
                         frame.stop();
-                        frame.waitForStop(0);
+                        // frame.waitForStop(0);
                     }
                 } catch (Exception e) {
-                    LOG.error("Shutdown Error:" + e.getMessage());
+                    LOG.error(e.getMessage(), e);
                 }
             }
         });

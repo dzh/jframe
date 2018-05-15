@@ -5,9 +5,6 @@ package jframe.launcher.api;
 
 import java.io.File;
 
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.LoggerContext;
 import jframe.launcher.util.VarProperties;
 
 /**
@@ -21,9 +18,9 @@ public abstract class DefLauncher implements Launcher {
 
     /*
      * (non-Javadoc)
-     * 
      * @see jframe.launcher.api.Launcher#load(java.lang.String)
      */
+    @Override
     public Config load(String file) throws LauncherException {
         File configFile = new File(file);
         assert configFile.exists() : "Not found config.properties";
@@ -37,8 +34,9 @@ public abstract class DefLauncher implements Launcher {
             VarProperties props = new VarProperties(System.getProperties());
             props.load(file);
             config = new DefConfig(props);
-            config.setConfig(Config.APP_HOME, props.getProperty(Config.APP_HOME));
-            config.setConfig(Config.LAUNCHER, props.getProperty(Config.LAUNCHER));
+            // config.setConfig(Config.APP_HOME, props.getProperty(Config.APP_HOME));
+            // config.setConfig(Config.LAUNCHER, props.getProperty(Config.LAUNCHER));
+            // config.setConfig(Config.START_TIME, props.getProperty(Config.LAUNCHER));
 
             // TODO verify variables in config.properties
             _config = config;
@@ -53,16 +51,19 @@ public abstract class DefLauncher implements Launcher {
     }
 
     private static final void stopLog() {
-        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-        loggerContext.stop();
+        // LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        // loggerContext.stop();
+        // TODO close
     }
 
+    @Override
     public void exit(int status) {
         _config = null;
         stopLog();
         System.exit(status);
     }
 
+    @Override
     public String name() {
         return getClass().getName();
     }

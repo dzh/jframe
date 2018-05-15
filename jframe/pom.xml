@@ -1,10 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cn</groupId>
+	<groupId>io.github.dzh</groupId>
 	<artifactId>jframe</artifactId>
-	<version>1.2.1</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<url>https://github.com/dzh/jframe</url>
+	<name>jframe</name>
+	<description>Java Plugin Framework</description>
+	<scm>
+		<url>https://github.com/dzh/jframe.git</url>
+	</scm>
+	<issueManagement>
+		<system>GitHub Issue Management</system>
+		<url>https://github.com/dzh/jframe/issues</url>
+	</issueManagement>
+
 	<modules>
 		<module>jframe-launcher</module>
 		<module>jframe-core</module>
@@ -13,49 +24,130 @@
 		<module>jframe-swt</module>
 	</modules>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<logback.version>1.1.2</logback.version>
-		<slf4j.version>1.7.5</slf4j.version>
-		<jframe.version>1.2.1</jframe.version>
+		<jdk.version>1.8</jdk.version>
 		<junit.version>4.12</junit.version>
-		<jmocket.version>1.23</jmocket.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<logback.version>1.1.2</logback.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>maven2-release</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+				</snapshotRepository>
+				<repository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.4</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<quiet>true</quiet>
+								</configuration>
+							</execution>
+						</executions>
+						<configuration>
+							<tags>
+								<tag>
+									<name>date</name>
+									<placement>t</placement>
+									<head>creation class date</head>
+								</tag>
+								<tag>
+									<name>mutable</name>
+									<placement>t</placement>
+									<head>mutable object</head>
+								</tag>
+								<tag>
+									<name>ThreadSafe</name>
+									<placement>t</placement>
+									<head>class is thread safe</head>
+								</tag>
+							</tags>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<useAgent>true</useAgent>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>cn</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>jframe-core</artifactId>
-				<version>${jframe.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>jframe-ext</artifactId>
-				<version>${jframe.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>jframe-launcher</artifactId>
-				<version>${jframe.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>jframe-release</artifactId>
-				<version>${jframe.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>jframe-swt</artifactId>
-				<version>${jframe.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jmockit</groupId>
-				<artifactId>jmockit</artifactId>
-				<version>${jmocket.version}</version>
+				<version>${project.version}</version>
+				<classifier>plugin</classifier>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -66,6 +158,7 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-simple</artifactId>
 				<version>${slf4j.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
@@ -86,14 +179,11 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
-				<version>2.4</version> <configuration> <outputDirectory>${session.executionRootDirectory}/jframe-release/jframe/lib/</outputDirectory> 
-				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -107,13 +197,20 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.20.1</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -122,20 +219,8 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jmockit</groupId>
-			<artifactId>jmockit</artifactId>
-			<scope>test</scope>
-		</dependency>
+		<!-- <dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> </dependency> <dependency> 
+			<groupId>ch.qos.logback</groupId> <artifactId>logback-core</artifactId> </dependency> -->
 	</dependencies>
 </project>

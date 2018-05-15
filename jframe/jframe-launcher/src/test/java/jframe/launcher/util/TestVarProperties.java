@@ -7,6 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author dzh
@@ -15,13 +17,15 @@ import org.junit.Test;
  */
 public class TestVarProperties {
 
+    static Logger LOG = LoggerFactory.getLogger(TestVarProperties.class);
+
     @Test
     public void testVarProperties() throws Exception {
         System.setProperty("app.home", "/home/dzh");
 
         VarProperties var = new VarProperties(System.getProperties());
-        var.load(TestVarProperties.class.getResourceAsStream("config.properties"));
-        System.out.println(var.toString());
+        var.load(TestVarProperties.class.getResourceAsStream("/config.properties"));
+        LOG.info(var.toString());
     }
 
     @Test
@@ -32,7 +36,7 @@ public class TestVarProperties {
         String var = null;
         while (m.find()) {
             var = m.group(1);
-            System.out.println(var.toString());
+            LOG.info("match {}", var);
         }
 
     }

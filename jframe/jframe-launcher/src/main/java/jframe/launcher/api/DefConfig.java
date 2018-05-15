@@ -44,7 +44,9 @@ public class DefConfig implements Config {
     }
 
     public String getConfig(String k) {
-        return _config.get(k);
+        String v = _config.get(k);
+        if (v == null) v = System.getProperty(k);
+        return v;
     }
 
     public String getConfig(String k, String defval) {

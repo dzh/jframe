@@ -47,8 +47,7 @@ public class ServiceContext {
     }
 
     public void regSvc(Service s) {
-        if (s == null)
-            return;
+        if (s == null) return;
 
         synchronized (_svcDef) {
             _svcDef.put(s.getId(), s);
@@ -63,8 +62,7 @@ public class ServiceContext {
      * @return
      */
     public Service getSvcById(String id) {
-        if (id == null)
-            return null;
+        if (id == null) return null;
         synchronized (_svcDef) {
             return _svcDef.get(id);
         }
@@ -77,13 +75,11 @@ public class ServiceContext {
      * @return
      */
     public Service getSvcByName(String name) {
-        if (name == null || "".equals(name))
-            return null;
+        if (name == null || "".equals(name)) return null;
 
         synchronized (_svcDef) {
             for (Service svc : _svcDef.values()) {
-                if (svc.getName().equals(name))
-                    return svc;
+                if (svc.getName().equals(name)) return svc;
             }
         }
         return null;
@@ -96,22 +92,19 @@ public class ServiceContext {
     }
 
     public void regSvcRef(String id, Class<?> clazz) {
-        if (id == null || clazz == null)
-            return;
+        if (id == null || clazz == null) return;
         synchronized (_svcRef) {
             List<Class<?>> ref = _svcRef.get(id);
             if (ref == null) {
                 ref = new LinkedList<Class<?>>();
                 _svcRef.put(id, ref);
             }
-            if (!ref.contains(clazz))
-                ref.add(clazz);
+            if (!ref.contains(clazz)) ref.add(clazz);
         }
     }
 
     public void unregSvcRef(String id, Class<?> clazz) {
-        if (id == null || clazz == null)
-            return;
+        if (id == null || clazz == null) return;
 
         synchronized (_svcRef) {
             List<Class<?>> ref = _svcRef.get(id);
@@ -135,8 +128,7 @@ public class ServiceContext {
      */
     @Deprecated
     public void attachService(Service svc, Class<?> clazz, boolean reg) {
-        if (svc == null || clazz == null)
-            return;
+        if (svc == null || clazz == null) return;
         for (Field f : clazz.getDeclaredFields()) {
             if (Modifier.isStatic(f.getModifiers()) && f.isAnnotationPresent(InjectService.class)
                     && svc.getId().equals(f.getAnnotation(InjectService.class).id())) {
@@ -158,11 +150,9 @@ public class ServiceContext {
      * @param reg
      */
     public void attachService(Service svc, Field f, boolean reg) {
-        if (svc == null || f == null)
-            return;
+        if (svc == null || f == null) return;
 
-        if (hasInjected(svc, f.getDeclaringClass()))
-            return;
+        if (hasInjected(svc, f.getDeclaringClass())) return;
 
         try {
             f.setAccessible(true);
@@ -178,13 +168,11 @@ public class ServiceContext {
     }
 
     boolean hasInjected(Service svc, Class<?> clazz) {
-        if (svc == null || clazz == null)
-            return false;
+        if (svc == null || clazz == null) return false;
 
         synchronized (_svcRef) {
             List<Class<?>> list = _svcRef.get(svc.getId());
-            if (list == null)
-                return false;
+            if (list == null) return false;
             return list.contains(clazz);
         }
     }
@@ -198,8 +186,7 @@ public class ServiceContext {
      *            unregSvcRef()
      */
     public void detachService(Service svc, Class<?> clazz, boolean unreg) {
-        if (svc == null || clazz == null)
-            return;
+        if (svc == null || clazz == null) return;
         for (Field f : clazz.getDeclaredFields()) {
             if (Modifier.isStatic(f.getModifiers()) && f.isAnnotationPresent(InjectService.class)
                     && svc.getId().equals(f.getAnnotation(InjectService.class).id())) {
@@ -207,7 +194,7 @@ public class ServiceContext {
                     f.setAccessible(true);
                     f.set(null, null);
                 } catch (Exception e) {
-                    LOG.error(e.getMessage());
+                    LOG.error(e.getMessage(), e);
                 }
                 break;
             }
@@ -227,8 +214,7 @@ public class ServiceContext {
      */
     public void detachService(String id) {
         Service svc = getSvcById(id);
-        if (svc == null)
-            return;
+        if (svc == null) return;
 
         try {
             synchronized (_svcRef) {
@@ -240,10 +226,14 @@ public class ServiceContext {
             }
         } finally {
             try {
-                Service.invokeServiceMethod(svc.getSingle(), Stop.class);
-            } catch (Exception e) {
-                LOG.warn("Stop service {}!", svc.toString());
-            }
+                if (svc.getSingle(false) != null) {
+                    try {
+                        Service.invokeServiceMethod(svc.getSingle(), Stop.class);
+                    } catch (Exception e) {
+                        LOG.warn("Stop service {}!", svc.toString());
+                    }
+                }
+            } catch (ServiceException e) {}
         }
     }
 
