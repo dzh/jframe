@@ -9,21 +9,20 @@
 	<artifactId>jframe-elasticsearch</artifactId>
 
 	<properties>
-		<es.version>2.4.0</es.version>
-		<es.client.version>5.0.0-beta1</es.client.version>
+		<es.version>6.2.4</es.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch</artifactId>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-client</artifactId>
 			<version>${es.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>rest</artifactId>
-			<version>${es.client.version}</version>
+			<artifactId>transport</artifactId>
+			<version>${es.version}</version>
 		</dependency>
 	</dependencies>
 </project>

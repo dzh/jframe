@@ -54,10 +54,10 @@ public class YunsmsServiceImpl implements YunsmsService {
     public boolean send(String id, String mobile, String content) {
         String data;
         try {
-            data = "uid=" + _config.getConf(id, YunsmsConfig.Uid) + "&pwd=" + _config.getConf(id, YunsmsConfig.Pwd)
-                    + "&mobile=" + mobile + "&content=" + java.net.URLEncoder.encode(content, "utf-8") + "&encode=utf8";
+            data = "uid=" + _config.getConf(id, YunsmsConfig.Uid) + "&pwd=" + _config.getConf(id, YunsmsConfig.Pwd) + "&mobile=" + mobile
+                    + "&content=" + java.net.URLEncoder.encode(content, "utf-8") + "&encode=utf8";
 
-            String res = _http.<String>send(id, _config.getConf(id, YunsmsConfig.HttpTx), data, null, HTTP_PARAS);
+            String res = _http.send(id, _config.getConf(id, YunsmsConfig.HttpTx), data, null, HTTP_PARAS);
             LOG.debug("id-{} mobile-{} res-{}", id, mobile, res);
 
             return "100".equals(res) ? true : false;

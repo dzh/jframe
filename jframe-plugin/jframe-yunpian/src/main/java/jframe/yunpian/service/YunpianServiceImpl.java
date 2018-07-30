@@ -11,6 +11,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
 import jframe.core.plugin.annotation.Injector;
@@ -72,8 +76,7 @@ public class YunpianServiceImpl implements YunpianService {
 
     @Override
     public Map<String, String> send(String text, String extend, String uid, String callback, String... mobile) {
-        if (mobile == null || mobile.length == 0)
-            return Collections.emptyMap();
+        if (mobile == null || mobile.length == 0) return Collections.emptyMap();
 
         String httpid = _config.getConf(null, YunpianConfig.HttpId, "yunpian");
         String path = _config.getConf(null, YunpianConfig.UrlSend);
@@ -84,8 +87,7 @@ public class YunpianServiceImpl implements YunpianService {
             Map<String, String> reqPara = new HashMap<String, String>();
             reqPara.put(YunpianConfig.Apikey, _config.getConf(null, YunpianConfig.Apikey));
             reqPara.put(YunpianConfig.Text, text);
-            if (extend != null)
-                reqPara.put(YunpianConfig.Extend, extend);
+            if (extend != null) reqPara.put(YunpianConfig.Extend, extend);
             if (uid != null) {
                 reqPara.put(YunpianConfig.Uid, uid);
             }
@@ -106,8 +108,8 @@ public class YunpianServiceImpl implements YunpianService {
             reqPara.put(YunpianConfig.Mobile, buf.toString());
 
             try {
-                Map<String, String> rsp = _http.<HashMap<String, String>> send(httpid, path,
-                        HttpUtil.format(reqPara, charset), null, HTTP_PARAS);
+                String rspStr = _http.send(httpid, path, HttpUtil.format(reqPara, charset), null, HTTP_PARAS);
+                Map<String, String> rsp = GSON.fromJson(rspStr, new TypeToken<HashMap<String, String>>() {}.getType());
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(rsp.toString());
                 }
@@ -119,6 +121,8 @@ public class YunpianServiceImpl implements YunpianService {
         }
         return Collections.emptyMap();
     }
+
+    static final Gson GSON = new GsonBuilder().create();
 
     @Override
     public Map<String, String> send(String text, String... mobile) {

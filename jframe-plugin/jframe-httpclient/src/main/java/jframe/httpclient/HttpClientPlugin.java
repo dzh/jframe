@@ -12,6 +12,4 @@ import jframe.core.plugin.DefPlugin;
  */
 public class HttpClientPlugin extends DefPlugin {
 
-	
-	
 }

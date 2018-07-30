@@ -24,5 +24,6 @@ public interface AliyunField {
     public static final String K_api_version = "api.version";
     public static final String K_securityToken = "securityToken";
     public static final String K_expiration = "expiration";
+    public static final String K_durationSeconds = "durationSeconds";
 
 }

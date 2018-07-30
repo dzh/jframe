@@ -39,6 +39,7 @@
 		<module>jframe-wx</module>
 		<module>jframe-freemarker</module>
 		<module>jframe-elasticsearch</module>
+		<module>jframe-redisson</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

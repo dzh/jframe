@@ -10,6 +10,6 @@ import jframe.core.plugin.DefPlugin;
  * @date Sep 29, 2016 7:37:06 PM
  * @since 1.0
  */
-public class JElasticSearchPlugin extends DefPlugin {
+public class ElasticSearchPlugin extends DefPlugin {
     
 }
