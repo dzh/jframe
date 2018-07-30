@@ -92,13 +92,10 @@ public class JedisServiceImpl implements JedisService {
                 // continue;
                 // }
                 int port = conf.getConfInt(h, "port", "6379");
-
                 int timeout = conf.getConfInt(h, "timeout", "2000");
-                if (port == 0) {
-                    _jedis.put(h, new JedisPool(config, ip, Protocol.DEFAULT_PORT, timeout));
-                } else {
-                    _jedis.put(h, new JedisPool(config, ip, port, timeout));
-                }
+                String passwd = conf.getConf(h, "passwd");
+
+                _jedis.put(h, new JedisPool(config, ip, port, timeout, passwd, Protocol.DEFAULT_DATABASE));
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
                 continue;
