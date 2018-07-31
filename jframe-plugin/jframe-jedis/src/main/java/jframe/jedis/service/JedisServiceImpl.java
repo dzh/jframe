@@ -41,7 +41,7 @@ public class JedisServiceImpl implements JedisService {
     // groupId
     private Map<String, JedisPool> _jedis = new HashMap<String, JedisPool>();
 
-    public JedisPoolConfig init(File jedis) throws Exception {
+    public PropsConf init(File jedis) throws Exception {
         if (!jedis.exists()) {
             LOG.error("Not found jedis file {}", jedis.getAbsolutePath());
             throw new FileNotFoundException("jedis file not found!" + jedis.getAbsolutePath());
@@ -49,17 +49,17 @@ public class JedisServiceImpl implements JedisService {
         return init(new FileInputStream(jedis), true);
     }
 
-    public JedisPoolConfig init(InputStream jedis, boolean closeIn) throws Exception {
+    public PropsConf init(InputStream jedis, boolean closeIn) throws Exception {
         conf.init(jedis);
-        return createPoolConfig();
+        return conf;
     }
 
-    JedisPoolConfig createPoolConfig() {
+    JedisPoolConfig createPoolConfig(PropsConf conf, String id) {
         JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(200);
-        config.setMaxIdle(10);
-        config.setMinIdle(1);
-        config.setMaxWaitMillis(3000L);
+        config.setMaxTotal(conf.getConfInt(id, "redis.conn.maxTotal", "200"));
+        config.setMaxIdle(conf.getConfInt(id, "redis.conn.maxIdle", "100"));
+        config.setMinIdle(conf.getConfInt(id, "redis.conn.minIdle", "1"));
+        config.setMaxWaitMillis(conf.getConfLong(id, "redis.conn.maxWaitMillis", "3000"));
         config.setTestOnBorrow(true);
         return config;
     }
@@ -81,7 +81,7 @@ public class JedisServiceImpl implements JedisService {
         }
     }
 
-    public void start(JedisPoolConfig config) {
+    public void start(PropsConf conf) {
         LOG.info("JedisServiceImpl starting");
         String[] hosts = conf.getGroupIds();
         for (String h : hosts) {
@@ -95,6 +95,7 @@ public class JedisServiceImpl implements JedisService {
                 int timeout = conf.getConfInt(h, "timeout", "2000");
                 String passwd = conf.getConf(h, "passwd").trim();
 
+                JedisPoolConfig config = createPoolConfig(conf, h);
                 _jedis.put(h, new JedisPool(config, ip, port, timeout, "".equals(passwd) ? null : passwd, Protocol.DEFAULT_DATABASE));
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
