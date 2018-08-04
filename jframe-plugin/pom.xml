@@ -40,6 +40,7 @@
 		<module>jframe-freemarker</module>
 		<module>jframe-elasticsearch</module>
 		<module>jframe-redisson</module>
+		<module>jframe-qcloud</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
