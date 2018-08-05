@@ -67,7 +67,7 @@ class QCloudServiceImpl implements QCloudService {
      * @see jframe.qcloud.service.QCloudService#getFederationToken()
      */
     @Override
-    public Map<String, String> getFederationToken(String id) {
+    public Map<String, Object> getFederationToken(String id) {
         TreeMap<String, Object> config = new TreeMap<String, Object>();
         config.put("SecretId", conf.getConf(id, QCloudConst.SECRET_ID));
         config.put("SecretKey", conf.getConf(id, QCloudConst.SECRET_KEY));
@@ -95,13 +95,16 @@ class QCloudServiceImpl implements QCloudService {
         /* generateUrl 方法生成请求串, 可用于调试使用 */
         LOG.info("GetFederationToken - {}", module.generateUrl("GetFederationToken", params));
 
-        Map<String, String> token = new HashMap<>(3, 1);
+        Map<String, Object> token = new HashMap<>(4, 1);
         try {
             /* call 方法正式向指定的接口名发送请求，并把请求参数 params 传入，返回即是接口的请求结果。 */
             String result = module.call("GetFederationToken", params);
             JSONObject json_result = new JSONObject(result);
             if (json_result.getInt("code") == 0) {
-                JSONObject credentials = json_result.getJSONObject("data").getJSONObject("credentials");
+                JSONObject data = json_result.getJSONObject("data");
+                JSONObject credentials = data.getJSONObject("credentials");
+
+                token.put("expiredTime", data.getLong("expiredTime"));
                 token.put("sessionToken", credentials.getString("sessionToken"));
                 token.put("tmpSecretId", credentials.getString("tmpSecretId"));
                 token.put("tmpSecretKey", credentials.getString("tmpSecretKey"));

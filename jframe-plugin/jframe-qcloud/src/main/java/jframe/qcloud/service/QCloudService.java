@@ -12,6 +12,6 @@ import jframe.core.plugin.annotation.Service;
 @Service(clazz = "jframe.qcloud.service.QCloudServiceImpl", id = "jframe.service.qcloud")
 public interface QCloudService {
 
-    Map<String, String> getFederationToken(String id);
+    Map<String, Object> getFederationToken(String id);
 
 }
