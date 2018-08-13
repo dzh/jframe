@@ -94,9 +94,10 @@ public class JedisServiceImpl implements JedisService {
                 int port = conf.getConfInt(h, "port", "6379");
                 int timeout = conf.getConfInt(h, "timeout", "2000");
                 String passwd = conf.getConf(h, "passwd").trim();
+                int database = conf.getConfInt(h, "database", String.valueOf(Protocol.DEFAULT_DATABASE));// 0
 
                 JedisPoolConfig config = createPoolConfig(conf, h);
-                _jedis.put(h, new JedisPool(config, ip, port, timeout, "".equals(passwd) ? null : passwd, Protocol.DEFAULT_DATABASE));
+                _jedis.put(h, new JedisPool(config, ip, port, timeout, "".equals(passwd) ? null : passwd, database));
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
                 continue;
