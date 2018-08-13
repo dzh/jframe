@@ -87,7 +87,7 @@ public class JedisServiceImpl implements JedisService {
         for (String h : hosts) {
             if ("".equals(h)) continue;
             try {
-                String ip = conf.getConf(h, "ip");
+                String ip = conf.getConf(h, "ip", "127.0.0.1");
                 // if ("127.0.0.1".equals(ip)) {
                 // continue;
                 // }
