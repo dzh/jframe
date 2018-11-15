@@ -1,7 +1,5 @@
 package io.rong.util;
 
-import io.rong.models.SdkHttpResult;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,6 +17,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import io.rong.models.SdkHttpResult;
 
 public class HttpUtil {
 

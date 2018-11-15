@@ -44,6 +44,11 @@
 	</modules>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>jframe-ext</artifactId>
+				<version>${jframe.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -80,17 +85,15 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> 
-				<version>2.8</version> <executions> <execution> <id>copy-lib</id> <phase>package</phase> 
-				<goals> <goal>copy-dependencies</goal> </goals> <configuration> <outputDirectory>${session.executionRootDirectory}/release/lib/</outputDirectory> 
-				<overWriteReleases>true</overWriteReleases> <overWriteSnapshots>true</overWriteSnapshots> 
-				<excludeTransitive>true</excludeTransitive> <excludeScope>provided</excludeScope> 
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> <version>2.8</version> 
+				<executions> <execution> <id>copy-lib</id> <phase>package</phase> <goals> <goal>copy-dependencies</goal> </goals> <configuration> 
+				<outputDirectory>${session.executionRootDirectory}/release/lib/</outputDirectory> <overWriteReleases>true</overWriteReleases> 
+				<overWriteSnapshots>true</overWriteSnapshots> <excludeTransitive>true</excludeTransitive> <excludeScope>provided</excludeScope> 
 				</configuration> </execution> </executions> </plugin> -->
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -155,11 +158,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jframe-core</artifactId>
-			<version>${jframe.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>jframe-ext</artifactId>
 			<version>${jframe.version}</version>
 		</dependency>
 	</dependencies>
