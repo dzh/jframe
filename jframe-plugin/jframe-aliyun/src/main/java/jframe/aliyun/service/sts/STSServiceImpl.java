@@ -58,7 +58,7 @@ public class STSServiceImpl implements STSService, AliyunField {
 
         try {
             String file = plugin.getConfig(FILE_ALISTS, plugin.getConfig(Config.APP_CONF) + "/alists.properties");
-            if (!new File(file).exists()) { throw new FileNotFoundException("Not found file.oss " + file); }
+            if (!new File(file).exists()) { throw new FileNotFoundException("Not found sts " + file); }
             _config.init(file);
             for (String id : _config.getGroupIds()) {
                 // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
