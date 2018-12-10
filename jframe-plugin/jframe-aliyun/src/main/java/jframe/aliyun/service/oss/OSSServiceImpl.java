@@ -46,7 +46,7 @@ public class OSSServiceImpl implements OSSService {
 
         try {
             String file = plugin.getConfig(FILE_OSS, plugin.getConfig(Config.APP_CONF) + "/oss-config.properties");
-            if (!new File(file).exists()) { throw new FileNotFoundException("Not found oss " + file); }
+            if (!new File(file).exists()) { throw new FileNotFoundException("not found " + file); }
             _config.init(file);
             for (String id : _config.getGroupIds()) {
                 // TODO

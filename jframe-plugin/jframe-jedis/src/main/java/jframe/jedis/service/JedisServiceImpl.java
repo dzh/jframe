@@ -60,7 +60,7 @@ public class JedisServiceImpl implements JedisService {
         config.setMaxIdle(conf.getConfInt(id, "redis.conn.maxIdle", "100"));
         config.setMinIdle(conf.getConfInt(id, "redis.conn.minIdle", "1"));
         config.setMaxWaitMillis(conf.getConfLong(id, "redis.conn.maxWaitMillis", "3000"));
-        config.setTestOnBorrow(true);
+        // config.setTestOnReturn(true);
         return config;
     }
 
@@ -182,6 +182,7 @@ public class JedisServiceImpl implements JedisService {
      * dono.pay.service.JedisService#recycleJedis(redis.clients.jedis.Jedis)
      */
     @Override
+    @Deprecated
     public void recycleJedis(Jedis jedis) {
         recycleJedis(null, jedis);
     }
@@ -192,6 +193,7 @@ public class JedisServiceImpl implements JedisService {
      * redis.clients.jedis.Jedis)
      */
     @Override
+    @Deprecated
     public void recycleJedis(String name, Jedis jedis) {
         if (conf == null || _jedis == null || name == null) return;
         JedisPool pool = _jedis.get(name);
