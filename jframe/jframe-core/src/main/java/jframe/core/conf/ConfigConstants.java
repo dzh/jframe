@@ -13,12 +13,12 @@ import jframe.launcher.api.LauncherConstants;
 public interface ConfigConstants extends LauncherConstants {
 
     /********************** Frame ***********************/
-    String APP_CONF = "app.conf"; // application configuration directory
-    String APP_LIB = "app.lib"; // application core library directory
-    String APP_PLUGIN = "app.plugin"; // application plug-in directory
-    String APP_UPDATE = "app.update"; // application update directory
-    String APP_CACHE = "app.cache"; // application cache directory
-    String APP_TEMP = "app.temp"; // application temporary directory
+    String APP_CONF = "app.conf"; // configuration directory
+    String APP_LIB = "app.lib"; // core library directory
+    String APP_PLUGIN = "app.plugin"; // plug-in directory
+    String APP_UPDATE = "app.update"; // update directory
+    String APP_CACHE = "app.cache"; // cache directory
+    String APP_TMP = "app.tmp"; // temporary directory
     String FILE_UNITS = "units.xml"; // units file path
     String ARG_CLEAN = "clean"; // clean cache
     String APP_NAME = "app.name";

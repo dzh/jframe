@@ -1,10 +1,38 @@
 jframe
-======
-Java Plug-in Framework
+===================================
+Java插件框架
 
 消息分发的效率低，
 订阅的效率高，把收到的消息只給感興趣的（編譯時、運行時綁定的問題），訂閱都動態性如何解決
 
+## 设计目标
+- 实现通用的启动框架, 适用于服务端和桌面java程序
+- 通过插件实现组件化编程, 有利于开发维护和部署升级, 支持热部署
+- 内建消息通讯, 实现服务化, 有助于大规模团队开发
+
+## 特性列表
+### [通用的程序启动器](jframe-launcher/README.md)
+- 构建在jframe-launcher上的插件工程一般结构
+
+```
+    - jframe project
+        - bin                   jframe.sh or other executable scripts
+        - conf                  configuration files
+            - config.properties core configuration
+            - vmargs            jvm arguments               
+        - lib                   common jar libraries
+            - *.jar
+        - log                   log directory
+        - plugin                plug-ins
+            - *-plugin.jar      
+        - tmp                   temporary or runtime files
+            - .cache            plug-in caches
+            - *.pid             daemon|app.pid
+        - update                directory for plug-ins to be updated
+```
+- config.properties配置说明
+
+## 工程
 ### jframe-core
 * 设计原则
 	* 异步运行、同步启停
@@ -45,10 +73,12 @@ Java Plug-in Framework
 * 共享
 * 分发
 
-###
-signal基于frame，msg基于plugin
-
-优化
+## TODO
+### 待开发
+- signal基于frame，msg基于plugin
+- 重写插件支持2.0.0
+- jframe监控
+### 优化
 - 优化守护进程占用的内存
 - 使用消息池，降低临时对象造成的频繁gc
 Fixed Bugs

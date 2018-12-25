@@ -3,13 +3,11 @@
  */
 package jframe.httpclient.service.impl;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.Consts;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -38,7 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
@@ -76,41 +73,17 @@ public class HttpClientServiceImpl implements HttpClientService {
 
     @Start
     public void start() {
+        LOG.info("HttpClientServiceImpl is starting");
         try {
             HttpClientConfig.init(plugin.getConfig(FILE_CONF));
             requestConfig = RequestConfig.custom()
-                    .setSocketTimeout(
-                            Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_SO_TIMEOUT, "6000")))
-                    .setConnectTimeout(Integer
-                            .parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_CONN_TIMEOUT, "3000")))
+                    .setSocketTimeout(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_SO_TIMEOUT, "30000")))
+                    .setConnectTimeout(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_CONN_TIMEOUT, "10000")))
                     .build();
-
-            // SSLContext sslContext = SSLContexts.createSystemDefault();
-            // SSLConnectionSocketFactory sslsf = new
-            // SSLConnectionSocketFactory(
-            // sslContext,
-            // SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
-            // KeyStore myTrustStore = <...>
-            // SSLContext sslContext = SSLContexts.custom()
-            // .useTLS()
-            // .loadTrustMaterial(myTrustStore)
-            // .build();
-            // SSLConnectionSocketFactory sslsf = new
-            // SSLConnectionSocketFactory(sslContext);
-            // ConnectionSocketFactory plainsf = <...>
-            // LayeredConnectionSocketFactory sslsf = <...>
-            // Registry<ConnectionSocketFactory> r =
-            // RegistryBuilder.<ConnectionSocketFactory>create()
-            // .register("http", plainsf)
-            // .register("https", sslsf)
-            // .build();
-            // HttpClientConnectionManager cm = new
-            // PoolingHttpClientConnectionManager(r);
 
             PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
             cm.setMaxTotal(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN, "200")));
-            cm.setDefaultMaxPerRoute(
-                    Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
+            cm.setDefaultMaxPerRoute(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
 
             for (String host : HttpClientConfig.getHosts()) {
                 String maxConn = HttpClientConfig.getConf(host, HttpClientConfig.HTTP_MAX_CONN, null);
@@ -122,14 +95,10 @@ public class HttpClientServiceImpl implements HttpClientService {
                 cm.setMaxPerRoute(new HttpRoute(localhost), Integer.parseInt(maxConn));
             }
 
-            // _httpClient.getParams().setIntParameter("http.socket.timeout",
-            // 5000);
-
             ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
                 public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
                     // Honor 'keep-alive' header
-                    HeaderElementIterator it = new BasicHeaderElementIterator(
-                            response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                    HeaderElementIterator it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
                     while (it.hasNext()) {
                         HeaderElement he = it.nextElement();
                         String param = he.getName();
@@ -137,8 +106,7 @@ public class HttpClientServiceImpl implements HttpClientService {
                         if (value != null && param.equalsIgnoreCase("timeout")) {
                             try {
                                 return Long.parseLong(value) * 1000;
-                            } catch (NumberFormatException ignore) {
-                            }
+                            } catch (NumberFormatException ignore) {}
                         }
                     }
 
@@ -166,6 +134,7 @@ public class HttpClientServiceImpl implements HttpClientService {
         } catch (Exception e) {
             LOG.error("HttpClientServiceImpl init error {}!", e.getMessage());
         }
+        LOG.info("HttpClientServiceImpl start succ");
     }
 
     @Stop
@@ -174,12 +143,11 @@ public class HttpClientServiceImpl implements HttpClientService {
             IdleConnectionMonitorThread.shutdown();
         }
 
-        if (httpClient != null)
-            try {
-                httpClient.close();
-            } catch (Exception e) {
-                LOG.error(e.getMessage());
-            }
+        if (httpClient != null) try {
+            httpClient.close();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
         LOG.info("HttpClientServiceImpl closed!");
     }
 
@@ -204,8 +172,7 @@ public class HttpClientServiceImpl implements HttpClientService {
                         // Optionally, close connections
                         // that have been idle longer than 30 sec
                         connMgr.closeIdleConnections(
-                                Integer.parseInt(
-                                        HttpClientConfig.getConf(null, HttpClientConfig.HTTP_IDLE_CONN_CLOSE, "30")),
+                                Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_IDLE_CONN_CLOSE, "30")),
                                 TimeUnit.SECONDS);
                     }
                 }
@@ -224,17 +191,18 @@ public class HttpClientServiceImpl implements HttpClientService {
     }
 
     @Override
-    public <T> T send(String id, String path, String data, Map<String, String> headers, Map<String, String> paras)
-            throws Exception {
+    public String send(String id, String path, String data, Map<String, String> headers, Map<String, String> paras) throws Exception {
         LOG.debug("HttpClientServiceImpl.send {} {} {}", id, path, data);
 
-        //
-        String ip = paras != null && paras.containsKey("ip") ? paras.get("ip")
-                : HttpClientConfig.getConf(id, HttpClientConfig.IP);
-        String port = paras != null && paras.containsKey("port") ? paras.get("port")
-                : HttpClientConfig.getConf(id, HttpClientConfig.PORT, "80");
+        if (paras == null) paras = Collections.emptyMap();
+        if (headers == null) headers = Collections.emptyMap();
 
-        HttpHost target = new HttpHost(ip, Integer.parseInt(port), HttpHost.DEFAULT_SCHEME_NAME);
+        //
+        String ip = paras.containsKey("ip") ? paras.get("ip") : HttpClientConfig.getConf(id, HttpClientConfig.IP);
+        String port = paras.containsKey("port") ? paras.get("port") : HttpClientConfig.getConf(id, HttpClientConfig.PORT, "80");
+        String scheme = HttpClientConfig.getConf(id, HttpClientConfig.SCHEME, HttpHost.DEFAULT_SCHEME_NAME);
+
+        HttpHost target = new HttpHost(ip, Integer.parseInt(port), scheme);
 
         HttpRequestBase request;
         String mehtod = HttpClientConfig.getConf(id, HttpClientConfig.HTTP_METHOD, HttpClientConfig.M_POST);
@@ -242,9 +210,9 @@ public class HttpClientServiceImpl implements HttpClientService {
             request = new HttpGet(target.toURI() + path + "?" + data);
         } else {
             request = new HttpPost(target.toURI() + path);
-            String mimeType = paras == null ? "text/plain" : paras.get(P_MIMETYPE);
-            ((HttpPost) request).setEntity(new StringEntity(data,
-                    ContentType.create(mimeType, HttpClientConfig.getConf(id, HttpClientConfig.HTTP_CHARSET))));
+            String mimeType = paras.isEmpty() ? "text/plain" : paras.get(P_MIMETYPE);
+            ((HttpPost) request).setEntity(
+                    new StringEntity(data, ContentType.create(mimeType, HttpClientConfig.getConf(id, HttpClientConfig.HTTP_CHARSET))));
         }
         request.setConfig(requestConfig);
 
@@ -275,26 +243,25 @@ public class HttpClientServiceImpl implements HttpClientService {
             // }
             //
             // };
+
             HttpEntity entity = rsp.getEntity();
             ContentType contentType = ContentType.get(entity);
             if (contentType == null) {
                 contentType = ContentType.APPLICATION_JSON;
             }
 
-            Charset charset = paras.containsKey("rsp.charset") ? Charset.forName(paras.get("rsp.charset"))
-                    : contentType.getCharset();
-            // TODO decode by mime-type
-            if ("application/json".equalsIgnoreCase(contentType.getMimeType())) {
-                Reader reader = new InputStreamReader(entity.getContent(), charset == null ? Consts.UTF_8 : charset);
-                return GSON.fromJson(reader, new TypeToken<T>() {
-                }.getType());
-                //
-            } else {
-                return (T) EntityUtils.toString(entity, charset);
-            }
+            Charset charset = paras.containsKey("rsp.charset") ? Charset.forName(paras.get("rsp.charset")) : contentType.getCharset();
+            // // TODO decode by mime-type
+            // if ("application/json".equalsIgnoreCase(contentType.getMimeType())) {
+            // Reader reader = new InputStreamReader(entity.getContent(), charset == null ? Consts.UTF_8 : charset);
+            // return GSON.fromJson(reader, new TypeToken<T>() {}.getType());
+            // //
+            // } else {
+            // return (T) EntityUtils.toString(entity, charset);
+            // }
+            return EntityUtils.toString(entity, charset);
         } finally {
             if (rsp != null) {
-                EntityUtils.consume(rsp.getEntity());
                 rsp.close();
             }
         }
@@ -311,23 +278,23 @@ public class HttpClientServiceImpl implements HttpClientService {
     // return gson.fromJson(json, clazz);
     // }
 
-    @Override
-    public <T> T sendGroup(String gid, String path, String data, Map<String, String> headers, Map<String, String> paras)
-            throws Exception {
-        throw new Exception("");
-    }
-
-    @Override
-    public <T> T sendRandom(String path, String data, Map<String, String> headers, Map<String, String> paras)
-            throws Exception {
-        throw new Exception("");
-    }
-
-    @Override
-    public <T> T sendAll(String path, String data, Map<String, String> headers, Map<String, String> paras)
-            throws Exception {
-        throw new Exception("");
-    }
+    // @Override
+    // public <T> T sendGroup(String gid, String path, String data, Map<String, String> headers, Map<String, String>
+    // paras) throws Exception {
+    // throw new Exception("not support this method");
+    // }
+    //
+    // @Override
+    // public <T> T sendRandom(String path, String data, Map<String, String> headers, Map<String, String> paras) throws
+    // Exception {
+    // throw new Exception("not support this method");
+    // }
+    //
+    // @Override
+    // public <T> T sendAll(String path, String data, Map<String, String> headers, Map<String, String> paras) throws
+    // Exception {
+    // throw new Exception("not support this method");
+    // }
 
     public static HttpClientService testHttpClient(String httpclient) {
         try {
@@ -356,8 +323,7 @@ public class HttpClientServiceImpl implements HttpClientService {
 
             PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
             cm.setMaxTotal(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN, "200")));
-            cm.setDefaultMaxPerRoute(
-                    Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
+            cm.setDefaultMaxPerRoute(Integer.parseInt(HttpClientConfig.getConf(null, HttpClientConfig.HTTP_MAX_CONN_ROUTE, "60")));
 
             for (String host : HttpClientConfig.getHosts()) {
                 String maxConn = HttpClientConfig.getConf(host, HttpClientConfig.HTTP_MAX_CONN, null);
@@ -375,8 +341,7 @@ public class HttpClientServiceImpl implements HttpClientService {
             ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
                 public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
                     // Honor 'keep-alive' header
-                    HeaderElementIterator it = new BasicHeaderElementIterator(
-                            response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                    HeaderElementIterator it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
                     while (it.hasNext()) {
                         HeaderElement he = it.nextElement();
                         String param = he.getName();
@@ -384,8 +349,7 @@ public class HttpClientServiceImpl implements HttpClientService {
                         if (value != null && param.equalsIgnoreCase("timeout")) {
                             try {
                                 return Long.parseLong(value) * 1000;
-                            } catch (NumberFormatException ignore) {
-                            }
+                            } catch (NumberFormatException ignore) {}
                         }
                     }
 

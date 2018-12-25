@@ -10,26 +10,26 @@ package jframe.core.msg;
  */
 public interface Msg<V> extends Cloneable {
 
-	int getType(); // 类型
+    int getType(); // 类型
 
-	Msg<V> setType(int type);
+    Msg<V> setType(int type);
 
-	Msg<V> setMeta(String key, String value); // 元信息
+    Msg<V> setMeta(String key, Object value); // 元信息
 
-	String getMeta(String key);
+    Object getMeta(String key);
 
-	String removeMeta(String key);
+    Object removeMeta(String key);
 
-	Msg<V> setValue(V msg); // 内容
+    Msg<V> setValue(V msg); // 内容
 
-	V getValue();
+    V getValue();
 
-	void accept(MsgVisitor<V> visitor); // 遍历
+    void accept(MsgVisitor<V> visitor); // 遍历
 
-	void clear();
+    void clear();
 
-	/**
-	 * delete all meta content
-	 */
-	void clearMeta();
+    /**
+     * delete all meta content
+     */
+    void clearMeta();
 }

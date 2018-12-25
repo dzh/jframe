@@ -20,6 +20,7 @@ public interface LauncherConstants {
     String APP_HOME = "app.home"; // application root directory
     String FILE_CONFIG = "file.config"; // file path of config.properties
     String LAUNCHER = "launcher"; // launcher class
+    String START_TIME = "start.time"; // start time ms
 
     /********************** VAR in config.properties ***********************/
     String LAUNCH_MODE = "launch.mode"; // launching mode, daemon or not

@@ -12,7 +12,7 @@ import jframe.core.plugin.annotation.Service;
  * @date Feb 28, 2016 9:13:38 AM
  * @since 1.0
  */
-@Service(clazz = "jframe.aliyun.service.sts.STSServiceImpl", id = "jframe.aliyun.service.sts")
+@Service(clazz = "jframe.aliyun.service.sts.STSServiceImpl", id = "jframe.service.aliyun.sts")
 public interface STSService {
 
     /**

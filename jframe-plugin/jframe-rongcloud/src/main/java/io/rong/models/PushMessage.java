@@ -1,11 +1,8 @@
 package io.rong.models;
 
-import io.rong.util.GsonUtil;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import io.rong.util.GsonUtil;
 
 public class PushMessage {
 	private List<String> platform;

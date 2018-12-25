@@ -56,14 +56,12 @@ public class DefDispatcher extends AbstractDispatcher {
                     final BlockingQueue<Msg<?>> queue = _queue;
                     while (true) {
                         try {
-                            if (stop || isInterrupted())
-                                break;
+                            if (stop || isInterrupted()) break;
                             dispatch(queue.take());
 
-                            if (sleep > 0)
-                                Thread.sleep(sleep);
+                            if (sleep > 0) Thread.sleep(sleep);
                         } catch (InterruptedException e) {
-                            LOG.warn(e.getMessage());
+                            // LOG.warn(e.getMessage());
                             break;
                         } catch (Exception e) {
                             LOG.error(e.getMessage(), e.fillInStackTrace());
@@ -106,8 +104,7 @@ public class DefDispatcher extends AbstractDispatcher {
     }
 
     public void receive(Msg<?> msg) {
-        if (msg == null || stop)
-            return;
+        if (msg == null || stop) return;
         try {
             _queue.offer(msg, 60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -122,8 +119,7 @@ public class DefDispatcher extends AbstractDispatcher {
      */
     @Override
     public void close() {
-        if (stop)
-            return;
+        if (stop) return;
         LOG.info("Dispacher: " + getID() + " Stopping!");
         closeDispatch();
         super.close();

@@ -18,7 +18,7 @@ import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
-import jframe.ext.util.PropertiesConfig;
+import jframe.core.util.PropsConf;
 import jframe.jedis.JedisPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -36,11 +36,12 @@ public class JedisServiceImpl implements JedisService {
 
     static final Logger LOG = LoggerFactory.getLogger(JedisServiceImpl.class);
 
-    private PropertiesConfig conf = new PropertiesConfig();
+    private PropsConf conf = new PropsConf();
 
+    // groupId
     private Map<String, JedisPool> _jedis = new HashMap<String, JedisPool>();
 
-    public JedisPoolConfig init(File jedis) throws Exception {
+    public PropsConf init(File jedis) throws Exception {
         if (!jedis.exists()) {
             LOG.error("Not found jedis file {}", jedis.getAbsolutePath());
             throw new FileNotFoundException("jedis file not found!" + jedis.getAbsolutePath());
@@ -48,18 +49,18 @@ public class JedisServiceImpl implements JedisService {
         return init(new FileInputStream(jedis), true);
     }
 
-    public JedisPoolConfig init(InputStream jedis, boolean closeIn) throws Exception {
+    public PropsConf init(InputStream jedis, boolean closeIn) throws Exception {
         conf.init(jedis);
-        return createPoolConfig();
+        return conf;
     }
 
-    JedisPoolConfig createPoolConfig() {
+    JedisPoolConfig createPoolConfig(PropsConf conf, String id) {
         JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(100);
-        config.setMaxIdle(10);
-        config.setMinIdle(1);
-        config.setMaxWaitMillis(3000L);
-        config.setTestOnBorrow(true);
+        config.setMaxTotal(conf.getConfInt(id, "redis.conn.maxTotal", "200"));
+        config.setMaxIdle(conf.getConfInt(id, "redis.conn.maxIdle", "100"));
+        config.setMinIdle(conf.getConfInt(id, "redis.conn.minIdle", "1"));
+        config.setMaxWaitMillis(conf.getConfLong(id, "redis.conn.maxWaitMillis", "3000"));
+        // config.setTestOnReturn(true);
         return config;
     }
 
@@ -76,31 +77,29 @@ public class JedisServiceImpl implements JedisService {
         try {
             start(init(new File(jedis)));
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
     }
 
-    public void start(JedisPoolConfig config) {
+    public void start(PropsConf conf) {
         LOG.info("JedisServiceImpl starting");
         String[] hosts = conf.getGroupIds();
         for (String h : hosts) {
-            if ("".equals(h))
-                continue;
+            if ("".equals(h)) continue;
             try {
-                String ip = conf.getConf(h, "ip");
+                String ip = conf.getConf(h, "ip", "127.0.0.1");
                 // if ("127.0.0.1".equals(ip)) {
                 // continue;
                 // }
                 int port = conf.getConfInt(h, "port", "6379");
-
                 int timeout = conf.getConfInt(h, "timeout", "2000");
-                if (port == 0) {
-                    _jedis.put(h, new JedisPool(config, ip, Protocol.DEFAULT_PORT, timeout));
-                } else {
-                    _jedis.put(h, new JedisPool(config, ip, port, timeout));
-                }
+                String passwd = conf.getConf(h, "passwd").trim();
+                int database = conf.getConfInt(h, "database", String.valueOf(Protocol.DEFAULT_DATABASE));// 0
+
+                JedisPoolConfig config = createPoolConfig(conf, h);
+                _jedis.put(h, new JedisPool(config, ip, port, timeout, "".equals(passwd) ? null : passwd, database));
             } catch (Exception e) {
-                LOG.error(e.getMessage());
+                LOG.error(e.getMessage(), e);
                 continue;
             }
         }
@@ -115,10 +114,9 @@ public class JedisServiceImpl implements JedisService {
         while (iter.hasNext()) {
             try {
                 JedisPool j = _jedis.get(iter.next());
-                if (j != null)
-                    j.destroy();
+                if (j != null) j.destroy();
             } catch (Exception e) {
-                LOG.warn(e.getMessage());
+                LOG.warn(e.getMessage(), e);
             }
         }
         LOG.info("JedisServiceImpl stop successfully");
@@ -128,25 +126,22 @@ public class JedisServiceImpl implements JedisService {
 
     /*
      * (non-Javadoc)
-     * 
      * @see dono.pay.service.JedisService#getJedis(java.lang.String)
      */
     @Override
     public Jedis getJedis(String name) {
         try {
             JedisPool pool = _jedis.get(name);
-            if (pool == null)
-                return null;
+            if (pool == null) return null;
             return pool.getResource();
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see dono.pay.service.JedisService#getJedisCluster(java.lang.String)
      */
     @Override
@@ -161,13 +156,11 @@ public class JedisServiceImpl implements JedisService {
     }
 
     void close() {
-        if (conf != null)
-            conf.clear();
+        if (conf != null) conf.clear();
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see dono.pay.service.JedisService#getJedis()
      */
     @Override
@@ -175,36 +168,34 @@ public class JedisServiceImpl implements JedisService {
     public Jedis getJedis() {
         try {
             JedisPool pool = _jedis.get(conf.getConf(null, "redis.host"));
-            if (pool == null)
-                return null;
+            if (pool == null) return null;
             return pool.getResource();
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see
      * dono.pay.service.JedisService#recycleJedis(redis.clients.jedis.Jedis)
      */
     @Override
+    @Deprecated
     public void recycleJedis(Jedis jedis) {
         recycleJedis(null, jedis);
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see dono.pay.service.JedisService#recycleJedis(java.lang.String,
      * redis.clients.jedis.Jedis)
      */
     @Override
+    @Deprecated
     public void recycleJedis(String name, Jedis jedis) {
-        if (conf == null || _jedis == null || name == null)
-            return;
+        if (conf == null || _jedis == null || name == null) return;
         JedisPool pool = _jedis.get(name);
         if (pool == null) {
             if (LOG.isDebugEnabled()) {

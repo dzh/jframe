@@ -23,6 +23,7 @@ public class HttpClientConfig {
 
     public static final String IP = "ip";
     public static final String PORT = "port";
+    public static final String SCHEME = "scheme";
     public static final String GROUP = "group";
 
     public static final String M_POST = "post";

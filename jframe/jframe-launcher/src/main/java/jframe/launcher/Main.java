@@ -31,9 +31,7 @@ public class Main {
      * @return
      */
     public static Launcher createLauncher(String lclazz) throws LauncherException {
-        if (lclazz == null || "".equals(lclazz)) {
-            throw new LauncherException("Not found launcher class" + lclazz);
-        }
+        if (lclazz == null || "".equals(lclazz)) { throw new LauncherException("Not found launcher class" + lclazz); }
         try {
             return (Launcher) Thread.currentThread().getContextClassLoader().loadClass(lclazz).newInstance();
         } catch (Exception e) {
@@ -60,8 +58,11 @@ public class Main {
             l = createLauncher(launcher);
             LOG.info("{} is starting from {}!", l.name(), appHome);
 
-            String fileConfig = System.getProperty(Config.FILE_CONFIG,
-                    appHome + File.separator + "conf" + File.separator + Config.FILE_CONFIG_NAME);
+            // String fileConfig =
+            // System.getProperty(Config.FILE_CONFIG, appHome + File.separator + "conf" + File.separator +
+            // Config.FILE_CONFIG_NAME);
+            String fileConfig =
+                    System.getProperty(Config.FILE_CONFIG, String.join(File.separator, appHome, "conf", Config.FILE_CONFIG_NAME));
             Config config = l.load(fileConfig);
             l.launch(config);
         } catch (Exception e) {

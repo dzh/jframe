@@ -98,7 +98,17 @@ public class Service {
      * @throws ServiceException
      */
     public synchronized Object getSingle() throws ServiceException {
-        if (single == null) {
+        return getSingle(true);
+
+    }
+
+    /**
+     * 
+     * @return
+     * @throws ServiceException
+     */
+    public synchronized Object getSingle(boolean createIfNull) throws ServiceException {
+        if (single == null && createIfNull) {
             single = createSingle();
         }
         return single;
@@ -140,9 +150,7 @@ public class Service {
     }
 
     public static Service newInstance(jframe.core.plugin.annotation.Service anno) throws ServiceException {
-        if (anno == null) {
-            throw new ServiceException("Service Annotation is null");
-        }
+        if (anno == null) { throw new ServiceException("Service Annotation is null"); }
         Service svc = new Service();
         svc.setId(anno.id());
         svc.setClazz(anno.clazz());

@@ -49,6 +49,7 @@ public class MainLauncher extends DefLauncher {
 
     private static Logger LOG = LoggerFactory.getLogger(MainLauncher.class);
 
+    @Override
     public void launch(Config config) {
         String daemon = config.getConfig(Config.LAUNCH_MODE);
         if (Config.LAUNCH_MODE_DAEMON.equalsIgnoreCase(daemon)) {
@@ -93,8 +94,8 @@ public class MainLauncher extends DefLauncher {
         Process p = null;
         try {
             p = pb.start();
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
         }
         return p;
     }
@@ -103,7 +104,7 @@ public class MainLauncher extends DefLauncher {
      * @param conf
      */
     private void launchDaemon(final Config config) {
-        LOG.info("Launching daemon mode! Write pid file: {}", config.getConfig(DefConfig.PID_DAEMON));
+        LOG.info("Launch daemon mode! write pid: {}", config.getConfig(DefConfig.PID_DAEMON));
 
         try {
             Program.writePID(Program.getPID(), config.getConfig(DefConfig.PID_DAEMON));
@@ -113,7 +114,7 @@ public class MainLauncher extends DefLauncher {
         }
 
         final String pid_daemon = config.getConfig(Config.PID_DAEMON);
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        Runtime.getRuntime().addShutdownHook(new Thread("DaemonShutdownhook") {
             public void run() {
                 try {
                     new File(pid_daemon).deleteOnExit();
@@ -125,27 +126,33 @@ public class MainLauncher extends DefLauncher {
 
         int exit = 0;
         do {
-            Process subp = launchInternal(config);//
-            if (subp == null) {
+            Process subp = launchInternal(config);
+            if (subp == null || !subp.isAlive()) {
                 LOG.error("Launch MainLauncher Error! Maybe incorrect value in vmargs[-win]");
                 break;
             }
             Thread errT = redirectStream(subp.getErrorStream());
             Thread stdT = redirectStream(subp.getInputStream());
-            LOG.info("Startup sub process successfully!");
+            LOG.info("Startup sub process!");
             try {
                 exit = subp.waitFor();
+                if (exit == 0 || exit == 143) break;
             } catch (Exception e) {
                 LOG.warn(e.getMessage());
-                break;
             } finally {
-                if (errT != null)
-                    errT.interrupt();
-                if (stdT != null)
-                    stdT.interrupt();
+                if (errT != null) errT.interrupt();
+                if (stdT != null) stdT.interrupt();
+                LOG.info("Shutdown sub process! exit-{}", exit);
             }
-            LOG.info("Shutdown sub process Successfully! exit-{}", exit);
-        } while (exit != 0 && exit != 143);
+
+            try {
+                Thread.sleep(1000L); // TODO waiting 1s
+            } catch (InterruptedException e) {
+                LOG.warn(e.getMessage(), e);
+                break;
+            }
+        } while (true);
+        LOG.info("Exit daemon mode!");
     }
 
     /**
@@ -165,10 +172,8 @@ public class MainLauncher extends DefLauncher {
                     while (!Thread.interrupted()) {
                         try {
                             String str = br.readLine();
-                            if (str == null)
-                                Thread.sleep(1000);
-                            else
-                                LOG.info(str);
+                            if (str == null) Thread.sleep(1000);
+                            else LOG.info(str);
                         } catch (IOException e) {
                             LOG.error(e.getMessage());
                             break;
@@ -177,11 +182,9 @@ public class MainLauncher extends DefLauncher {
                 } catch (Exception e) {
                     LOG.warn(e.getMessage());
                 } finally {
-                    if (br != null)
-                        try {
-                            br.close();
-                        } catch (Exception e) {
-                        }
+                    if (br != null) try {
+                        br.close();
+                    } catch (Exception e) {}
                 }
             }
         };

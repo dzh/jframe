@@ -116,11 +116,9 @@ public class ActivemqDispatcher extends AbstractDispatcher {
                                 }
                             });
                         }
-                        if (MqConf.SendSleepTime > 0)
-                            Thread.sleep(MqConf.SendSleepTime);
+                        if (MqConf.SendSleepTime > 0) Thread.sleep(MqConf.SendSleepTime);
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Mq send msg -> {}, sum -> {}, date-> {}", msg.toString(), queue.size(),
-                                    new Date());
+                            LOG.debug("Mq send msg -> {}, sum -> {}, date-> {}", msg.toString(), queue.size(), new Date());
                         }
                     } catch (Exception e) {
                         LOG.warn(e.getMessage());
@@ -146,24 +144,22 @@ public class ActivemqDispatcher extends AbstractDispatcher {
                     while (!stop) {
                         try {
                             final Message message = consumer.receive(MqConf.ConsumerTimeout);
-                            if (message != null)
-                                workPool.execute(new Runnable() {
-                                    public void run() {
-                                        try {
-                                            if (message instanceof TextMessage) {
-                                                String text = ((TextMessage) message).getText();
-                                                dispatch(msgTransfer.decode(text));
-                                                if (LOG.isDebugEnabled()) {
-                                                    LOG.debug("Mq dispatch msg -> {}, date-> {}", text, new Date());
-                                                }
+                            if (message != null) workPool.execute(new Runnable() {
+                                public void run() {
+                                    try {
+                                        if (message instanceof TextMessage) {
+                                            String text = ((TextMessage) message).getText();
+                                            dispatch(msgTransfer.decode(text));
+                                            if (LOG.isDebugEnabled()) {
+                                                LOG.debug("Mq dispatch msg -> {}, date-> {}", text, new Date());
                                             }
-                                        } catch (Exception e) {
-                                            LOG.warn(e.getMessage());
                                         }
+                                    } catch (Exception e) {
+                                        LOG.warn(e.getMessage());
                                     }
-                                });
-                            if (MqConf.RecvSleepTime > 0)
-                                Thread.sleep(MqConf.RecvSleepTime);
+                                }
+                            });
+                            if (MqConf.RecvSleepTime > 0) Thread.sleep(MqConf.RecvSleepTime);
                         } catch (Exception e) {
                             LOG.error(e.getMessage());
                         }
@@ -173,11 +169,9 @@ public class ActivemqDispatcher extends AbstractDispatcher {
                 } catch (Exception e) {
                     LOG.error(e.getMessage());
                 } finally {
-                    if (connection != null)
-                        try {
-                            connection.close();
-                        } catch (JMSException e) {
-                        }
+                    if (connection != null) try {
+                        connection.close();
+                    } catch (JMSException e) {}
                 }
 
                 if (!stop) {
@@ -215,20 +209,16 @@ public class ActivemqDispatcher extends AbstractDispatcher {
         } catch (Exception e) {
             LOG.error(e.getMessage());
         } finally {
-            if (connection != null)
-                try {
-                    connection.close();
-                } catch (JMSException e) {
-                }
+            if (connection != null) try {
+                connection.close();
+            } catch (JMSException e) {}
         }
     }
 
     private int getDeliveryMode(Msg<?> msg) {
         try {
-            if (msg.getMeta(Msg_DeliveryMode) == null) {
-                return javax.jms.DeliveryMode.PERSISTENT;
-            }
-            return Integer.parseInt(msg.getMeta(Msg_DeliveryMode));
+            if (msg.getMeta(Msg_DeliveryMode) == null) { return javax.jms.DeliveryMode.PERSISTENT; }
+            return Integer.parseInt((String) msg.getMeta(Msg_DeliveryMode));
         } catch (Exception e) {
 
         }
@@ -236,7 +226,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
     }
 
     public String getSendQueueName(Msg<?> msg) {
-        String queue = msg.getMeta(Msg_SendQueue);
+        String queue = (String) msg.getMeta(Msg_SendQueue);
         return queue == null ? MqConf.DefMqSendQueue : queue;
     }
 
@@ -257,8 +247,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
     }
 
     public void receive(final Msg<?> msg) {
-        if (msg == null || stop)
-            return;
+        if (msg == null || stop) return;
         try {
             _queue.offer(msg, 60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -283,8 +272,7 @@ public class ActivemqDispatcher extends AbstractDispatcher {
                 workPool.shutdown();
                 workPool.awaitTermination(60, TimeUnit.SECONDS);
             }
-        } catch (InterruptedException e) {
-        }
+        } catch (InterruptedException e) {}
         LOG.info("ActivemqDispatcher stopped!");
     }
 }

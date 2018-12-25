@@ -48,8 +48,7 @@ public class PluginClassLoader extends URLClassLoader {
 
     protected synchronized Class<?> findInjectingClass(String name) {
         for (Class<?> clazz : injectingClazz) {
-            if (clazz.getName().equals(name))
-                return clazz;
+            if (clazz.getName().equals(name)) return clazz;
         }
         return null;
     }
@@ -60,9 +59,7 @@ public class PluginClassLoader extends URLClassLoader {
     public PluginClassLoader(URL[] urls, PluginCase pc, PluginClassLoaderContext plc) {
         super(urls, pc.getClass().getClassLoader());
         this._case = pc;
-        if (getParent() == null) {
-            throw new NullPointerException("PluginClassLoader's parent is null");
-        }
+        if (getParent() == null) { throw new NullPointerException("PluginClassLoader's parent is null"); }
         try {
             addURL(new URL("file:" + pc.getJarPath()));
             for (String lib : pc.getPluginLib()) {
@@ -99,14 +96,12 @@ public class PluginClassLoader extends URLClassLoader {
         if (c == null) {
             // get injecting class
             c = findInjectingClass(name);
-            if (c != null)
-                return c;
+            if (c != null) return c;
 
             // load import class
             if (getPluginCase().getImportClass().contains(name)) {
                 PluginClassLoader pcl = getPluginClassLoaderContext().findImportClassLoader(name);
-                if (pcl != null)
-                    return pcl.loadClass(name);
+                if (pcl != null) return pcl.loadClass(name);
             }
             // load plug-in class
             try {
@@ -131,8 +126,7 @@ public class PluginClassLoader extends URLClassLoader {
             }
         }
 
-        if (c == null)
-            throw new ClassNotFoundException(name);
+        if (c == null) throw new ClassNotFoundException(name);
 
         if (resolve) {
             resolveClass(c);
@@ -140,25 +134,26 @@ public class PluginClassLoader extends URLClassLoader {
         return c;
     }
 
-    protected synchronized Plugin createPlugin(PluginCase pc) {
-        if (_plugin != null)
-            return _plugin;
+    private Plugin createPlugin(PluginCase pc) {
         try {
-            _plugin = (Plugin) loadClass(pc.getPluginClass()).newInstance();
+            return (Plugin) loadClass(pc.getPluginClass()).newInstance();
         } catch (Exception e) {
-            LOG.error("Create Plugin Error: " + e.getLocalizedMessage());
+            LOG.error("Create plugin Error: " + e.getLocalizedMessage());
         }
-        return _plugin;
+        return null;
     }
 
-    @SuppressWarnings("unchecked")
-    protected Class<? extends Plugin> loadPluginClass(PluginCase pc) throws ClassNotFoundException {
-        return (Class<? extends Plugin>) loadClass(pc.getPluginClass());
-    }
+    // @SuppressWarnings("unchecked")
+    // protected Class<? extends Plugin> loadPluginClass(PluginCase pc) throws ClassNotFoundException {
+    // return (Class<? extends Plugin>) loadClass(pc.getPluginClass());
+    // }
 
-    public synchronized Plugin getPlugin() {
-        if (_plugin == null) {
-            createPlugin(getPluginCase());
+    public Plugin getPlugin() { // TODO
+        synchronized (this) {
+            if (_plugin == null) {
+                _plugin = createPlugin(getPluginCase());
+                // LOG.debug("{} {} create plugin {}", Thread.currentThread().getId(), this, _plugin.getName());
+            }
         }
         return _plugin;
     }
@@ -174,8 +169,7 @@ public class PluginClassLoader extends URLClassLoader {
         try {
             // load from plug-in
             c = findClass(name);
-        } catch (ClassNotFoundException e) {
-        }
+        } catch (ClassNotFoundException e) {}
         return c;
     }
 
@@ -198,8 +192,7 @@ public class PluginClassLoader extends URLClassLoader {
                     continue;
                 clazz = pcl.loadClass(name);
                 break;
-            } catch (ClassNotFoundException e) {
-            }
+            } catch (ClassNotFoundException e) {}
         }
         return clazz;
     }
@@ -207,8 +200,7 @@ public class PluginClassLoader extends URLClassLoader {
     protected boolean isInjector(Class<?> clazz) {
         try {
             return clazz != null && clazz.isAnnotationPresent(Injector.class) ? true : false;
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         return false;
     }
 
@@ -218,8 +210,7 @@ public class PluginClassLoader extends URLClassLoader {
      * @throws Exception
      */
     protected void injectAnnocation(Class<?> clazz) throws Exception {
-        if (clazz == null)
-            return;
+        if (clazz == null) return;
 
         for (Field f : clazz.getDeclaredFields()) {
             if (Modifier.isStatic(f.getModifiers())) {
@@ -227,7 +218,7 @@ public class PluginClassLoader extends URLClassLoader {
                     injectPlugin(f);
                     break;
                 }
-                
+
             }
         }
     }
@@ -248,8 +239,7 @@ public class PluginClassLoader extends URLClassLoader {
     @Override
     protected String findLibrary(String libname) {
         String path = _case.getCacheDllPath() + File.separator + libname;
-        if (new File(path).exists())
-            return path;
+        if (new File(path).exists()) return path;
         return null;
     }
 
@@ -265,16 +255,14 @@ public class PluginClassLoader extends URLClassLoader {
     public URL findResource(String name) {
         try {
             File f = new File(_case.getCachePath() + File.separator + name);
-            if (f.exists())
-                return f.toURI().toURL();
+            if (f.exists()) return f.toURI().toURL();
         } catch (MalformedURLException e) {
             LOG.warn(e.getLocalizedMessage());
         }
 
         try {
             File f = new File(name);
-            if (f.exists())
-                return f.toURI().toURL();
+            if (f.exists()) return f.toURI().toURL();
         } catch (MalformedURLException e) {
             LOG.warn(e.getLocalizedMessage());
         }

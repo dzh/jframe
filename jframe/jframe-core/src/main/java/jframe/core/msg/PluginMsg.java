@@ -13,69 +13,79 @@ import java.util.Map;
  */
 public class PluginMsg<V> implements Msg<V> {
 
-	public static final String PluginName = "Plugin";
+    public static final String PluginName = "Plugin";
 
-	private final Map<String, String> meta = new HashMap<String, String>(10);
+    private final Map<String, Object> meta = new HashMap<String, Object>(10);
 
-	private int type;
+    private int type;
 
-	private V value;
+    private V value;
 
-	public int getType() {
-		return type;
-	}
+    @Override
+    public int getType() {
+        return type;
+    }
 
-	public PluginMsg<V> setType(int type) {
-		this.type = type;
-		return this;
-	}
+    @Override
+    public PluginMsg<V> setType(int type) {
+        this.type = type;
+        return this;
+    }
 
-	public PluginMsg<V> setMeta(String key, String value) {
-		meta.put(key, value);
-		return this;
-	}
+    @Override
+    public PluginMsg<V> setMeta(String key, Object value) {
+        meta.put(key, value);
+        return this;
+    }
 
-	public String getMeta(String key) {
-		return meta.get(key);
-	}
+    @Override
+    public Object getMeta(String key) {
+        return meta.get(key);
+    }
 
-	public PluginMsg<V> setValue(V msg) {
-		this.value = msg;
-		return this;
-	}
+    @Override
+    public PluginMsg<V> setValue(V msg) {
+        this.value = msg;
+        return this;
+    }
 
-	public V getValue() {
-		return value;
-	}
+    @Override
+    public V getValue() {
+        return value;
+    }
 
-	public void accept(MsgVisitor<V> visitor) {
-		visitor.visit(this);
-	}
+    @Override
+    public void accept(MsgVisitor<V> visitor) {
+        visitor.visit(this);
+    }
 
-	public void clear() {
-		clearMeta();
-		value = null;
-	}
+    @Override
+    public void clear() {
+        clearMeta();
+        value = null;
+    }
 
-	public String toString() {
-		return "MsgType: " + getType() + ", MsgValue: " + getValue();
-	}
+    @Override
+    public String toString() {
+        return "type: " + getType() + ", value: " + getValue();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.msg.Msg#clearMeta()
-	 */
-	public void clearMeta() {
-		meta.clear();
-	}
+    /*
+     * (non-Javadoc)
+     * @see jframe.core.msg.Msg#clearMeta()
+     */
+    @Override
+    public void clearMeta() {
+        meta.clear();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jframe.core.msg.Msg#removeMeta(java.lang.String)
-	 */
-	public String removeMeta(String key) {
-		return meta.remove(key);
-	}
+    /*
+     * (non-Javadoc)
+     * @see jframe.core.msg.Msg#removeMeta(java.lang.String)
+     */
+    @Override
+    public Object removeMeta(String key) {
+        return meta.remove(key);
+    }
+
 }

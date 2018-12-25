@@ -25,19 +25,19 @@ JVM_OPT_DEBUG="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_soc
 # local jre
 JRE_LOCAL=${APP_HOME}/jre
 if [ -x "${JRE_LOCAL}" ]; then
-    export PATH=${JRE_LOCAL}/bin:$PATH 
-    export CLASSPATH=.:${JRE_LOCAL}/lib/rt.jar 
+    export PATH=${JRE_LOCAL}/bin:$PATH
+    export CLASSPATH=.:${JRE_LOCAL}/lib/rt.jar
 fi
 
 usage()
 {
-    echo "Usage: ${0##*/}  {start|stop} "
+    echo "Usage: ${0##*/}  {start|stop}"
     exit 1
 }
 
 start()
 {
-    PID_PATH=${APP_HOME}/temp/daemon.pid
+    PID_PATH=${APP_HOME}/tmp/daemon.pid
     if [ -f "${PID_PATH}" ]; then
         echo "Application has started!"
         exit 0
@@ -54,7 +54,7 @@ start()
 
 stop()
 {
-    PID_PATH=${APP_HOME}/temp/app.pid
+    PID_PATH=${APP_HOME}/tmp/app.pid
     if [ -f "${PID_PATH}" ]; then
 	    PID=`cat ${PID_PATH}`
 	    kill -TERM ${PID}
@@ -64,7 +64,7 @@ stop()
 	    echo "Not found app.pid file!"
     fi
 
-    PID_PATH=${APP_HOME}/temp/daemon.pid
+    PID_PATH=${APP_HOME}/tmp/daemon.pid
     if [ -f "${PID_PATH}" ]; then
 	    PID=`cat ${PID_PATH}`
 	    kill -TERM ${PID}

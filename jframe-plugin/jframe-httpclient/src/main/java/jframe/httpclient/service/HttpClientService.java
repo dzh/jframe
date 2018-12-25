@@ -23,20 +23,18 @@ import jframe.core.plugin.annotation.Service;
 @Service(clazz = "jframe.httpclient.service.impl.HttpClientServiceImpl", id = "jframe.service.httpclient")
 public interface HttpClientService {
 
-	String P_MIMETYPE = "mimeType";
-	String P_METHOD = "method";
+    String P_MIMETYPE = "mimeType";
+    String P_METHOD = "method";
 
-	<T> T send(String id, String path, String data,
-			Map<String, String> headers, Map<String, String> paras)
-			throws Exception;
+    String send(String id, String path, String data, Map<String, String> headers, Map<String, String> paras) throws Exception;
 
-	<T> T sendGroup(String gid, String path, String data,
-			Map<String, String> headers, Map<String, String> paras)
-			throws Exception;
+    // <T> T sendGroup(String gid, String path, String data,
+    // Map<String, String> headers, Map<String, String> paras)
+    // throws Exception;
 
-	<T> T sendRandom(String path, String data, Map<String, String> headers,
-			Map<String, String> paras) throws Exception;
+    // <T> T sendRandom(String path, String data, Map<String, String> headers,
+    // Map<String, String> paras) throws Exception;
 
-	<T> T sendAll(String path, String data, Map<String, String> headers,
-			Map<String, String> paras) throws Exception;
+    // <T> T sendAll(String path, String data, Map<String, String> headers,
+    // Map<String, String> paras) throws Exception;
 }

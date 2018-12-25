@@ -46,15 +46,13 @@ public class OSSServiceImpl implements OSSService {
 
         try {
             String file = plugin.getConfig(FILE_OSS, plugin.getConfig(Config.APP_CONF) + "/oss-config.properties");
-            if (!new File(file).exists()) {
-                throw new FileNotFoundException("Not found file.oss " + file);
-            }
+            if (!new File(file).exists()) { throw new FileNotFoundException("not found " + file); }
             _config.init(file);
             for (String id : _config.getGroupIds()) {
-
+                // TODO
             }
         } catch (Exception e) {
-            LOG.error("Start OSSService Failure!" + e.getMessage(), e.fillInStackTrace());
+            LOG.error("Start OSSService Failure!" + e.getMessage(), e);
             return;
         }
         LOG.info("Start OSSService Successfully!");
@@ -64,14 +62,13 @@ public class OSSServiceImpl implements OSSService {
     void stop() {
         LOG.info("Stop OSSService");
 
-        if (client != null)
-            for (Map.Entry<String, OSSClient> c : client.entrySet()) {
-                try {
-                    c.getValue().shutdown();
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e.fillInStackTrace());
-                }
+        if (client != null) for (Map.Entry<String, OSSClient> c : client.entrySet()) {
+            try {
+                c.getValue().shutdown();
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e.fillInStackTrace());
             }
+        }
     }
 
     @Override

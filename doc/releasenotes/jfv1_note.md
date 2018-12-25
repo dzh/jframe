@@ -1,7 +1,6 @@
-Jframe v1.x Release Notes
+JFrame v1.x Release Note
 ===================================
 
-## Jframe v1 Feature
 * v1.0.0
    * Run on jdk1.5 or higher
    * Use slf4j+logback as logging framework

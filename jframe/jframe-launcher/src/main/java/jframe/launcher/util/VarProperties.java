@@ -96,18 +96,16 @@ public class VarProperties extends Properties {
      * @return
      */
     private String replaceVar(String key, String value, Set<String> keys) {
-        if (value == null)
-            return null;
+        if (value == null) return null;
         Matcher m = P_VAR.matcher(value);
-        if (keys.contains(key))
-            throw new RuntimeException("circle key->" + key);
+        if (keys.contains(key)) throw new RuntimeException("circle key->" + key);
 
         String newVal = value;
         String var = null;
         String val = null;
         try {
             while (m.find()) {
-                if (!keys.contains(keys)) {
+                if (!keys.contains(key)) {
                     keys.add(key);
                 }
 
@@ -121,8 +119,7 @@ public class VarProperties extends Properties {
             }
             keys.remove(key);
 
-            if (containsKey(key))
-                put(key, newVal);
+            if (containsKey(key)) put(key, newVal);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("key={}, value={}->{}", key, value, newVal);
             }
