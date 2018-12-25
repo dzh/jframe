@@ -59,7 +59,7 @@ class QiniuServiceImpl implements QiniuService {
 
     @Stop
     void stop() {
-        CONFIG = null;
+        CONFIG.clear();
     }
 
     /*
@@ -68,26 +68,30 @@ class QiniuServiceImpl implements QiniuService {
      * java.lang.String)
      */
     @Override
-    public String uploadToken(String bucket, String key) {
+    public String uploadToken(String id, String key) {
+        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
         return uploadToken(bucket, key, -1L);
     }
 
     @Override
-    public String uploadToken(String bucket, String key, long expires) {
+    public String uploadToken(String id, String key, long expires) {
+        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
         return uploadToken(bucket, key, expires, null);
     }
 
     @Override
-    public String privateDownloadUrl(String bucket, String key, long expires) {
+    public String privateDownloadUrl(String id, String key, long expires) {
+        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
         if (LOG.isDebugEnabled()) {
             LOG.debug("privateDownloadUrl -> {}", HTTP + CONFIG.getConf(bucket, QiniuConfig.DOMAIN) + HTTP_SEPERATOR + key);
         }
-
+        if (expires < 1) expires = CONFIG.getConfLong(id, QiniuConfig.DOWNLOAD_EXPIRE, "3600");
         return AUTH.privateDownloadUrl(HTTP + CONFIG.getConf(bucket, QiniuConfig.DOMAIN) + HTTP_SEPERATOR + key, expires);
     }
 
     @Override
-    public String publicDownloadUrl(String bucket, String key) {
+    public String publicDownloadUrl(String id, String key) {
+        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
         if (LOG.isDebugEnabled()) {
             LOG.debug("publicDownlaodUrl -> {}", HTTP + CONFIG.getConf(bucket, QiniuConfig.DOMAIN) + HTTP_SEPERATOR + key);
         }
@@ -96,12 +100,14 @@ class QiniuServiceImpl implements QiniuService {
     }
 
     @Override
-    public String uploadToken(String bucket, String key, long expires, StringMap policy) {
+    public String uploadToken(String id, String key, long expires, StringMap policy) {
+        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
         return uploadToken(bucket, key, expires, policy, true);
     }
 
     @Override
-    public String uploadToken(String bucket, String key, long expires, StringMap policy, boolean strict) {
+    public String uploadToken(String id, String key, long expires, StringMap policy, boolean strict) {
+        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
         if (expires == -1) expires = Long.parseLong(CONFIG.getConf(bucket, QiniuConfig.UPLOAD_EXPIRE, "3600"));
         return AUTH.uploadToken(bucket, key, expires, policy, strict);
     }

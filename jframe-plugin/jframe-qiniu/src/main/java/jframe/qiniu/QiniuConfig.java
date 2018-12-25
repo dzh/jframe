@@ -22,4 +22,6 @@ public class QiniuConfig extends PropsConf {
 
     public static final String DOWNLOAD_EXPIRE = "download.expire";
 
+    public static final String BUCKET = "bucket";
+
 }
