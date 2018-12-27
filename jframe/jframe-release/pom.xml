@@ -23,7 +23,7 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.basedir}/jframe/lib/</outputDirectory>
+							<outputDirectory>${project.basedir}/lib/</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<excludeTransitive>false</excludeTransitive>
@@ -38,7 +38,7 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.basedir}/jframe/plugin/</outputDirectory>
+							<outputDirectory>${project.basedir}/plugin/</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<excludeTransitive>false</excludeTransitive>
@@ -92,10 +92,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jframe-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>jframe-ext</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

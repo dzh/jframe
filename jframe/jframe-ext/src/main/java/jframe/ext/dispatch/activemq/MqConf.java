@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jframe.ext.dispatch;
+package jframe.ext.dispatch.activemq;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

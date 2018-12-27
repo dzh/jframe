@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jframe.ext.dispatch;
+package jframe.ext.dispatch.activemq;
 
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;

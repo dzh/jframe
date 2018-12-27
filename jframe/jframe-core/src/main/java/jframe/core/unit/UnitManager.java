@@ -49,8 +49,7 @@ public class UnitManager {
      * @throws UnitException
      */
     public Unit regUnit(Unit u) throws UnitException {
-        if (u == null)
-            throw new UnitException("Unit is null");
+        if (u == null) throw new UnitException("Unit is null");
 
         try {
             synchronized (_units) {
@@ -87,8 +86,7 @@ public class UnitManager {
      * @throws UnitException
      */
     public Unit unregUnit(Unit u) throws UnitException {
-        if (u == null)
-            throw new UnitException("Unit is null");
+        if (u == null) throw new UnitException("Unit is null");
 
         synchronized (_units) {
             _units.remove(u);
@@ -128,7 +126,7 @@ public class UnitManager {
      * @throws UnitException
      */
     public void start() throws UnitException {
-        String funit = _conf.getConfig("file.unit", _conf.getConfig(Config.APP_CONF + "/unit.properties"));
+        String funit = _conf.getConfig("file.unit", _conf.getConfig(Config.APP_CONF) + "/unit.properties");
         if (funit != null && new File(funit).exists()) {
             loadUnit(funit);
         } else {
@@ -158,8 +156,7 @@ public class UnitManager {
             String[] units = props.getGroupIds();
             for (String id : units) {
                 String clazz = props.getConf(id, "class");
-                Unit unit = (Unit) Class.forName(clazz, true, Thread.currentThread().getContextClassLoader())
-                        .newInstance();
+                Unit unit = (Unit) Class.forName(clazz, true, Thread.currentThread().getContextClassLoader()).newInstance();
                 unit.setName(props.getConf(id, "name", unit.getClass().getSimpleName()));
                 regUnit(unit);
             }

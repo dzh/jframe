@@ -27,4 +27,6 @@ public interface QiniuService {
 
     String publicDownloadUrl(String id, String key);
 
+    String info(String id, String key);
+
 }

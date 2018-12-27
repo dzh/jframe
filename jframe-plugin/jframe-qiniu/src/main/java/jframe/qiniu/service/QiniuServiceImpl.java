@@ -49,6 +49,7 @@ class QiniuServiceImpl implements QiniuService {
             if ("".equals(CONFIG.getConf(null,
                     QiniuConfig.SK))) { throw new ServiceException("Error in configuration , lost parameter -> " + QiniuConfig.SK); }
 
+            LOG.info("QiniuService {}", CONFIG);
             AUTH = Auth.create(CONFIG.getConf(null, QiniuConfig.AK), CONFIG.getConf(null, QiniuConfig.SK));
 
             LOG.info("QiniuService start successfully!");
@@ -69,14 +70,12 @@ class QiniuServiceImpl implements QiniuService {
      */
     @Override
     public String uploadToken(String id, String key) {
-        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
-        return uploadToken(bucket, key, -1L);
+        return uploadToken(id, key, -1L);
     }
 
     @Override
     public String uploadToken(String id, String key, long expires) {
-        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
-        return uploadToken(bucket, key, expires, null);
+        return uploadToken(id, key, expires, null);
     }
 
     @Override
@@ -101,8 +100,7 @@ class QiniuServiceImpl implements QiniuService {
 
     @Override
     public String uploadToken(String id, String key, long expires, StringMap policy) {
-        String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
-        return uploadToken(bucket, key, expires, policy, true);
+        return uploadToken(id, key, expires, policy, true);
     }
 
     @Override
@@ -110,6 +108,11 @@ class QiniuServiceImpl implements QiniuService {
         String bucket = CONFIG.getConf(id, QiniuConfig.BUCKET);
         if (expires == -1) expires = Long.parseLong(CONFIG.getConf(id, QiniuConfig.UPLOAD_EXPIRE, "3600"));
         return AUTH.uploadToken(bucket, key, expires, policy, strict);
+    }
+
+    @Override
+    public String info(String id, String key) {
+        return CONFIG.getConf(id, key);
     }
 
 }
