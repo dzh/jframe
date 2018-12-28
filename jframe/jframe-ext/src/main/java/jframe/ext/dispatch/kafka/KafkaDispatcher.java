@@ -210,15 +210,17 @@ public class KafkaDispatcher extends AbstractDispatcher {
      */
     @Override
     public void receive(Msg<?> msg) {
-        String topic = (String) msg.getMeta(D_KAFKA_R_TOPIC);
-        if (Objects.isNull(topic)) {
-            topic = DEFAULT_TOPIC;
+        if (producer != null) {
+            String topic = (String) msg.getMeta(D_KAFKA_R_TOPIC);
+            if (Objects.isNull(topic)) {
+                topic = DEFAULT_TOPIC;
+            }
+            Integer partition = partition(msg);
+            Long timestamp = timestamp(msg);
+            String key = (String) msg.getMeta(D_KAFKA_R_KEY);
+            ProducerRecord<String, Msg<?>> record = new ProducerRecord<>(topic, partition, timestamp, key, msg, null);
+            producer.send(record);
         }
-        Integer partition = partition(msg);
-        Long timestamp = timestamp(msg);
-        String key = (String) msg.getMeta(D_KAFKA_R_KEY);
-        ProducerRecord<String, Msg<?>> record = new ProducerRecord<>(topic, partition, timestamp, key, msg, null);
-        producer.send(record);
     }
 
     private Long timestamp(Msg<?> msg) {

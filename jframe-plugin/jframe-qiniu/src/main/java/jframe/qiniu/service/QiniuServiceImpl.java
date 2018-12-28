@@ -6,6 +6,8 @@ package jframe.qiniu.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.qiniu.storage.BucketManager;
+import com.qiniu.storage.Configuration;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
@@ -36,6 +38,8 @@ class QiniuServiceImpl implements QiniuService {
 
     static Auth AUTH;
 
+    static BucketManager BUCKET;
+
     static String HTTP = "http://";
 
     static String HTTP_SEPERATOR = "/";
@@ -51,6 +55,7 @@ class QiniuServiceImpl implements QiniuService {
 
             LOG.info("QiniuService {}", CONFIG);
             AUTH = Auth.create(CONFIG.getConf(null, QiniuConfig.AK), CONFIG.getConf(null, QiniuConfig.SK));
+            BUCKET = new BucketManager(AUTH, new Configuration());
 
             LOG.info("QiniuService start successfully!");
         } catch (Exception e) {
@@ -113,6 +118,26 @@ class QiniuServiceImpl implements QiniuService {
     @Override
     public String info(String id, String key) {
         return CONFIG.getConf(id, key);
+    }
+
+    @Override
+    public String config(String id, String key) {
+        return CONFIG.getConf(id, key);
+    }
+
+    @Override
+    public String bucket(String id) {
+        return CONFIG.getConf(id, QiniuConfig.BUCKET);
+    }
+
+    @Override
+    public Auth auth() {
+        return AUTH;
+    }
+
+    @Override
+    public BucketManager bucketManager() {
+        return BUCKET;
     }
 
 }

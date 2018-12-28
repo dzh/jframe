@@ -3,6 +3,8 @@
  */
 package jframe.qiniu.service;
 
+import com.qiniu.storage.BucketManager;
+import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
 import jframe.core.plugin.annotation.Service;
@@ -27,6 +29,18 @@ public interface QiniuService {
 
     String publicDownloadUrl(String id, String key);
 
+    /**
+     * use {@link QiniuService#config(String, String)}
+     */
+    @Deprecated
     String info(String id, String key);
+
+    String config(String id, String key);
+
+    String bucket(String id);
+
+    Auth auth();
+
+    BucketManager bucketManager();
 
 }

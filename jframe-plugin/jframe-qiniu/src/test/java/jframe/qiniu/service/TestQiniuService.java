@@ -10,6 +10,4 @@ package jframe.qiniu.service;
  */
 public class TestQiniuService {
 
-	
-	
 }
