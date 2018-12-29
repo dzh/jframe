@@ -13,13 +13,8 @@
 target/
 .project
 .classpath
-jframe/jframe-release/jframe/lib/
 jframe/jframe-release/jframe/log/
-jframe/jframe-release/jframe/plugin/
-jframe/jframe-release/jframe/temp/
-jframe/jframe-release/jframe/conf/cache/
-
-jframe/jframe-release/jframe/tmp/
+tmp/
 
 jframe-plugin/release/lib/
 jframe-plugin/release/plugin/

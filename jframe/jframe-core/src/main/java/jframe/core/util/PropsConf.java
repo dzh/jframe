@@ -5,6 +5,7 @@ package jframe.core.util;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,8 +35,7 @@ public class PropsConf {
     boolean init = false;
 
     public synchronized void init(String file) throws Exception {
-        if (init)
-            return;
+        if (init) return;
 
         try {
             init(new FileInputStream(file));
@@ -45,11 +45,10 @@ public class PropsConf {
         init = true;
     }
 
-    private Map<String, String> conf;
+    private Map<String, String> conf = Collections.emptyMap();
 
     public synchronized void init(InputStream is) throws Exception {
-        if (is == null || init)
-            return;
+        if (is == null || init) return;
 
         conf = new HashMap<String, String>();
         try {
@@ -67,8 +66,7 @@ public class PropsConf {
     }
 
     public synchronized void replace(VarHandler vh) {
-        if (conf == null)
-            return;
+        if (conf.isEmpty()) return;
         for (Entry<String, String> e : conf.entrySet()) {
             conf.put(e.getKey(), vh.replace(e.getValue()));
         }
@@ -76,8 +74,7 @@ public class PropsConf {
 
     public synchronized String[] getGroupIds() {
         String groups = conf.get("group.id");
-        if (groups == null)
-            return new String[0];
+        if (groups == null) return new String[0];
         return groups.split("\\s+");
     }
 
@@ -88,8 +85,7 @@ public class PropsConf {
      * @return "" if not matched value or value
      */
     public synchronized String getConf(String group, String key) {
-        if (conf == null)
-            return "";
+        if (conf.isEmpty()) return "";
         String val = null;
         if (group != null) {
             val = conf.get("@" + group + "." + key);
@@ -109,8 +105,7 @@ public class PropsConf {
      * @return defVal if not matched value or value
      */
     public synchronized String getConf(String group, String key, String defVal) {
-        if (conf == null)
-            return defVal;
+        if (conf.isEmpty()) return defVal;
         String val = null;
         if (group != null) {
             val = conf.get("@" + group + "." + key);
@@ -124,29 +119,25 @@ public class PropsConf {
 
     public synchronized int getConfInt(String group, String key, String defVal) {
         String val = getConf(group, key, defVal);
-        if (val == null)
-            return -1;
+        if (val == null) return -1;
         return Integer.parseInt(val);
     }
 
     public synchronized boolean getConfBool(String group, String key, String defVal) {
         String val = getConf(group, key, defVal);
-        if (val == null)
-            return false;
+        if (val == null) return false;
         return Boolean.parseBoolean(val);
     }
 
     public synchronized long getConfLong(String group, String key, String defVal) {
         String val = getConf(group, key, defVal);
-        if (val == null)
-            return -1;
+        if (val == null) return -1;
         return Long.parseLong(val);
     }
 
     public synchronized Properties clone2Properties() {
         Properties p = new Properties();
-        if (conf == null)
-            return p;
+        if (conf.isEmpty()) return p;
         for (Entry<String, String> e : conf.entrySet()) {
             p.setProperty(e.getKey(), e.getValue());
         }
@@ -154,7 +145,11 @@ public class PropsConf {
     }
 
     public synchronized void clear() {
-        if (conf != null)
-            conf.clear();
+        conf.clear();
+    }
+
+    @Override
+    public String toString() {
+        return conf.toString();
     }
 }

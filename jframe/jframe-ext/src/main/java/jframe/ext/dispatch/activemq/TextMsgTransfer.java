@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jframe.ext.dispatch;
+package jframe.ext.dispatch.activemq;
 
 import jframe.core.msg.Msg;
 import jframe.core.msg.TextMsg;

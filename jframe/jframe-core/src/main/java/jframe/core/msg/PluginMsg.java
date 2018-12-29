@@ -15,7 +15,7 @@ public class PluginMsg<V> implements Msg<V> {
 
     public static final String PluginName = "Plugin";
 
-    private final Map<String, Object> meta = new HashMap<String, Object>(10);
+    private final Map<String, Object> meta = new HashMap<String, Object>(8);
 
     private int type;
 
