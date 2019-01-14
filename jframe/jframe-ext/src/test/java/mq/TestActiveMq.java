@@ -7,8 +7,6 @@ import java.util.Date;
 
 import jframe.core.msg.TextMsg;
 
-import org.junit.Test;
-
 /**
  * @author dzh
  * @date Mar 24, 2015 10:44:06 AM
