@@ -69,9 +69,10 @@ public class UnitManager {
                 _units.add(u);
             }
 
-            LOG.info("u-{}", u);
+            LOG.info("reg u-{}", u);
             u.start();
         } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
             unregUnit(u);
             throw new UnitException(e.getMessage(), e.getCause());
         }
@@ -93,7 +94,7 @@ public class UnitManager {
         }
         u.stop();
 
-        LOG.info("u-{}", u);
+        LOG.info("unreg u-{}", u);
         return u;
     }
 
