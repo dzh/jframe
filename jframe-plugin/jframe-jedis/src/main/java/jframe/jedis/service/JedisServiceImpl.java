@@ -206,4 +206,33 @@ public class JedisServiceImpl implements JedisService {
         pool.returnResource(jedis);
     }
 
+    @Override
+    public String get(String id, String key) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) { return jedis.get(key); }
+        }
+        return null;
+    }
+
+    @Override
+    public void setex(String id, String key, String value, Integer expiredSeconds) {
+        if (value == null) return; // do nothing
+
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                jedis.setex(key, expiredSeconds, value);
+            }
+        }
+
+    }
+
+    @Override
+    public void del(String id, String key) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                jedis.del(key);
+            }
+        }
+    }
+
 }
