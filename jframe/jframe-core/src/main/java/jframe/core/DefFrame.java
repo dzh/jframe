@@ -80,7 +80,7 @@ public class DefFrame implements Frame {
                 try {
                     um.start();
                 } catch (Exception e) {
-                    LOG.error(e.getMessage(), e.fillInStackTrace());
+                    LOG.error(e.getMessage(), e);
                     // DefFrame.this.stop(); // Exit Frame
                     // TODO Exit daemon process
                 }

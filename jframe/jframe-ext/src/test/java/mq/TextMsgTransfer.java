@@ -3,10 +3,10 @@
  */
 package mq;
 
+import com.google.gson.Gson;
+
 import jframe.core.msg.Msg;
 import jframe.core.msg.TextMsg;
-
-import com.google.gson.Gson;
 
 /**
  * @author dzh

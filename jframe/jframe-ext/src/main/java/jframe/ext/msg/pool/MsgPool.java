@@ -8,11 +8,11 @@ import java.lang.ref.SoftReference;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import jframe.core.msg.Msg;
-import jframe.core.msg.PluginMsg;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jframe.core.msg.Msg;
+import jframe.core.msg.PluginMsg;
 
 /**
  * <p>

@@ -67,6 +67,10 @@ public class KafkaDispatcher extends AbstractDispatcher {
 
     private volatile boolean closed;
 
+    private int WAIT_CLOSED_SECOND = 60;
+
+    private Thread dispatchT; // consume dispatch thread
+
     public KafkaDispatcher(String id, Config config) {
         super(id, config);
     }
@@ -152,7 +156,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
             close();
         }
         final boolean autoCommit = "true".equals(props.get("enable.auto.commit")) ? true : false;
-        Thread dispatchT = new Thread(() -> {
+        this.dispatchT = new Thread(() -> {
             LOG.info("{} start", Thread.currentThread().getName());
             ConsumerRecords<String, Msg<?>> records = null;
             while (true) {
@@ -171,6 +175,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
                 // commit if autoCommit is false
                 if (!autoCommit) consumer.commitAsync();
             }
+            consumer.close(Duration.ofSeconds(WAIT_CLOSED_SECOND)); // consumer close
             LOG.info("{} closed", Thread.currentThread().getName());
         }, "kafkaConsumeThread");
         dispatchT.start();
@@ -250,12 +255,16 @@ public class KafkaDispatcher extends AbstractDispatcher {
     @Override
     public void close() {
         // close producer
-        if (enableProducer()) producer.close(60, TimeUnit.SECONDS);
+        if (enableProducer()) producer.close(WAIT_CLOSED_SECOND, TimeUnit.SECONDS);
 
         // close dispatcher and consumer
         if (enableConsumer()) {
             closed = true;
-            consumer.close(Duration.ofSeconds(60));
+            if (dispatchT != null) {
+                try {
+                    dispatchT.join(WAIT_CLOSED_SECOND * 1000L);
+                } catch (InterruptedException e) {}
+            }
         }
         super.close();
     }

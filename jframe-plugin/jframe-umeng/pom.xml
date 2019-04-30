@@ -26,5 +26,13 @@
 			<version>2.0.0-SNAPSHOT</version>
 			<classifier>plugin</classifier>
 		</dependency>
+
+		<dependency>
+			<groupId>com.umeng.sdk</groupId>
+			<artifactId>push</artifactId>
+			<version>4.2.0</version>
+			<type>aar</type>
+		</dependency>
+
 	</dependencies>
 </project>

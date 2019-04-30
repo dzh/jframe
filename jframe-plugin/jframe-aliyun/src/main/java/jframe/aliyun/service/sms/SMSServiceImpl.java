@@ -29,6 +29,8 @@ import jframe.core.util.PropsConf;
 /**
  * https://help.aliyun.com/document_detail/55284.html?spm=a2c4g.11186623.6.566.5d1b4175GzAYkw
  * 
+ * https://helpcdn.aliyun.com/document_detail/68360.html
+ * 
  * @author dzh
  * @date Nov 19, 2018 7:01:24 PM
  * @version 0.0.1
@@ -91,7 +93,7 @@ public class SMSServiceImpl implements SMSService, AliyunField {
         DefaultAcsClient client = clients.get(id);
         if (client == null) { throw new NullPointerException("not found sms id:" + id); }
 
-        return client.getAcsResponse(request);
+        return client.getAcsResponse(request);// TODO async
     }
 
 }

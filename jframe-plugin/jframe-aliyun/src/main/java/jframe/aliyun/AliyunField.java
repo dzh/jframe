@@ -28,4 +28,6 @@ public interface AliyunField {
 
     String K_product = "product";
     String K_domain = "domain";
+
+    String K_endpoint = "endpoint";
 }

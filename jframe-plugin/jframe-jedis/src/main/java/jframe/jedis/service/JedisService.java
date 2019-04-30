@@ -15,24 +15,43 @@ import redis.clients.jedis.JedisCluster;
 @Service(clazz = "jframe.jedis.service.JedisServiceImpl", id = "jframe.service.jedis")
 public interface JedisService {
 
-	/**
-	 * 
-	 * @return jedis.host.default's jedis
-	 */
-	Jedis getJedis();
+    /**
+     * 
+     * @return jedis.host.default's jedis
+     */
+    Jedis getJedis();
 
-	Jedis getJedis(String name);
+    Jedis getJedis(String id);
 
-	void recycleJedis(Jedis jedis);
+    /**
+     * use {@link redis.clients.jedis.Jedis#close()}
+     * 
+     * @param jedis
+     */
+    @Deprecated
+    void recycleJedis(Jedis jedis);
 
-	void recycleJedis(String name, Jedis jedis);
+    /**
+     * use {@link redis.clients.jedis.Jedis#close()}
+     * 
+     * @param jedis
+     */
+    @Deprecated
+    void recycleJedis(String id, Jedis jedis);
 
-	/**
-	 * unsupported
-	 * 
-	 * @param name
-	 * @return
-	 */
-	JedisCluster getJedisCluster(String name);
+    /**
+     * unsupported
+     * 
+     * @param name
+     * @return
+     */
+    JedisCluster getJedisCluster(String name);
+
+    /************************** simple method ***************************/
+    String get(String id, String key);
+
+    void setex(String id, String key, String value, Integer expiredSeconds);
+
+    void del(String id, String key);
 
 }

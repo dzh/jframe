@@ -30,6 +30,7 @@ import push.ios.IOSBroadcast;
 import push.ios.IOSUnicast;
 
 /**
+ * 
  * @author dzh
  * @date Mar 4, 2016 10:13:18 PM
  * @since 1.0
@@ -78,14 +79,21 @@ public class UmengServiceImpl implements UmengService {
     }
 
     @Stop
-    void stop() {
-    }
+    void stop() {}
 
+    /**
+     * "alert":""/{ // 当content-available=1时(静默推送)，可选; 否则必填。
+     * // 可为JSON类型和字符串类型
+     * "title":"title",
+     * "subtitle":"subtitle",
+     * "body":"body"
+     * }
+     */
     @Override
-    public void sendIOSUnicast(String groupId, String token, String alert, Integer badge, String sound,
-            Map<String, String> custom) throws Exception {
-        IOSUnicast unicast = new IOSUnicast(_config.getConf(groupId, UmengConfig.AppKey),
-                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+    public void sendIOSUnicast(String groupId, String token, String alert, Integer badge, String sound, Map<String, String> custom)
+            throws Exception {
+        IOSUnicast unicast =
+                new IOSUnicast(_config.getConf(groupId, UmengConfig.AppKey), _config.getConf(groupId, UmengConfig.AppMasterSecret));
         unicast.setDeviceToken(token);
         unicast.setAlert(alert);
         badge = badge == null ? 0 : badge;
@@ -93,19 +101,23 @@ public class UmengServiceImpl implements UmengService {
         sound = sound == null ? "default" : sound;
         unicast.setSound(sound);
         unicast.setTestMode();
-        if (custom != null)
-            for (Map.Entry<String, String> e : custom.entrySet()) {
-                unicast.setCustomizedField(e.getKey(), e.getValue());
-            }
+        if (custom != null) for (Map.Entry<String, String> e : custom.entrySet()) {
+            unicast.setCustomizedField(e.getKey(), e.getValue());
+        }
 
         sendUmengNotification(unicast, groupId);
     }
 
+    /**
+     * "ticker":"xx", // 必填，通知栏提示文字
+     * "title":"xx", // 必填，通知标题
+     * "text":"xx", // 必填，通知文字描述
+     */
     @Override
-    public void sendAndUnicast(String groupId, String token, String ticker, String title, String text,
-            Map<String, String> custom) throws Exception {
-        AndroidUnicast unicast = new AndroidUnicast(_config.getConf(groupId, UmengConfig.AppKey),
-                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+    public void sendAndUnicast(String groupId, String token, String ticker, String title, String text, Map<String, String> custom)
+            throws Exception {
+        AndroidUnicast unicast =
+                new AndroidUnicast(_config.getConf(groupId, UmengConfig.AppKey), _config.getConf(groupId, UmengConfig.AppMasterSecret));
         unicast.setDeviceToken(token);
         unicast.setTicker(ticker);
         unicast.setTitle(title);
@@ -117,10 +129,9 @@ public class UmengServiceImpl implements UmengService {
             unicast.setCustomField(text);
         }
         // unicast.setDisplayType(DisplayType.NOTIFICATION);
-        if (custom != null)
-            for (Map.Entry<String, String> e : custom.entrySet()) {
-                unicast.setExtraField(e.getKey(), e.getValue());
-            }
+        if (custom != null) for (Map.Entry<String, String> e : custom.entrySet()) {
+            unicast.setExtraField(e.getKey(), e.getValue());
+        }
 
         sendUmengNotification(unicast, groupId);
     }
@@ -132,8 +143,7 @@ public class UmengServiceImpl implements UmengService {
         String timestamp = Integer.toString((int) (System.currentTimeMillis() / 1000));
         n.setPredefinedKeyValue("timestamp", timestamp);
         String postBody = n.getPostBody();
-        String sign = DigestUtils
-                .md5Hex(("POST" + UmengConfig.UrlSend + postBody + n.getAppMasterSecret()).getBytes("utf-8"));
+        String sign = DigestUtils.md5Hex(("POST" + UmengConfig.UrlSend + postBody + n.getAppMasterSecret()).getBytes("utf-8"));
         String httpid = _config.getConf(null, UmengConfig.HttpId, "umeng");
         String path = "/api/send?sign=" + sign;
 
@@ -147,38 +157,36 @@ public class UmengServiceImpl implements UmengService {
     }
 
     @Override
-    public void sendIOSBroadcast(String groupId, String token, String alert, Integer badge, String sound,
-            Map<String, String> custom) throws Exception {
-        IOSBroadcast broadcast = new IOSBroadcast(_config.getConf(groupId, UmengConfig.AppKey),
-                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+    public void sendIOSBroadcast(String groupId, String token, String alert, Integer badge, String sound, Map<String, String> custom)
+            throws Exception {
+        IOSBroadcast broadcast =
+                new IOSBroadcast(_config.getConf(groupId, UmengConfig.AppKey), _config.getConf(groupId, UmengConfig.AppMasterSecret));
         broadcast.setAlert(alert);
         badge = badge == null ? 0 : badge;
         broadcast.setBadge(badge);
         sound = sound == null ? "default" : sound;
         broadcast.setSound(sound);
         broadcast.setTestMode();
-        if (custom != null)
-            for (Map.Entry<String, String> e : custom.entrySet()) {
-                broadcast.setCustomizedField(e.getKey(), e.getValue());
-            }
+        if (custom != null) for (Map.Entry<String, String> e : custom.entrySet()) {
+            broadcast.setCustomizedField(e.getKey(), e.getValue());
+        }
 
         sendUmengNotification(broadcast, groupId);
     }
 
     @Override
-    public void sendAndBroadcast(String groupId, String token, String ticker, String title, String text,
-            Map<String, String> custom) throws Exception {
-        AndroidBroadcast broadcast = new AndroidBroadcast(_config.getConf(groupId, UmengConfig.AppKey),
-                _config.getConf(groupId, UmengConfig.AppMasterSecret));
+    public void sendAndBroadcast(String groupId, String token, String ticker, String title, String text, Map<String, String> custom)
+            throws Exception {
+        AndroidBroadcast broadcast =
+                new AndroidBroadcast(_config.getConf(groupId, UmengConfig.AppKey), _config.getConf(groupId, UmengConfig.AppMasterSecret));
         broadcast.setTicker(ticker);
         broadcast.setTitle(title);
         broadcast.setText(text);
         broadcast.goAppAfterOpen();
         broadcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-        if (custom != null)
-            for (Map.Entry<String, String> e : custom.entrySet()) {
-                broadcast.setExtraField(e.getKey(), e.getValue());
-            }
+        if (custom != null) for (Map.Entry<String, String> e : custom.entrySet()) {
+            broadcast.setExtraField(e.getKey(), e.getValue());
+        }
 
         sendUmengNotification(broadcast, groupId);
     }
