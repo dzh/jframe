@@ -123,7 +123,7 @@ public class STSServiceImpl implements STSService, AliyunField {
 
         // 发起请求，并得到response
         final AssumeRoleResponse response = client.getAcsResponse(request);
-        client.shutdown();
+        // client.shutdown();
 
         return response;
     }

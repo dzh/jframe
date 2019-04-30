@@ -8,6 +8,7 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleRequest;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
+import org.junit.Test;
 
 public class StsServiceSample {
     // 目前只有"cn-hangzhou"这个region可用, 不要使用填写其他region的值
@@ -16,7 +17,7 @@ public class StsServiceSample {
     public static final String STS_API_VERSION = "2015-04-01";
 
     static AssumeRoleResponse assumeRole(String accessKeyId, String accessKeySecret, String roleArn, String roleSessionName, String policy,
-            ProtocolType protocolType) throws ClientException {
+                                         ProtocolType protocolType) throws ClientException {
         try {
             // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
             IClientProfile profile = DefaultProfile.getProfile(REGION_CN_HANGZHOU, accessKeyId, accessKeySecret);
@@ -41,7 +42,8 @@ public class StsServiceSample {
         }
     }
 
-    public static void main(String[] args) {
+    @Test
+    public void tokenTest() {
         // 只有 RAM用户（子账号）才能调用 AssumeRole 接口
         // 阿里云主账号的AccessKeys不能用于发起AssumeRole请求
         // 请首先在RAM控制台创建一个RAM用户，并为这个用户创建AccessKeys
@@ -57,7 +59,7 @@ public class StsServiceSample {
         // RoleSessionName 是临时Token的会话名称，自己指定用于标识你的用户，主要用于审计，或者用于区分Token颁发给谁
         // 但是注意RoleSessionName的长度和规则，不要有空格，只能有'-' '_' 字母和数字等字符
         // 具体规则请参考API文档中的格式要求
-        String roleSessionName = "";
+        String roleSessionName = "oss-app-client";
 
         // 如何定制你的policy?
         // String policy = "{\"Statement\": [{\"Action\": \"oss:*\", "
@@ -81,9 +83,7 @@ public class StsServiceSample {
             System.out.println("Security Token: " + response.getCredentials().getSecurityToken());
         } catch (
 
-        ClientException e)
-
-        {
+                ClientException e) {
             System.out.println("Failed to get a token.");
             System.out.println("Error code: " + e.getErrCode());
             System.out.println("Error message: " + e.getErrMsg());
