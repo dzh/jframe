@@ -9,7 +9,7 @@
 	<artifactId>jframe-zk</artifactId>
 
 	<properties>
-		<curator.version>4.0.1</curator.version>
+		<curator.version>4.2.0</curator.version>
 	</properties>
 
 	<dependencies>

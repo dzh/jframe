@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package jframe.aliyun.service;
 
-import java.util.Map;
-
 import jframe.core.plugin.annotation.Service;
+
+import java.util.Map;
 
 /**
  * @author dzh
@@ -17,7 +17,7 @@ public interface STSService {
 
     /**
      * 获取临时访问权限
-     * 
+     *
      * @param id
      * @return
      */
