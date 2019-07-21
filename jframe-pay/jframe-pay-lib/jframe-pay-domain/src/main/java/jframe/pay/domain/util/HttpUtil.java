@@ -1,21 +1,16 @@
 /**
- * 
+ *
  */
 package jframe.pay.domain.util;
-
-import static java.util.stream.Collectors.toList;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+
+import java.io.UnsupportedEncodingException;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author dzh
@@ -27,7 +22,7 @@ public class HttpUtil {
     /**
      * If req not contains all mustParas , then return emptyList contains empty
      * parameter
-     * 
+     *
      * @param req
      *            req parameters
      * @param mustParas
@@ -70,7 +65,7 @@ public class HttpUtil {
 
     /**
      * 目前只支持单值情况， 不支持多值和编码
-     * 
+     *
      * @param content
      * @return
      * @throws UnsupportedEncodingException

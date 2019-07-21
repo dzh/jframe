@@ -6,22 +6,11 @@
         <artifactId>jframe-pay</artifactId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>jframe-pay-plugin</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>jframe-pay-alipay</module>
-        <module>jframe-pay-wx</module>
-        <module>jframe-pay-http</module>
-        <module>jframe-pay-dao</module>
-        <module>jframe-pay-task</module>
-        <module>jframe-pay-upmp</module>
-        <module>jframe-pay-client</module>
-    </modules>
+    <artifactId>jframe-pay-client</artifactId>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <classifier>plugin</classifier>
@@ -33,13 +22,12 @@
     <dependencies>
         <dependency>
             <groupId>io.github.dzh</groupId>
-            <artifactId>jframe-pay-domain</artifactId>
+            <artifactId>jframe-httpclient</artifactId>
+            <classifier>plugin</classifier>
         </dependency>
-
         <dependency>
             <groupId>io.github.dzh</groupId>
-            <artifactId>jframe-memcached-client</artifactId>
-            <classifier>plugin</classifier>
+            <artifactId>jframe-pay-domain</artifactId>
         </dependency>
     </dependencies>
 </project>

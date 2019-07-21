@@ -1,27 +1,12 @@
 /**
- * 
+ *
  */
 package jframe.pay.upmp.service;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.unionpay.acp.sdk.SDKConfig;
-
 import jframe.core.conf.VarHandler;
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.InjectService;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
-import jframe.ext.util.PropertiesConfig;
+import jframe.core.plugin.annotation.*;
+import jframe.core.util.PropsConf;
 import jframe.httpclient.service.HttpClientService;
 import jframe.memcached.client.MemcachedService;
 import jframe.pay.dao.service.PayDaoService;
@@ -37,6 +22,15 @@ import jframe.pay.upmp.UpmppayPlugin;
 import jframe.pay.upmp.domain.UpmpConfig;
 import jframe.pay.upmp.domain.UpmpFields;
 import jframe.pay.upmp.req.ConsumeReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author dzh
@@ -74,7 +68,7 @@ public class UpmppayServiceImpl implements UpmppayService, UpmpFields {
             VarHandler vh = new VarHandler(Plugin.getContext().getConfig());
             UpmpConfig.config.replace(vh);
 
-            PropertiesConfig acpSDK = new PropertiesConfig();
+            PropsConf acpSDK = new PropsConf();
             acpSDK.init(UpmpConfig.getConf(UpmpConfig.KEY_ACP_SDK));
             acpSDK.replace(vh);
             SDKConfig.getConfig().loadProperties(acpSDK.clone2Properties());
@@ -102,7 +96,7 @@ public class UpmppayServiceImpl implements UpmppayService, UpmpFields {
             return;
         }
 
-        rsp.put(F_filter, JsonUtil.createPropertyFilter(new String[] { F_rspCode, F_rspDesc, F_tn }));
+        rsp.put(F_filter, JsonUtil.createPropertyFilter(new String[]{F_rspCode, F_rspDesc, F_tn}));
 
         if (ConsumeReq.consume(req, rsp)) {
             OrderUpmp od = PayDao.selectOrderUpmp(req.get(F_payNo));
@@ -226,24 +220,22 @@ public class UpmppayServiceImpl implements UpmppayService, UpmpFields {
             URL url = new URL(od.backUrl);
             int port = url.getPort() == -1 ? 80 : url.getPort();
 
-            if (LOG.isDebugEnabled())
-                LOG.debug("postBack -> {}, {},{}", url.toString(), new Date(), map);
-            Long packtime = System.currentTimeMillis();
+            LOG.info("postBack -> {},{},{}", url, new Date(), map);
+            Long backtime = System.currentTimeMillis();
 
             Map<String, String> paras = new HashMap<>(HTTP_PARAS);
             paras.put("ip", url.getHost());
             paras.put("port", String.valueOf(port));
-            Map<String, String> rsp = HttpClient.<HashMap<String, String>> send("payback", url.getPath(),
+            String rsp = HttpClient.send("payback", url.getPath(),
                     HttpUtil.format(map, "utf-8"), null, paras);
             Long packTime = System.currentTimeMillis();
-            if (LOG.isDebugEnabled())
-                LOG.debug("orderNo=" + od.orderNo + " postBack" + new Date() + " use time=" + (packTime - packtime)
-                        + " rsp=" + rsp);
-            if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
-                succ = true;
-            } else {
-                LOG.error("payNo=" + od.payNo + "rsp=" + rsp);
-            }
+            LOG.info("postback orderNo={}, postBack->{}, use time->{}, rsp->{}", od.orderNo, url.getPath(),
+                    (System.currentTimeMillis() - backtime), rsp);
+//            if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
+//                succ = true;
+//            } else {
+//                LOG.error("payNo=" + od.payNo + "rsp=" + rsp);
+//            }
         } catch (Exception e) {
             succ = false;
             LOG.error(e.getMessage());

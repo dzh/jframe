@@ -1,14 +1,7 @@
 /**
- * 
+ *
  */
 package jframe.pay.client.service;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.InjectService;
@@ -21,6 +14,13 @@ import jframe.pay.domain.Fields;
 import jframe.pay.domain.TransType;
 import jframe.pay.domain.http.ReqOp;
 import jframe.pay.domain.util.HttpUtil;
+import jframe.pay.domain.util.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author dzh
@@ -98,15 +98,17 @@ class HttpPayClientService implements PayClientService, Fields {
 
         // TODO check
 
-        return HttpClient.send(HttpClient_ID, Prefix_ord + req.get(F_reqOp), HttpUtil.format(req, "utf-8"), null,
+        String result = HttpClient.send(HttpClient_ID, Prefix_ord + req.get(F_reqOp), HttpUtil.format(req, "utf-8"), null,
                 HTTP_PARAS);
+        return JsonUtil.decode(result);
     }
 
     @Override
     public Map<String, Object> usr(Map<String, String> req) throws Exception {
         // TODO check
-        return HttpClient.send(HttpClient_ID, Prefix_usr + req.get(F_reqOp), HttpUtil.format(req, "utf-8"), null,
+        String result = HttpClient.send(HttpClient_ID, Prefix_usr + req.get(F_reqOp), HttpUtil.format(req, "utf-8"), null,
                 HTTP_PARAS);
+        return JsonUtil.decode(result);
     }
 
 }
