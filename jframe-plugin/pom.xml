@@ -43,6 +43,7 @@
         <module>jframe-redisson</module>
         <module>jframe-qcloud</module>
         <module>jframe-google</module>
+        <module>jframe-alipay</module>
     </modules>
     <dependencyManagement>
         <dependencies>
