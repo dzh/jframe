@@ -1,13 +1,12 @@
 package jframe.zk.service;
 
-import org.apache.curator.framework.CuratorFramework;
-
 import jframe.core.plugin.annotation.Service;
+import org.apache.curator.framework.CuratorFramework;
 
 /**
  * @author dzh
- * @date Dec 12, 2018 7:12:56 PM
  * @version 0.0.1
+ * @date Dec 12, 2018 7:12:56 PM
  */
 @Service(clazz = "jframe.zk.service.impl.CuratorServiceImpl", id = "jframe.service.zk.curator")
 public interface CuratorService {
