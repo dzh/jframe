@@ -39,5 +39,12 @@
 			<version>2.1.0</version>
 		</dependency>
 
+		<!-- rocketmq -->
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-client</artifactId>
+			<version>4.6.0</version>
+		</dependency>
+
 	</dependencies>
 </project>

@@ -6,8 +6,8 @@ import jframe.ext.dispatch.kafka.KafkaDispatcher;
 
 /**
  * @author dzh
- * @date Dec 27, 2018 3:05:36 PM
  * @version 0.0.1
+ * @date Dec 27, 2018 3:05:36 PM
  */
 public abstract class KafkaPlugin extends PluginSender {
 

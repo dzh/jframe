@@ -1,14 +1,8 @@
 package jframe.ext.dispatch.kafka;
 
-import java.io.FileInputStream;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
+import jframe.core.conf.Config;
+import jframe.core.dispatch.AbstractDispatcher;
+import jframe.core.msg.Msg;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -18,9 +12,14 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jframe.core.conf.Config;
-import jframe.core.dispatch.AbstractDispatcher;
-import jframe.core.msg.Msg;
+import java.io.FileInputStream;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -30,7 +29,7 @@ import jframe.core.msg.Msg;
  * <li>file.d.kafka.consumer=${app.home}/conf/d-kafka-consumer.properties</li>
  * <li>d.kafka.subscribe=topicA topicB topicC</i>
  * </p>
- * 
+ *
  * <p>
  * msg meta:
  * <li>d.kafka.r.topic 对应{@link ProducerRecord}的topic</li>
@@ -38,10 +37,10 @@ import jframe.core.msg.Msg;
  * <li>d.kafka.r.partition</li>
  * <li>d.kafka.r.timestamp</li>
  * </p>
- * 
+ *
  * @author dzh
- * @date Dec 26, 2018 5:16:26 PM
  * @version 0.0.1
+ * @date Dec 26, 2018 5:16:26 PM
  */
 public class KafkaDispatcher extends AbstractDispatcher {
 
@@ -118,10 +117,10 @@ public class KafkaDispatcher extends AbstractDispatcher {
 
     /**
      * http://kafka.apache.org/21/javadoc/index.html?org/apache/kafka/clients/producer/KafkaProducer.html
-     * 
+     *
      * @param props
      */
-    private void loadDefaultProducer(Properties props) {
+    protected void loadDefaultProducer(Properties props) {
         props.put("bootstrap.servers", "localhost:9092");
         props.put("acks", "all");
         props.put("delivery.timeout.ms", 30000);
@@ -154,6 +153,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             close();
+            return;
         }
         final boolean autoCommit = "true".equals(props.get("enable.auto.commit")) ? true : false;
         this.dispatchT = new Thread(() -> {
@@ -185,10 +185,10 @@ public class KafkaDispatcher extends AbstractDispatcher {
         Consumer<String, Msg<?>> consumer = new KafkaConsumer<>(props);
         String topics = DEFAULT_TOPIC;
         if (getConfig().contain(D_KAFKA_SUBSCRIBE)) {
-            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE);
+            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE); //todo  put into props
             consumer.subscribe(Arrays.asList(topics.split("\\s+")));
         } else if (getConfig().contain(D_KAFKA_SUBSCRIBE_REGEX)) {
-            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE_REGEX);
+            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE_REGEX);  //todo  put into props
             consumer.subscribe(Pattern.compile(topics));
         } else {
             consumer.subscribe(Arrays.asList(topics));
@@ -199,10 +199,10 @@ public class KafkaDispatcher extends AbstractDispatcher {
 
     /**
      * http://kafka.apache.org/21/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
-     * 
+     *
      * @param props
      */
-    private void loadDefaultConsumer(Properties props) {
+    protected void loadDefaultConsumer(Properties props) {
         props.put("bootstrap.servers", "localhost:9092");
         props.put("group.id", "jframe");
         props.put("enable.auto.commit", "true");
@@ -254,6 +254,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
 
     @Override
     public void close() {
+        if (closed) return;
         // close producer
         if (enableProducer()) producer.close(WAIT_CLOSED_SECOND, TimeUnit.SECONDS);
 
@@ -263,7 +264,8 @@ public class KafkaDispatcher extends AbstractDispatcher {
             if (dispatchT != null) {
                 try {
                     dispatchT.join(WAIT_CLOSED_SECOND * 1000L);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                }
             }
         }
         super.close();
