@@ -22,7 +22,7 @@ import java.util.Properties;
  * @author dzh
  * @date 2019/12/25 13:02
  */
-public class RmqDispatcher extends AbstractDispatcher {
+public class RmqDispatcher extends AbstractDispatcher implements RmqConst {
 
     static Logger LOG = LoggerFactory.getLogger(RmqDispatcher.class);
 
@@ -30,16 +30,6 @@ public class RmqDispatcher extends AbstractDispatcher {
 
     private DefaultMQProducer producer;
     private DefaultMQPushConsumer consumer;
-
-    public static final String FILE_RMQ_PRODUCER = "file.rmq.producer";
-    public static final String FILE_RMQ_CONSUMER = "file.rmq.consumer";
-
-    public static final String D_RMQ_CODEC = "d.rmq.codec"; // MsgCodec
-
-    public static final String DEFAULT_TOPIC = "jframe";
-    public static final String D_RMQ_R_TOPIC = "d.rmq.r.topic";
-    public static final String D_RMQ_R_TAG = "d.rmq.r.tag";
-    public static final String D_RMQ_R_Key = "d.rmq.r.key";
 
 //    private Thread dispatchT; // consume dispatch thread
 
@@ -136,7 +126,7 @@ public class RmqDispatcher extends AbstractDispatcher {
 //            consumer.seekToEnd(Collections.emptyList());
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            close();
+//            close();
         }
 
         // pull mode
@@ -199,13 +189,13 @@ public class RmqDispatcher extends AbstractDispatcher {
         int ingoreTimeoutMsgMs = Integer.parseInt(props.getProperty("consume.ignore.timeout.msg.ms", "10000"));
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
             for (MessageExt msg : msgs) {
+                LOG.debug("consume rmq msg-{}", msg);
                 try {
                     if (ingoreTimeoutMsg && (System.currentTimeMillis() - msg.getBornTimestamp()) >= ingoreTimeoutMsgMs) {
                         LOG.warn("discard rmq timeout msg-{}", msg);
                         continue;
                     }
-
-                    LOG.info("recv rmq msg-{}", msg);
+                    LOG.info("dispatch rmq msg-{}", msg.getKeys());
                     dispatch(msgCodec.decode(msg.getBody()));
                 } catch (Exception e) {
                     LOG.info(e.getMessage(), e);
@@ -234,7 +224,7 @@ public class RmqDispatcher extends AbstractDispatcher {
                         (String) msg.getMeta(D_RMQ_R_TAG), (String) msg.getMeta(D_RMQ_R_Key),
                         msgCodec.encode(msg));
                 SendResult r = producer.send(rmqMsg);
-                LOG.debug("receive {}, sendResult {}", msg, r);
+                LOG.debug("send msg {}, sendResult {}", msg, r);
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);//todo
             }

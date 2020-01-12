@@ -152,8 +152,8 @@ public class KafkaDispatcher extends AbstractDispatcher {
             consumer.seekToEnd(Collections.emptyList());
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            close();
-            return;
+//            close();
+//            return;
         }
         final boolean autoCommit = "true".equals(props.get("enable.auto.commit")) ? true : false;
         this.dispatchT = new Thread(() -> {
@@ -162,7 +162,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
             while (true) {
                 if (closed) break;
                 try {
-                    records = consumer.poll(Duration.ofMillis(1000L));
+                    records = consumer.poll(Duration.ofMillis(1000L));//
                 } catch (Exception e) {
                     LOG.warn(e.getMessage(), e);
                     continue;
