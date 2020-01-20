@@ -80,7 +80,7 @@ public class OnsDispatcher extends AbstractDispatcher implements RmqConst {
 //        // 设置 TCP 接入域名，进入控制台的实例详情页面的获取接入点信息区域查看
 //        properties.put(PropertyKeyConst.NAMESRV_ADDR,
 //                "XXX");
-        Producer producer = ONSFactory.createProducer(props);
+        producer = ONSFactory.createProducer(props);
         // 在发送消息前，必须调用 start 方法来启动 Producer，只需调用一次即可
         producer.start();
     }
