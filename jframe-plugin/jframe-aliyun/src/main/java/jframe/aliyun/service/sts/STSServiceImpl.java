@@ -111,6 +111,8 @@ public class STSServiceImpl implements STSService, AliyunField {
 
         // 创建一个 AssumeRoleRequest 并设置请求参数
         final AssumeRoleRequest request = new AssumeRoleRequest();
+        // https://help.aliyun.com/document_detail/66053.html?spm=a2c4g.11186623.6.799.7c6d7074SK0BQS
+        request.setEncoding(_config.getConf(id, K_endpoint, "sts.aliyuncs.com"));
         request.setVersion(_config.getConf(id, K_api_version));
         request.setMethod(MethodType.POST);
         request.setProtocol(protocolType);
