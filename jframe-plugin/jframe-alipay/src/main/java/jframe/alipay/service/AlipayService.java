@@ -6,6 +6,9 @@ import jframe.core.plugin.annotation.Service;
 import java.util.Map;
 
 /**
+ * https://docs.open.alipay.com/204 App支付
+ * https://docs.open.alipay.com/291/105971  密钥配置
+ * <p>
  * https://docs.open.alipay.com/270/105899/
  * https://docs.open.alipay.com/api_1/alipay.trade.page.pay/
  * <p>
@@ -16,8 +19,10 @@ import java.util.Map;
  * @author dzh
  * @date 2019-07-22 14:56
  */
-@Service(clazz = "jframe.alipay.service.AlipayServiceImpl", id = "jframe.service.alipay")
+@Service(clazz = "jframe.alipay.service.AlipayServiceImpl", id = AlipayService.ID)
 public interface AlipayService {
+
+    String ID = "jframe.service.alipay";
 
     String F_URL = "url";
     String F_APP_ID = "app.id";

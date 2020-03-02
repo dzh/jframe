@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package jframe.httpclient.service;
 
-import java.util.Map;
-
 import jframe.core.plugin.annotation.Service;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -15,13 +15,15 @@ import jframe.core.plugin.annotation.Service;
  * <li>TODO 支持https</li>
  * <li>TODO 发送失败异常处理</li>
  * </p>
- * 
+ *
  * @author dzh
  * @date Dec 2, 2014 12:10:16 PM
  * @since 1.0
  */
-@Service(clazz = "jframe.httpclient.service.impl.HttpClientServiceImpl", id = "jframe.service.httpclient")
+@Service(clazz = "jframe.httpclient.service.impl.HttpClientServiceImpl", id = HttpClientService.ID)
 public interface HttpClientService {
+
+    String ID = "jframe.service.httpclient";
 
     String P_MIMETYPE = "mimeType";
     String P_METHOD = "method";

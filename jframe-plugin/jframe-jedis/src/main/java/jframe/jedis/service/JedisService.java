@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.jedis.service;
 
@@ -12,11 +12,12 @@ import redis.clients.jedis.JedisCluster;
  * @date Dec 2, 2014 10:37:37 AM
  * @since 1.0
  */
-@Service(clazz = "jframe.jedis.service.JedisServiceImpl", id = "jframe.service.jedis")
+@Service(clazz = "jframe.jedis.service.JedisServiceImpl", id = JedisService.ID)
 public interface JedisService {
+    String ID = "jframe.service.jedis";
 
     /**
-     * 
+     *
      * @return jedis.host.default's jedis
      */
     Jedis getJedis();
@@ -25,7 +26,7 @@ public interface JedisService {
 
     /**
      * use {@link redis.clients.jedis.Jedis#close()}
-     * 
+     *
      * @param jedis
      */
     @Deprecated
@@ -33,7 +34,7 @@ public interface JedisService {
 
     /**
      * use {@link redis.clients.jedis.Jedis#close()}
-     * 
+     *
      * @param jedis
      */
     @Deprecated
@@ -41,7 +42,7 @@ public interface JedisService {
 
     /**
      * unsupported
-     * 
+     *
      * @param name
      * @return
      */

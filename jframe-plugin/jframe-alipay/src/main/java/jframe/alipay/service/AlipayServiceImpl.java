@@ -2,6 +2,7 @@ package jframe.alipay.service;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
+import com.alipay.api.AlipayConstants;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import jframe.alipay.AlipayPlugin;
@@ -79,10 +80,10 @@ class AlipayServiceImpl implements AlipayService {
         String url = conf.getConf(id, F_URL);
         String appId = conf.getConf(id, F_APP_ID);
         String privateKey = conf.getConf(id, F_PRIVATE_KEY);
-        String format = conf.getConf(id, F_FORMAT);
-        String charset = conf.getConf(id, F_CHARSET);
+        String format = conf.getConf(id, F_FORMAT, AlipayConstants.FORMAT_JSON);
+        String charset = conf.getConf(id, F_CHARSET, AlipayConstants.CHARSET_UTF8);
         String publicKey = conf.getConf(id, F_PUBLIC_KEY);
-        String signType = conf.getConf(id, F_SIGN_TYPE);
+        String signType = conf.getConf(id, F_SIGN_TYPE, AlipayConstants.SIGN_TYPE_RSA2);
         AlipayClient alipayClient = new DefaultAlipayClient(url, appId, privateKey, format, charset, publicKey, signType);
         LOG.info("createAlipayClient {}", appId);
         return alipayClient;
