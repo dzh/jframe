@@ -82,7 +82,7 @@ class AlipayServiceImpl implements AlipayService {
         String privateKey = conf.getConf(id, F_PRIVATE_KEY);
         String format = conf.getConf(id, F_FORMAT, AlipayConstants.FORMAT_JSON);
         String charset = conf.getConf(id, F_CHARSET, AlipayConstants.CHARSET_UTF8);
-        String publicKey = conf.getConf(id, F_PUBLIC_KEY);
+        String publicKey = conf.getConf(id, F_PUBLIC_KEY); //alipay public key
         String signType = conf.getConf(id, F_SIGN_TYPE, AlipayConstants.SIGN_TYPE_RSA2);
         AlipayClient alipayClient = new DefaultAlipayClient(url, appId, privateKey, format, charset, publicKey, signType);
         LOG.info("createAlipayClient {}", appId);
