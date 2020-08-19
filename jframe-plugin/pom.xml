@@ -44,6 +44,7 @@
         <module>jframe-qcloud</module>
         <module>jframe-google</module>
         <module>jframe-alipay</module>
+        <module>jframe-wxpay</module>
     </modules>
     <dependencyManagement>
         <dependencies>
