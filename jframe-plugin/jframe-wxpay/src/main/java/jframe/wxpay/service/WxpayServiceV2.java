@@ -69,7 +69,7 @@ public class WxpayServiceV2 implements WxpayService {
     private WXPay createWxpay(WxpayConf props, String id) throws Exception {
         byte[] bytes = props.loadCert(id);
         JframeWxpayConfig conf = JframeWxpayConfig.create(props.getConf(id, WxpayConf.P_appId),
-                props.getConf(id, WxpayConf.P_mchId), props.getConf(id, WxpayConf.P_appId), new ByteArrayInputStream(bytes));
+                props.getConf(id, WxpayConf.P_mchId), props.getConf(id, WxpayConf.P_apiKey), new ByteArrayInputStream(bytes));
         return new WXPay(conf, props.getConf(id, WxpayConf.P_notifyUrl),
                 Boolean.parseBoolean(props.getConf(id, WxpayConf.P_autoReport, "true")),
                 Boolean.parseBoolean(props.getConf(id, WxpayConf.P_useSandbox, "false")));

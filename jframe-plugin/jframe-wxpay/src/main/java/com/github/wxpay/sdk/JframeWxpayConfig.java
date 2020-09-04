@@ -1,5 +1,8 @@
 package com.github.wxpay.sdk;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 
 /**
@@ -7,6 +10,8 @@ import java.io.InputStream;
  * @date 2020/8/18 19:21
  */
 public class JframeWxpayConfig extends WXPayConfig {
+
+    static Logger LOG = LoggerFactory.getLogger(JframeWxpayConfig.class);
 
     private String appId;
 
@@ -46,7 +51,19 @@ public class JframeWxpayConfig extends WXPayConfig {
 
     @Override
     IWXPayDomain getWXPayDomain() {
-        return null;
+        return new IWXPayDomain() {
+
+            public void report(String domain, long elapsedTimeMillis, Exception ex) {
+                if (ex != null) {
+                    LOG.info("{} {} {}", domain, elapsedTimeMillis, ex);
+                }
+            }
+
+            public DomainInfo getDomain(WXPayConfig config) {
+                return new DomainInfo(WXPayConstants.DOMAIN_API, true);
+            }
+        };
+
     }
 
 //    public boolean shouldAutoReport() {
