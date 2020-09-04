@@ -103,7 +103,6 @@ public class WxpayServiceV2 implements WxpayService {
         //timeStamp,nonceStr,package,signType,paySign
         data.put("signType", WXPayConstants.signTypeName(signType));
         data.put("paySign", paySign);
-        data.remove("appId");
         return data;
     }
 
