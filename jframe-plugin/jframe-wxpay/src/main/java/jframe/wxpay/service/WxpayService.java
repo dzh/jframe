@@ -25,6 +25,19 @@ public interface WxpayService {
 
     Map<String, String> orderPrepay(String id, Map<String, String> req) throws Exception;
 
+    /**
+     * 签名预支付信息，返回给前端
+     * https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=5
+     * <p>
+     * Map{appId,timeStamp,nonceStr,package,signType}
+     *
+     * @param id        group id
+     * @param prepareId orderPrepay response
+     * @return Map{timeStamp,nonceStr,package,package,signType,paySign}
+     * @throws Exception
+     */
+    Map<String, String> signPrepay(String id, String prepareId) throws Exception;
+
     Map<String, String> orderClose(String id, Map<String, String> req) throws Exception;
 
     Map<String, String> orderQuery(String id, Map<String, String> req) throws Exception;

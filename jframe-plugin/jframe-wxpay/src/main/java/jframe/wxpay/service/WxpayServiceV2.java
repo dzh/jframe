@@ -2,6 +2,8 @@ package jframe.wxpay.service;
 
 import com.github.wxpay.sdk.JframeWxpayConfig;
 import com.github.wxpay.sdk.WXPay;
+import com.github.wxpay.sdk.WXPayConstants;
+import com.github.wxpay.sdk.WXPayUtil;
 import jframe.core.conf.Config;
 import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
@@ -86,6 +88,23 @@ public class WxpayServiceV2 implements WxpayService {
 //        req.putIfAbsent("appid", conf(id, WxpayConf.P_appId));
 //        req.putIfAbsent("mch_id", conf(id, WxpayConf.P_mchId));
         return clients.get(id).unifiedOrder(req);
+    }
+
+    @Override
+    public Map<String, String> signPrepay(String id, String prepareId) throws Exception {
+        //appId,timeStamp,nonceStr,package,signType
+        Map<String, String> data = new HashMap<>();
+        data.put("appId", conf(id, WxpayConf.P_appId));
+        data.put("timeStamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
+        data.put("nonceStr", WXPayUtil.generateNonceStr());
+        data.put("package", prepareId);
+        WXPayConstants.SignType signType = clients.get(id).signType();
+        String paySign = WXPayUtil.generateSignature(data, conf(id, WxpayConf.P_apiKey), signType);
+        //timeStamp,nonceStr,package,signType,paySign
+        data.put("signType", WXPayConstants.signTypeName(signType));
+        data.put("paySign", paySign);
+        data.remove("appId");
+        return data;
     }
 
     @Override
