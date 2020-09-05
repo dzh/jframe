@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,12 +93,15 @@ public class WxpayServiceV2 implements WxpayService {
 
     @Override
     public Map<String, String> signPrepay(String id, String prepareId) throws Exception {
+        if (prepareId == null) {
+            return Collections.emptyMap();
+        }
         //appId,timeStamp,nonceStr,package,signType
         Map<String, String> data = new HashMap<>();
         data.put("appId", conf(id, WxpayConf.P_appId));
         data.put("timeStamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
         data.put("nonceStr", WXPayUtil.generateNonceStr());
-        data.put("package", prepareId);
+        data.put("package", prepareId.startsWith("prepay_id") ? prepareId : "prepay_id=" + prepareId);
         WXPayConstants.SignType signType = clients.get(id).signType();
         String paySign = WXPayUtil.generateSignature(data, conf(id, WxpayConf.P_apiKey), signType);
         //timeStamp,nonceStr,package,signType,paySign

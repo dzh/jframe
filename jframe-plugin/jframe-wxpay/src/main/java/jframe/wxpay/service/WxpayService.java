@@ -40,6 +40,14 @@ public interface WxpayService {
 
     Map<String, String> orderClose(String id, Map<String, String> req) throws Exception;
 
+    /**
+     * https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
+     *
+     * @param id  group id
+     * @param req map{transaction_id,out_trade_no}
+     * @return
+     * @throws Exception
+     */
     Map<String, String> orderQuery(String id, Map<String, String> req) throws Exception;
 
     Map<String, String> processResponseXml(String id, String xmlStr) throws Exception;
