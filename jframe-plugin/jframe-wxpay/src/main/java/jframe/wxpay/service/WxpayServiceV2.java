@@ -92,16 +92,17 @@ public class WxpayServiceV2 implements WxpayService {
     }
 
     @Override
-    public Map<String, String> signPrepay(String id, String prepareId) throws Exception {
-        if (prepareId == null) {
+    public Map<String, String> signPrepay(String id, Map<String, String> req) throws Exception {
+        String prepayId = req.get("prepayId");
+        if (prepayId == null) {
             return Collections.emptyMap();
         }
         //appId,timeStamp,nonceStr,package,signType
         Map<String, String> data = new HashMap<>();
         data.put("appId", conf(id, WxpayConf.P_appId));
         data.put("timeStamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
-        data.put("nonceStr", WXPayUtil.generateNonceStr());
-        data.put("package", prepareId.startsWith("prepay_id") ? prepareId : "prepay_id=" + prepareId);
+        data.put("nonceStr", req.getOrDefault("nonceStr", WXPayUtil.generateNonceStr()));
+        data.put("package", prepayId.startsWith("prepay_id") ? prepayId : "prepay_id=" + prepayId);
         WXPayConstants.SignType signType = clients.get(id).signType();
         String paySign = WXPayUtil.generateSignature(data, conf(id, WxpayConf.P_apiKey), signType);
         //timeStamp,nonceStr,package,signType,paySign

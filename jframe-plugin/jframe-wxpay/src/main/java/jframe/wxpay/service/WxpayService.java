@@ -32,11 +32,11 @@ public interface WxpayService {
      * Map{appId,timeStamp,nonceStr,package,signType}
      *
      * @param id        group id
-     * @param prepareId orderPrepay response
+     * @param req Map{prepareId,nonceStr}
      * @return Map{timeStamp,nonceStr,package,package,signType,paySign}
      * @throws Exception
      */
-    Map<String, String> signPrepay(String id, String prepareId) throws Exception;
+    Map<String, String> signPrepay(String id, Map<String, String> req) throws Exception;
 
     Map<String, String> orderClose(String id, Map<String, String> req) throws Exception;
 
