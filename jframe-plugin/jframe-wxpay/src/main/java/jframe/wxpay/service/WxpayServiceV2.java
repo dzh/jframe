@@ -105,9 +105,9 @@ public class WxpayServiceV2 implements WxpayService {
         data.put("nonceStr", req.getOrDefault("nonceStr", WXPayUtil.generateNonceStr()));
         data.put("package", prepayId.startsWith("prepay_id") ? prepayId : "prepay_id=" + prepayId);
         WXPayConstants.SignType signType = clients.get(id).signType();
+        data.put("signType", signType.typeName());
         String paySign = WXPayUtil.generateSignature(data, conf(id, WxpayConf.P_apiKey), signType);
         //timeStamp,nonceStr,package,signType,paySign
-        data.put("signType", signType.typeName());
         data.put("paySign", paySign);
         return data;
     }
