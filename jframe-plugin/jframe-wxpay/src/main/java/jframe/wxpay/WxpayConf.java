@@ -27,6 +27,7 @@ public class WxpayConf extends PropsConf {
     public static final String P_notifyUrl = "notifyUrl";
     public static final String P_autoReport = "autoReport";
     public static final String P_useSandbox = "useSandbox";
+    public static final String P_signType = "signType";
 
     public synchronized void init(InputStream is) throws Exception {
         super.init(is);

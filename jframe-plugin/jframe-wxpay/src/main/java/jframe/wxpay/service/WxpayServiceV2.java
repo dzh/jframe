@@ -75,7 +75,8 @@ public class WxpayServiceV2 implements WxpayService {
                 props.getConf(id, WxpayConf.P_mchId), props.getConf(id, WxpayConf.P_apiKey), new ByteArrayInputStream(bytes));
         return new WXPay(conf, props.getConf(id, WxpayConf.P_notifyUrl),
                 Boolean.parseBoolean(props.getConf(id, WxpayConf.P_autoReport, "true")),
-                Boolean.parseBoolean(props.getConf(id, WxpayConf.P_useSandbox, "false")));
+                Boolean.parseBoolean(props.getConf(id, WxpayConf.P_useSandbox, "false")),
+                WXPayConstants.SignType.of(props.getConf(id, WxpayConf.P_signType)));
     }
 
 
@@ -106,7 +107,7 @@ public class WxpayServiceV2 implements WxpayService {
         WXPayConstants.SignType signType = clients.get(id).signType();
         String paySign = WXPayUtil.generateSignature(data, conf(id, WxpayConf.P_apiKey), signType);
         //timeStamp,nonceStr,package,signType,paySign
-        data.put("signType", WXPayConstants.signTypeName(signType));
+        data.put("signType", signType.typeName());
         data.put("paySign", paySign);
         return data;
     }

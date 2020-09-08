@@ -36,22 +36,31 @@ public class WXPay {
     }
 
     public WXPay(final WXPayConfig config, final String notifyUrl, final boolean autoReport, final boolean useSandbox) throws Exception {
+        this(config, notifyUrl, autoReport, useSandbox, null);
+    }
+
+    public WXPay(final WXPayConfig config, final String notifyUrl, final boolean autoReport, final boolean useSandbox, SignType signType) throws Exception {
         this.config = config;
         this.notifyUrl = notifyUrl;
         this.autoReport = autoReport;
         this.useSandbox = useSandbox;
-        if (useSandbox) {
-            this.signType = SignType.MD5; // 沙箱环境
-        } else {
-            this.signType = SignType.HMACSHA256;
+        if (signType != null) {
+            this.signType = signType;
         }
+        if (signType == null) {
+            if (useSandbox) {
+                this.signType = SignType.MD5; // 沙箱环境
+            } else {
+                this.signType = SignType.HMACSHA256;
+            }
+        }
+
         this.wxPayRequest = new WXPayRequest(config);
     }
 
     public SignType signType() {
         return signType;
     }
-
 
     private void checkWXPayConfig() throws Exception {
         if (this.config == null) {

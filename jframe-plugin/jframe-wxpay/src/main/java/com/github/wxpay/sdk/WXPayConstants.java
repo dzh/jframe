@@ -8,17 +8,31 @@ import org.apache.http.client.HttpClient;
 public class WXPayConstants {
 
     public enum SignType {
-        MD5, HMACSHA256
-    }
+        MD5, HMACSHA256;
 
-    public static String signTypeName(SignType type) {
-        switch (type) {
-            case MD5:
-                return WXPayConstants.MD5;
-            case HMACSHA256:
-                return WXPayConstants.HMACSHA256;
+        public String typeName() {
+            switch (this) {
+                case MD5:
+                    return WXPayConstants.MD5;
+                case HMACSHA256:
+                    return WXPayConstants.HMACSHA256;
+            }
+            return WXPayConstants.MD5;
         }
-        return WXPayConstants.MD5;
+
+        public static SignType of(String name) {
+            if (name == null) return MD5;
+
+            switch (name) {
+                case WXPayConstants.MD5:
+                    return MD5;
+                case WXPayConstants.HMACSHA256:
+                    return HMACSHA256;
+                default:
+                    return MD5;
+            }
+        }
+
     }
 
     public static final String DOMAIN_API = "api.mch.weixin.qq.com";
