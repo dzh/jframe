@@ -5,6 +5,7 @@ package jframe.aliyun.service.oss;
 
 import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.common.comm.Protocol;
 import jframe.aliyun.AliyunField;
 import jframe.aliyun.AliyunPlugin;
 import jframe.aliyun.service.OSSService;
@@ -70,8 +71,10 @@ public class OSSServiceImpl implements OSSService {
                 String endpoint = _config.getConf(id, AliyunField.K_endpoint);
                 String accessKeyId = _config.getConf(id, AliyunField.K_accessKeyId);
                 String accessKeySecret = _config.getConf(id, AliyunField.K_accessKeySecret);
+                String protocol = _config.getConf(id, AliyunField.K_client_protocol, "https");
 
                 ClientConfiguration conf = new ClientConfiguration();
+                conf.setProtocol(Protocol.HTTPS.toString().equals(protocol) ? Protocol.HTTPS : Protocol.HTTP);
                 // TODO config client
                 OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret, conf);
                 clients.put(id, ossClient);
