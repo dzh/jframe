@@ -206,7 +206,7 @@ public class HttpClientServiceImpl implements HttpClientService {
             request = new HttpGet(target.toURI() + path + "?" + data);
         } else {
             request = new HttpPost(target.toURI() + path);
-            String mimeType = paras.isEmpty() ? "text/plain" : paras.get(P_MIMETYPE);
+            String mimeType = paras.getOrDefault(P_MIMETYPE, "text/plain");
             ((HttpPost) request).setEntity(
                     new StringEntity(data, ContentType.create(mimeType, HttpClientConfig.getConf(id, HttpClientConfig.HTTP_CHARSET))));
         }
