@@ -36,6 +36,7 @@ import java.util.Map;
  * @author dzh
  * @date 2020/8/18 17:38
  */
+@Deprecated
 @Injector
 public class WxpayServiceV3 {
 

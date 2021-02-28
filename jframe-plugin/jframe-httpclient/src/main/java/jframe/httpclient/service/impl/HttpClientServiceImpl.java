@@ -198,11 +198,11 @@ public class HttpClientServiceImpl implements HttpClientService {
         String scheme = paras.containsKey(HttpClientConfig.SCHEME) ? paras.get(HttpClientConfig.SCHEME)
                 : HttpClientConfig.getConf(id, HttpClientConfig.SCHEME, HttpHost.DEFAULT_SCHEME_NAME);
         HttpHost target = new HttpHost(ip, Integer.parseInt(port), scheme);
-        String mehtod = paras.containsKey(HttpClientConfig.HTTP_METHOD) ? paras.get(HttpClientConfig.HTTP_METHOD)
+        String method = paras.containsKey(HttpClientConfig.HTTP_METHOD) ? paras.get(HttpClientConfig.HTTP_METHOD)
                 : HttpClientConfig.getConf(id, HttpClientConfig.HTTP_METHOD, HttpClientConfig.M_POST);
 
         HttpRequestBase request;
-        if (HttpClientConfig.M_GET.equals(mehtod)) {
+        if (HttpClientConfig.M_GET.equals(method)) {
             request = new HttpGet(target.toURI() + path + "?" + data);
         } else {
             request = new HttpPost(target.toURI() + path);

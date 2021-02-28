@@ -31,7 +31,7 @@ public interface WxpayService {
      * <p>
      * Map{appId,timeStamp,nonceStr,package,signType}
      *
-     * @param id        group id
+     * @param id  group id
      * @param req Map{prepareId,nonceStr}
      * @return Map{timeStamp,nonceStr,package,package,signType,paySign}
      * @throws Exception
@@ -51,6 +51,10 @@ public interface WxpayService {
     Map<String, String> orderQuery(String id, Map<String, String> req) throws Exception;
 
     Map<String, String> processResponseXml(String id, String xmlStr) throws Exception;
+
+    Map<String, String> processResponseXmlUnsafe(String xmlStr) throws Exception;
+
+    boolean isResponseSignatureValid(String id, Map<String, String> res) throws Exception;
 
     Map<String, String> refund(String id, Map<String, String> req) throws Exception;
 

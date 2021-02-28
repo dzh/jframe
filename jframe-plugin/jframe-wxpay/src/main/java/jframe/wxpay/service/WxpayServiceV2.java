@@ -128,6 +128,16 @@ public class WxpayServiceV2 implements WxpayService {
     }
 
     @Override
+    public Map<String, String> processResponseXmlUnsafe(String xmlStr) throws Exception {
+        return WXPayUtil.xmlToMap(xmlStr);
+    }
+
+    @Override
+    public boolean isResponseSignatureValid(String id, Map<String, String> res) throws Exception {
+        return clients.get(id).isResponseSignatureValid(res);
+    }
+
+    @Override
     public Map<String, String> refund(String id, Map<String, String> req) throws Exception {
         return clients.get(id).refund(req);
     }
