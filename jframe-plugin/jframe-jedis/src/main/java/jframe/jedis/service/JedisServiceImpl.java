@@ -100,7 +100,6 @@ public class JedisServiceImpl implements JedisService {
                 _jedis.put(h, new JedisPool(config, ip, port, timeout, "".equals(passwd) ? null : passwd, database));
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
-                continue;
             }
         }
         LOG.info("JedisServiceImpl start successfully");

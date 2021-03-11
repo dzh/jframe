@@ -155,25 +155,23 @@ public class KafkaDispatcher extends AbstractDispatcher {
 //            close();
 //            return;
         }
-        final boolean autoCommit = "true".equals(props.get("enable.auto.commit")) ? true : false;
+        final boolean autoCommit = "true".equals(props.get("enable.auto.commit"));
         this.dispatchT = new Thread(() -> {
             LOG.info("{} start", Thread.currentThread().getName());
             ConsumerRecords<String, Msg<?>> records = null;
-            while (true) {
-                if (closed) break;
+            while (!closed) {
                 try {
                     records = consumer.poll(Duration.ofMillis(1000L));//
+                    if (records == null) continue;
+
+                    records.forEach(record -> {
+                        dispatch(record.value());
+                    });
+                    // commit if autoCommit is false
+                    if (!autoCommit) consumer.commitAsync();
                 } catch (Exception e) {
                     LOG.warn(e.getMessage(), e);
-                    continue;
                 }
-                if (records == null) continue;
-
-                records.forEach(record -> {
-                    dispatch(record.value());
-                });
-                // commit if autoCommit is false
-                if (!autoCommit) consumer.commitAsync();
             }
             consumer.close(Duration.ofSeconds(WAIT_CLOSED_SECOND)); // consumer close
             LOG.info("{} closed", Thread.currentThread().getName());
