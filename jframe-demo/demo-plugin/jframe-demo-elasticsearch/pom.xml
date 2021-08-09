@@ -9,7 +9,7 @@
 	<artifactId>jframe-demo-elasticsearch</artifactId>
 
 	<properties>
-		<es.version>2.4.0</es.version>
+		<es.version>6.8.17</es.version>
 		<es.client.version>5.0.0-beta1</es.client.version>
 		<resteasy.version>3.0.18.Final</resteasy.version>
 	</properties>
