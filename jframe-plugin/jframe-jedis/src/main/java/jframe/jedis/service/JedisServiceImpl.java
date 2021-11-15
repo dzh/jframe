@@ -1,7 +1,17 @@
 /**
- * 
+ *
  */
 package jframe.jedis.service;
+
+import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
+import jframe.core.plugin.annotation.Start;
+import jframe.core.plugin.annotation.Stop;
+import jframe.core.util.PropsConf;
+import jframe.jedis.JedisPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,21 +20,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
-import jframe.core.util.PropsConf;
-import jframe.jedis.JedisPlugin;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Protocol;
 
 /**
  * @author dzh
@@ -208,7 +203,9 @@ public class JedisServiceImpl implements JedisService {
     @Override
     public String get(String id, String key) {
         try (Jedis jedis = getJedis(id)) {
-            if (jedis != null) { return jedis.get(key); }
+            if (jedis != null) {
+                return jedis.get(key);
+            }
         }
         return null;
     }
@@ -232,6 +229,46 @@ public class JedisServiceImpl implements JedisService {
                 jedis.del(key);
             }
         }
+    }
+
+    @Override
+    public long incr(String id, String key) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                return jedis.incr(key);
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public long incrBy(String id, String key, long val) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                return jedis.incrBy(key, val);
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public long decr(String id, String key) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                return jedis.decr(key);
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public long decrBy(String id, String key, long val) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                return jedis.decrBy(key, val);
+            }
+        }
+        return -1;
     }
 
 }

@@ -1,20 +1,7 @@
 /**
- * 
+ *
  */
 package jframe.core.plugin;
-
-import java.lang.reflect.Proxy;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jframe.core.conf.Config;
 import jframe.core.conf.ConfigConstants;
@@ -27,6 +14,11 @@ import jframe.core.plugin.annotation.Message;
 import jframe.core.plugin.dispatch.DispatchSourceHandler;
 import jframe.core.plugin.dispatch.DispatchTargetHandler;
 import jframe.core.signal.Signal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Proxy;
+import java.util.*;
 
 /**
  * @author dzh
@@ -121,7 +113,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     }
 
     /**
-     * @param plugin
+     * @param ref
      */
     private void regDispatch(PluginRef ref) {
         Plugin plugin = ref.getPlugin();
@@ -147,7 +139,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     private void createDispatchTarget(PluginRef ref) {
         Object pdt = ref.getPolicy(PluginRef.DispatchTarget);
         if (pdt == null) {
-            pdt = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { DispatchTarget.class }, new DispatchTargetHandler(ref));
+            pdt = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{DispatchTarget.class}, new DispatchTargetHandler(ref));
             ref.regPolicy(PluginRef.DispatchTarget, pdt);
             if (getDispatcher() != null)
                 getDispatcher().addDispatchTarget((DispatchTarget) pdt);
@@ -163,7 +155,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     private void createDispatchSource(PluginRef ref) {
         Object pds = ref.getPolicy(PluginRef.DispatchSource); // null is normal
         if (pds == null) {
-            pds = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { DispatchSource.class }, new DispatchSourceHandler(ref));
+            pds = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{DispatchSource.class}, new DispatchSourceHandler(ref));
             ref.regPolicy(PluginRef.DispatchSource, pds);
             if (getDispatcher() != null)
                 getDispatcher().addDispatchSource((DispatchSource) pds);
@@ -230,7 +222,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
      * <li>关闭dispatch</li>
      * </p>
      * (non-Javadoc)
-     * 
+     *
      * @see jframe.core.plugin.PluginContext#dispose()
      */
     public void dispose() {
@@ -253,7 +245,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see jframe.core.plugin.PluginContext#getConfig()
      */
     public Config getConfig() {
@@ -262,7 +254,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * jframe.core.plugin.PluginContext#regPluginListener(jframe.core.plugin
      * .PluginListener)
@@ -277,7 +269,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * jframe.core.plugin.PluginContext#unregPluginListener(jframe.core.plugin
      * .PluginListener)
@@ -290,7 +282,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * jframe.core.plugin.PluginContext#notifyPluginEvent(jframe.core.plugin
      * .PluginEvent)
@@ -305,10 +297,9 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     }
 
     /**
-     * 
+     *
      * (non-Javadoc)
-     * 
-     * @see jframe.core.plugin.PluginContext#containRef(jframe.core.plugin.Plugin)
+     *
      * @return if find PluginRef return it, or return null
      */
     private PluginRef containRef(Plugin plugin) {
@@ -326,7 +317,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see jframe.core.plugin.IDispatchable#getDispatcher()
      */
     public Dispatcher getDispatcher() {
@@ -335,7 +326,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see jframe.core.plugin.PluginContext#getPlugin(java.lang.String)
      */
     public PluginRef getPlugin(String name) {
@@ -350,7 +341,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see jframe.core.plugin.PluginContext#regPlugins(java.util.Collection,
      * java.util.Comparator)
      */
@@ -383,7 +374,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see jframe.core.plugin.PluginContext#unregPlugins(java.util.Collection,
      * java.util.Comparator)
      */
@@ -419,7 +410,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         public int compare(Plugin o1, Plugin o2) {
@@ -427,14 +418,14 @@ public class DefPluginContext implements PluginContext, Dispatchable {
             jframe.core.plugin.annotation.Plugin ap1 = o1.getClass().getAnnotation(jframe.core.plugin.annotation.Plugin.class);
             jframe.core.plugin.annotation.Plugin ap2 = o2.getClass().getAnnotation(jframe.core.plugin.annotation.Plugin.class);
             switch (type) {
-            case START: {
-                v = minus(ap1.startOrder(), ap2.startOrder());
-                break;
-            }
-            case STOP: {
-                v = minus(ap1.stopOrder(), ap2.stopOrder());
-                break;
-            }
+                case START: {
+                    v = minus(ap1.startOrder(), ap2.startOrder());
+                    break;
+                }
+                case STOP: {
+                    v = minus(ap1.stopOrder(), ap2.stopOrder());
+                    break;
+                }
             }
 
             if (v == 0) {
@@ -445,7 +436,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
         /**
          * 负数作为最大整数
-         * 
+         *
          * @param minuend
          * @param subtrahend
          * @return
@@ -463,7 +454,7 @@ public class DefPluginContext implements PluginContext, Dispatchable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * jframe.core.plugin.PluginContext#unregPlugin(jframe.core.plugin.PluginRef
      * )

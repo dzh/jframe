@@ -55,4 +55,12 @@ public interface JedisService {
 
     void del(String id, String key);
 
+    long incr(String id, String key);
+
+    long incrBy(String id, String key, long val);
+
+    long decr(String id, String key);
+
+    long decrBy(String id, String key, long val);
+
 }
