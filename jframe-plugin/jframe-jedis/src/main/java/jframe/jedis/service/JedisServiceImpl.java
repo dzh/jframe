@@ -271,4 +271,22 @@ public class JedisServiceImpl implements JedisService {
         return -1;
     }
 
+    @Override
+    public void expire(String id, String key, int seconds) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                jedis.expire(key, seconds);
+            }
+        }
+    }
+
+    @Override
+    public void expireAt(String id, String key, int ts) {
+        try (Jedis jedis = getJedis(id)) {
+            if (jedis != null) {
+                jedis.expireAt(key, ts);
+            }
+        }
+    }
+
 }

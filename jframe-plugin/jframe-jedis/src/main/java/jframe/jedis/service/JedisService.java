@@ -63,4 +63,8 @@ public interface JedisService {
 
     long decrBy(String id, String key, long val);
 
+    void expire(String id, String key, int seconds);
+
+    void expireAt(String id, String key, int ts);
+
 }
