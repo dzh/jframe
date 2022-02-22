@@ -89,7 +89,7 @@ public class RmqDispatcher extends AbstractDispatcher implements RmqConst {
         if (props.containsKey("namespace")) {
             producer.setNamespace(props.getProperty("namespace"));
         }
-        producer.setNamesrvAddr(DefPluginContext.getProperty("namesrv.addr", "localhost:9876"));
+        producer.setNamesrvAddr(props.getProperty("namesrv.addr", "localhost:9876"));
         producer.setRetryTimesWhenSendFailed(Integer.parseInt(props.getProperty("retry.times", "3")));
         producer.setVipChannelEnabled(Boolean.parseBoolean(props.getProperty("vipChannelEnabled", "false")));
 //        LOG.info("start producer {} {}", producer.getProducerGroup(), producer.getNamesrvAddr());
