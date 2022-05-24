@@ -51,6 +51,8 @@ public interface JedisService {
     /************************** simple method ***************************/
     String get(String id, String key);
 
+//    String getdel(String id, String key);
+
     void setex(String id, String key, String value, Integer expiredSeconds);
 
     void del(String id, String key);

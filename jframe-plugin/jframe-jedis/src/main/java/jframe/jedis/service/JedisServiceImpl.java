@@ -210,6 +210,16 @@ public class JedisServiceImpl implements JedisService {
         return null;
     }
 
+//    @Override
+//    public String getdel(String id, String key) {
+//        try (Jedis jedis = getJedis(id)) {
+//            if (jedis != null) {
+//                return jedis.get
+//            }
+//        }
+//        return null;
+//    }
+
     @Override
     public void setex(String id, String key, String value, Integer expiredSeconds) {
         if (value == null) return; // do nothing

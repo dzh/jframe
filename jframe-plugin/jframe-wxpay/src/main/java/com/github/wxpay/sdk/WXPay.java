@@ -5,6 +5,10 @@ import com.github.wxpay.sdk.WXPayConstants.SignType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay_yhk.php?chapter=24_4 微信银行编号
+ * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay_yhk.php?chapter=4_2 银行字符码
+ */
 public class WXPay {
 
     private WXPayConfig config;
@@ -694,6 +698,93 @@ public class WXPay {
         String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
+
+    /**
+     * 用于向微信用户个人付款
+     * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
+     *
+     * @param reqData
+     * @return API返回数据
+     * @throws Exception
+     */
+    public Map<String, String> promotionTransfers(Map<String, String> reqData) throws Exception {
+        String url = "/mmpaymkttransfers/promotion/transfers";
+        reqData.put("mch_appid", config.getAppID());
+        reqData.put("mchid", config.getMchID());
+        reqData.put("nonce_str", WXPayUtil.generateNonceStr());
+        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), SignType.MD5));
+        String respXml = this.requestWithoutCert(url, reqData, config.getHttpConnectTimeoutMs(), this.config.getHttpReadTimeoutMs());
+        return this.processResponseXml(respXml);
+    }
+
+    /**
+     * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_3
+     *
+     * @param reqData
+     * @return API返回数据
+     * @throws Exception
+     */
+    public Map<String, String> gettransferinfo(Map<String, String> reqData) throws Exception {
+        String url = "/mmpaymkttransfers/gettransferinfo";
+        reqData.put("appid", config.getAppID());
+        reqData.put("mch_id", config.getMchID());
+        reqData.put("nonce_str", WXPayUtil.generateNonceStr());
+        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), SignType.MD5));
+        String respXml = this.requestWithoutCert(url, reqData, config.getHttpConnectTimeoutMs(), this.config.getHttpReadTimeoutMs());
+        return this.processResponseXml(respXml);
+    }
+
+
+    /**
+     * 付款到银行卡
+     * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay_yhk.php?chapter=24_2
+     *
+     * @param reqData
+     * @return API返回数据
+     * @throws Exception
+     */
+    public Map<String, String> payBank(Map<String, String> reqData) throws Exception {
+        String url = "/mmpaysptrans/pay_bank";
+        reqData.put("mch_id", config.getMchID());
+        reqData.put("nonce_str", WXPayUtil.generateNonceStr());
+        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), SignType.MD5));
+        String respXml = this.requestWithoutCert(url, reqData, config.getHttpConnectTimeoutMs(), this.config.getHttpReadTimeoutMs());
+        return this.processResponseXml(respXml);
+    }
+
+    /**
+     * 对商户付款到银行卡操作进行结果查询
+     * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay_yhk.php?chapter=24_3
+     *
+     * @param reqData
+     * @return API返回数据
+     * @throws Exception
+     */
+    public Map<String, String> queryBank(Map<String, String> reqData) throws Exception {
+        String url = "/mmpaysptrans/query_bank";
+        reqData.put("mch_id", config.getMchID());
+        reqData.put("nonce_str", WXPayUtil.generateNonceStr());
+        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), SignType.MD5));
+        String respXml = this.requestWithoutCert(url, reqData, config.getHttpConnectTimeoutMs(), this.config.getHttpReadTimeoutMs());
+        return this.processResponseXml(respXml);
+    }
+
+    /**
+     * 获取RSA加密公钥API
+     * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay_yhk.php?chapter=24_7&index=4
+     *
+     * @param reqData
+     * @return
+     * @throws Exception
+     */
+//    public Map<String, String> getPublicKey(Map<String, String> reqData) throws Exception {
+//        String url = "/mmpaysptrans/query_bank";
+//        reqData.put("mch_id", config.getMchID());
+//        reqData.put("nonce_str", WXPayUtil.generateNonceStr());
+//        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), SignType.MD5));
+//        String respXml = this.requestWithoutCert(url, reqData, config.getHttpConnectTimeoutMs(), this.config.getHttpReadTimeoutMs());
+//        return this.processResponseXml(respXml);
+//    }
 
 
 } // end class

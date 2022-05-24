@@ -146,4 +146,24 @@ public class WxpayServiceV2 implements WxpayService {
     public Map<String, String> refundQuery(String id, Map<String, String> req) throws Exception {
         return clients.get(id).refundQuery(req);
     }
+
+    @Override
+    public Map<String, String> promotionTransfers(String id, Map<String, String> reqData) throws Exception {
+        return clients.get(id).promotionTransfers(reqData);
+    }
+
+    @Override
+    public Map<String, String> gettransferinfo(String id, Map<String, String> reqData) throws Exception {
+        return clients.get(id).gettransferinfo(reqData);
+    }
+
+    @Override
+    public Map<String, String> payBank(String id, Map<String, String> reqData) throws Exception {
+        return clients.get(id).payBank(reqData);
+    }
+
+    @Override
+    public Map<String, String> queryBank(String id, Map<String, String> reqData) throws Exception {
+        return clients.get(id).queryBank(reqData);
+    }
 }

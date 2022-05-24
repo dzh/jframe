@@ -5,6 +5,8 @@ import jframe.core.plugin.annotation.Service;
 import java.util.Map;
 
 /**
+ * https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1  付款到零钱
+ *
  * @author dzh
  * @date 2020/8/18 16:45
  */
@@ -60,5 +62,12 @@ public interface WxpayService {
 
     Map<String, String> refundQuery(String id, Map<String, String> req) throws Exception;
 
+    Map<String, String> promotionTransfers(String id, Map<String, String> reqData) throws Exception;
+
+    Map<String, String> gettransferinfo(String id, Map<String, String> reqData) throws Exception;
+
+    Map<String, String> payBank(String id, Map<String, String> reqData) throws Exception;
+
+    Map<String, String> queryBank(String id, Map<String, String> reqData) throws Exception;
 
 }
