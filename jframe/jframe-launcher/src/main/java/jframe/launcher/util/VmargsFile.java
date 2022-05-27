@@ -25,7 +25,7 @@ public class VmargsFile {
     Logger LOG = LoggerFactory.getLogger(VmargsFile.class);
 
     /**
-     * @param string
+     * @param file
      */
     public List<String> loadVmargs(String file) {
         File f = new File(file); // vmargs file

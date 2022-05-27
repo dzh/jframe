@@ -79,7 +79,7 @@ public class DefConfig implements Config {
     /**
      * replace all variables in input
      * 
-     * @param system
+     * @param config
      *            jvm系统变量，一般是System.getProperty
      * @param input
      * @return

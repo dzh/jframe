@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package jframe.launcher.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -15,12 +15,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * support variable feature
- * 
+ *
  * @author dzh
  * @date Feb 16, 2016 10:14:22 AM
  * @since 1.2.1
@@ -30,7 +27,7 @@ public class VarProperties extends Properties {
     static Logger LOG = LoggerFactory.getLogger(VarProperties.class);
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -6146614559017054452L;
 
@@ -59,21 +56,19 @@ public class VarProperties extends Properties {
     }
 
     public synchronized void load(File file) throws IOException {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
+        if (file == null) return;
+        try (InputStreamReader fis = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             load(fis);
         } catch (Exception e) {
             LOG.warn(e.getMessage());
-        } finally {
-            if (file != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    LOG.error(e.getMessage());
-                }
-            }
         }
+//        finally {
+//            try {
+//                fis.close();
+//            } catch (IOException e) {
+//                LOG.error(e.getMessage());
+//            }
+//        }
     }
 
     @Override
@@ -89,7 +84,7 @@ public class VarProperties extends Properties {
 
     /**
      * TODO handle circle key
-     * 
+     *
      * @param key
      * @param value
      * @keys avoid circle key
