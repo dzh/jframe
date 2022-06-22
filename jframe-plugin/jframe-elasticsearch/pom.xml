@@ -9,7 +9,7 @@
 	<artifactId>jframe-elasticsearch</artifactId>
 
 	<properties>
-		<es.version>6.2.4</es.version>
+		<es.version>6.8.15</es.version>
 	</properties>
 
 	<dependencies>
