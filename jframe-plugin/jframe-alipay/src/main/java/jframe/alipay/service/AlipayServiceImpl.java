@@ -1,9 +1,6 @@
 package jframe.alipay.service;
 
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.AlipayConstants;
-import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.*;
 import com.alipay.api.internal.util.AlipaySignature;
 import jframe.alipay.AlipayPlugin;
 import jframe.core.conf.Config;
@@ -50,7 +47,8 @@ class AlipayServiceImpl implements AlipayService {
             alipayConf.init(file);
             for (String id : alipayConf.getGroupIds()) {
                 AlipayClient client = createAlipayClient(alipayConf, id);
-                clients.put(id, client);
+                if (client != null)
+                    clients.put(id, client);
             }
             LOG.info("Start AlipayService Successfully!");
         } catch (Exception e) {
@@ -77,16 +75,26 @@ class AlipayServiceImpl implements AlipayService {
      * @return
      */
     private AlipayClient createAlipayClient(PropsConf conf, String id) {
-        String url = conf.getConf(id, F_URL);
-        String appId = conf.getConf(id, F_APP_ID);
-        String privateKey = conf.getConf(id, F_PRIVATE_KEY);
-        String format = conf.getConf(id, F_FORMAT, AlipayConstants.FORMAT_JSON);
-        String charset = conf.getConf(id, F_CHARSET, AlipayConstants.CHARSET_UTF8);
-        String publicKey = conf.getConf(id, F_PUBLIC_KEY); //alipay public key
-        String signType = conf.getConf(id, F_SIGN_TYPE, AlipayConstants.SIGN_TYPE_RSA2);
-        AlipayClient alipayClient = new DefaultAlipayClient(url, appId, privateKey, format, charset, publicKey, signType);
-        LOG.info("createAlipayClient {}", appId);
-        return alipayClient;
+        AlipayConfig config = new AlipayConfig();
+        config.setServerUrl(conf.getConf(id, F_URL, "https://openapi.alipay.com/gateway.do"));
+        config.setAppId(conf.getConf(id, F_APP_ID));
+        config.setPrivateKey(conf.getConf(id, F_PRIVATE_KEY));
+        config.setFormat(conf.getConf(id, F_FORMAT, AlipayConstants.FORMAT_JSON));
+        config.setCharset(conf.getConf(id, F_CHARSET, AlipayConstants.CHARSET_UTF8));
+        config.setAlipayPublicKey(conf.getConf(id, F_PUBLIC_KEY));//alipay public key
+        config.setSignType(conf.getConf(id, F_SIGN_TYPE, AlipayConstants.SIGN_TYPE_RSA2));
+        String encryptKey = conf.getConf(id, F_ENCRYPT_KEY);
+        if (encryptKey != null && !"".equals(encryptKey)) {
+            config.setEncryptKey(encryptKey);
+            config.setEncryptType(conf.getConf(id, F_ENCRYPT_TYPE, AlipayConstants.ENCRYPT_TYPE_AES));
+        }
+        try {
+            LOG.info("createAlipayClient {}", config.getAppId());
+            return new DefaultAlipayClient(config);
+        } catch (AlipayApiException e) {
+            LOG.error("failed to createAlipayClient " + e.getMessage(), e);
+            return null;
+        }
     }
 
     @Stop
@@ -103,6 +111,7 @@ class AlipayServiceImpl implements AlipayService {
 
     @Override
     public AlipayClient getClient(String id) {
+        if (id == null) return null;
         return clients.get(id);
     }
 

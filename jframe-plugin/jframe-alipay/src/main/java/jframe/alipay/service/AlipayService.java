@@ -31,6 +31,8 @@ public interface AlipayService {
     String F_FORMAT = "format";
     String F_CHARSET = "charset";
     String F_SIGN_TYPE = "sign.type";
+    String F_ENCRYPT_KEY = "encrypt.key";
+    String F_ENCRYPT_TYPE = "encrypt.type";
     String F_RETURN_URL = "return.url";
     String F_NOTIFY_URL = "notify.url";
 
