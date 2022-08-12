@@ -89,7 +89,7 @@ class AlipayServiceImpl implements AlipayService {
             config.setEncryptType(conf.getConf(id, F_ENCRYPT_TYPE, AlipayConstants.ENCRYPT_TYPE_AES));
         }
         try {
-            LOG.info("createAlipayClient {}", config.getAppId());
+            LOG.info("createAlipayClient {} {}", id, config.getAppId());
             return new DefaultAlipayClient(config);
         } catch (AlipayApiException e) {
             LOG.error("failed to createAlipayClient " + e.getMessage(), e);

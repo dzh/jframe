@@ -56,8 +56,8 @@ public class WxpayServiceV2 implements WxpayService {
             for (String id : wxpayConf.getGroupIds()) {
                 WXPay wxpay = createWxpay(wxpayConf, id);
                 clients.put(id, wxpay);
+                LOG.info("createWxpay id {}", id);
             }
-            LOG.info("Start WxpayServiceV2 Successfully! ids:{}", wxpayConf.getGroupIds());
         } catch (Exception e) {
             LOG.error("Start WxpayServiceV2 Failed!" + e.getMessage(), e);
         }

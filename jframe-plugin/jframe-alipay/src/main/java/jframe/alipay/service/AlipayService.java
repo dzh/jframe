@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * https://docs.open.alipay.com/204 App支付
  * https://docs.open.alipay.com/291/105971  密钥配置
+ * https://opendocs.alipay.com/open/203/105286 支付Notify说明
  * <p>
  * https://docs.open.alipay.com/270/105899/
  * https://docs.open.alipay.com/api_1/alipay.trade.page.pay/
@@ -41,6 +42,9 @@ public interface AlipayService {
     String TRADE_STATUS_SUCC = "TRADE_SUCCESS";     //交易支付成功
     String TRADE_STATUS_FINISHED = "TRADE_FINISHED";    //交易结束，不可退款
 
+    //https://opendocs.alipay.com/support/01raw4
+    String TRADE_NOTIFY_RES_SUCC = "success";//接收成功
+    String TRADE_NOTIFY_RES_FAIL = "fail"; //接收失败,重新发送通知
 
     AlipayClient getClient(String id);
 
