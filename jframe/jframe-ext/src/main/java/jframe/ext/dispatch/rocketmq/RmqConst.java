@@ -6,13 +6,14 @@ package jframe.ext.dispatch.rocketmq;
  */
 public interface RmqConst {
 
-    public static final String FILE_RMQ_PRODUCER = "file.rmq.producer";
-    public static final String FILE_RMQ_CONSUMER = "file.rmq.consumer";
+    String FILE_RMQ_PRODUCER = "file.rmq.producer";
+    String FILE_RMQ_CONSUMER = "file.rmq.consumer";
 
-    public static final String D_RMQ_CODEC = "d.rmq.codec"; // MsgCodec
+    // msg meta
+    String M_RMQ_CODEC = "m.rmq.codec"; // MsgCodec
+    String M_RMQ_TOPIC = "m.rmq.topic";
+    String M_RMQ_TAG = "m.rmq.tag";
+    String M_RMQ_Key = "m.rmq.key";
 
-    public static final String DEFAULT_TOPIC = "jframe";
-    public static final String D_RMQ_R_TOPIC = "d.rmq.r.topic";
-    public static final String D_RMQ_R_TAG = "d.rmq.r.tag";
-    public static final String D_RMQ_R_Key = "d.rmq.r.key";
+    String DEFAULT_TOPIC = "jframe";
 }

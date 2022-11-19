@@ -297,7 +297,6 @@ public class DefPluginContext implements PluginContext, Dispatchable {
     }
 
     /**
-     *
      * (non-Javadoc)
      *
      * @return if find PluginRef return it, or return null

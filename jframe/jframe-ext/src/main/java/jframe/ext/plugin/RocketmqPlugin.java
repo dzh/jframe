@@ -1,8 +1,7 @@
 package jframe.ext.plugin;
 
 import jframe.core.msg.Msg;
-import jframe.core.plugin.PluginSender;
-import jframe.ext.dispatch.rocketmq.RmqDispatcher;
+import jframe.ext.dispatch.rocketmq.RmqConst;
 
 /**
  * Rocketmq Plugin
@@ -10,14 +9,14 @@ import jframe.ext.dispatch.rocketmq.RmqDispatcher;
  * @author dzh
  * @date 2019/12/25 15:22
  */
-public abstract class RocketmqPlugin extends PluginSender {
+public class RocketmqPlugin extends MqPlugin {
 
     public void send(Msg<?> msg, String topic, String tag, String key) {
         if (msg == null) return;
 
-        msg.setMeta(RmqDispatcher.D_RMQ_R_TOPIC, topic);
-        msg.setMeta(RmqDispatcher.D_RMQ_R_TAG, tag);
-        msg.setMeta(RmqDispatcher.D_RMQ_R_Key, key);
+        msg.setMeta(RmqConst.M_RMQ_TOPIC, topic);
+        msg.setMeta(RmqConst.M_RMQ_TAG, tag);
+        msg.setMeta(RmqConst.M_RMQ_Key, key);
 
         send(msg);
     }

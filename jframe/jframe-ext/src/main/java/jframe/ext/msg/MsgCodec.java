@@ -1,4 +1,4 @@
-package jframe.ext.dispatch.rocketmq;
+package jframe.ext.msg;
 
 import jframe.core.msg.Msg;
 

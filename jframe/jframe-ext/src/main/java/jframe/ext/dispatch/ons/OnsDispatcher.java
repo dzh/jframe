@@ -4,9 +4,9 @@ import com.aliyun.openservices.ons.api.*;
 import jframe.core.conf.Config;
 import jframe.core.dispatch.AbstractDispatcher;
 import jframe.core.msg.Msg;
-import jframe.ext.dispatch.rocketmq.MsgCodec;
 import jframe.ext.dispatch.rocketmq.RmqConst;
-import jframe.ext.dispatch.rocketmq.TextMsgCodec;
+import jframe.ext.msg.MsgCodec;
+import jframe.ext.msg.TextMsgCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -152,7 +152,7 @@ public class OnsDispatcher extends AbstractDispatcher implements RmqConst {
     }
 
     private void initMsgCodec() {
-        String clazz = getConfig().getConfig(D_RMQ_CODEC, TextMsgCodec.class.getName());
+        String clazz = getConfig().getConfig(M_RMQ_CODEC, TextMsgCodec.class.getName());
         try {
             msgCodec = (MsgCodec) Class.forName(clazz).newInstance();
         } catch (Exception e) {
@@ -163,14 +163,14 @@ public class OnsDispatcher extends AbstractDispatcher implements RmqConst {
     @Override
     public void receive(Msg<?> msg) {
         if (producer != null) {
-            String topic = (String) msg.getMeta(D_RMQ_R_TOPIC);
+            String topic = (String) msg.getMeta(M_RMQ_TOPIC);
             if (Objects.isNull(topic)) {
                 topic = DEFAULT_TOPIC;
             }
 
             try {
                 Message rmqMsg = new Message(topic,
-                        (String) msg.getMeta(D_RMQ_R_TAG), (String) msg.getMeta(D_RMQ_R_Key),
+                        (String) msg.getMeta(M_RMQ_TAG), (String) msg.getMeta(M_RMQ_Key),
                         msgCodec.encode(msg));
                 SendResult r = producer.send(rmqMsg);
                 LOG.debug("send msg {}, sendResult {}", msg, r);

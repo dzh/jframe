@@ -1,9 +1,10 @@
-package jframe.ext.dispatch.rocketmq;
+package jframe.ext.msg;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jframe.core.msg.Msg;
 import jframe.core.msg.TextMsg;
+import jframe.ext.msg.MsgCodec;
 
 import java.io.IOException;
 

@@ -3,6 +3,8 @@ package jframe.ext.dispatch.rocketmq;
 import jframe.core.conf.Config;
 import jframe.core.dispatch.AbstractDispatcher;
 import jframe.core.msg.Msg;
+import jframe.ext.msg.MsgCodec;
+import jframe.ext.msg.TextMsgCodec;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -60,7 +62,7 @@ public class RmqDispatcher extends AbstractDispatcher implements RmqConst {
     }
 
     private void initMsgCodec() {
-        String clazz = getConfig().getConfig(D_RMQ_CODEC, TextMsgCodec.class.getName());
+        String clazz = getConfig().getConfig(M_RMQ_CODEC, TextMsgCodec.class.getName());
         try {
             msgCodec = (MsgCodec) Class.forName(clazz).newInstance();
         } catch (Exception e) {
@@ -162,7 +164,7 @@ public class RmqDispatcher extends AbstractDispatcher implements RmqConst {
         consumer.setConsumeMessageBatchMaxSize(Integer.parseInt(val));
         val = props.getProperty("consume.timeout", "5"); //minutes
         consumer.setConsumeTimeout(Long.parseLong(val));
-        consumer.subscribe(props.getProperty("consume.topic", "jframe"),
+        consumer.subscribe(props.getProperty("consume.topic", RmqConst.DEFAULT_TOPIC),
                 props.getProperty("consume.subExpression", "*"));
         consumer.setVipChannelEnabled(false);
         val = props.getProperty("consume.thread.max");
@@ -214,14 +216,14 @@ public class RmqDispatcher extends AbstractDispatcher implements RmqConst {
     @Override
     public void receive(Msg<?> msg) {
         if (producer != null) {
-            String topic = (String) msg.getMeta(D_RMQ_R_TOPIC);
+            String topic = (String) msg.getMeta(M_RMQ_TOPIC);
             if (Objects.isNull(topic)) {
                 topic = DEFAULT_TOPIC;
             }
 
             try {
                 Message rmqMsg = new Message(topic,
-                        (String) msg.getMeta(D_RMQ_R_TAG), (String) msg.getMeta(D_RMQ_R_Key),
+                        (String) msg.getMeta(M_RMQ_TAG), (String) msg.getMeta(M_RMQ_Key),
                         msgCodec.encode(msg));
                 SendResult r = producer.send(rmqMsg);
                 LOG.debug("send msg {}, sendResult {}", msg, r);

@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -42,24 +41,9 @@ import java.util.regex.Pattern;
  * @version 0.0.1
  * @date Dec 26, 2018 5:16:26 PM
  */
-public class KafkaDispatcher extends AbstractDispatcher {
+public class KafkaDispatcher extends AbstractDispatcher implements KafkaConst {
 
     static Logger LOG = LoggerFactory.getLogger(KafkaDispatcher.class);
-
-    // default
-    public static final String DEFAULT_TOPIC = "jframe";
-
-    // config
-    public static final String FILE_KAFKA_PRODUCER = "file.kafka.producer";
-    public static final String FILE_KAFKA_CONSUMER = "file.kafka.consumer";
-    public static final String D_KAFKA_SUBSCRIBE = "d.kafka.subscribe";
-    public static final String D_KAFKA_SUBSCRIBE_REGEX = "d.kafka.subscribe.regex";
-
-    // msg meta
-    public static final String D_KAFKA_R_TOPIC = "d.kafka.r.topic";
-    public static final String D_KAFKA_R_KEY = "d.kafka.r.key";
-    public static final String D_KAFKA_R_PARTITION = "d.kafka.r.partition";
-    public static final String D_KAFKA_R_TIMESTAMP = "d.kafka.r.timestamp";
 
     private Producer<String, Msg<?>> producer;
     private Consumer<String, Msg<?>> consumer;
@@ -214,20 +198,20 @@ public class KafkaDispatcher extends AbstractDispatcher {
     @Override
     public void receive(Msg<?> msg) {
         if (producer != null) {
-            String topic = (String) msg.getMeta(D_KAFKA_R_TOPIC);
+            String topic = (String) msg.getMeta(M_KAFKA_TOPIC);
             if (Objects.isNull(topic)) {
                 topic = DEFAULT_TOPIC;
             }
             Integer partition = partition(msg);
             Long timestamp = timestamp(msg);
-            String key = (String) msg.getMeta(D_KAFKA_R_KEY);
+            String key = (String) msg.getMeta(M_KAFKA_KEY);
             ProducerRecord<String, Msg<?>> record = new ProducerRecord<>(topic, partition, timestamp, key, msg, null);
             producer.send(record);
         }
     }
 
     private Long timestamp(Msg<?> msg) {
-        Object ts = msg.getMeta(D_KAFKA_R_TIMESTAMP);
+        Object ts = msg.getMeta(M_KAFKA_TIMESTAMP);
         if (ts == null) return null;
         if (ts instanceof Long) return (Long) ts;
         if (ts instanceof String) return Long.parseLong((String) ts);
@@ -235,7 +219,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
     }
 
     private Integer partition(Msg<?> msg) {
-        Object p = msg.getMeta(D_KAFKA_R_PARTITION);
+        Object p = msg.getMeta(M_KAFKA_PARTITION);
         if (p == null) return null;
         if (p instanceof Integer) return (Integer) p;
         if (p instanceof String) return Integer.parseInt((String) p);
@@ -254,11 +238,12 @@ public class KafkaDispatcher extends AbstractDispatcher {
     public void close() {
         if (closed) return;
         // close producer
-        if (enableProducer()) producer.close(WAIT_CLOSED_SECOND, TimeUnit.SECONDS);
+        if (enableProducer())
+//            producer.close(WAIT_CLOSED_SECOND, TimeUnit.SECONDS);
+            producer.close(Duration.ofSeconds(WAIT_CLOSED_SECOND));
 
         // close dispatcher and consumer
         if (enableConsumer()) {
-            closed = true;
             if (dispatchT != null) {
                 try {
                     dispatchT.join(WAIT_CLOSED_SECOND * 1000L);
@@ -266,6 +251,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
                 }
             }
         }
+        closed = true;
         super.close();
     }
 
