@@ -20,18 +20,10 @@ jframe-plugin/release/lib/
 jframe-plugin/release/plugin/
 
 
-jframe-pay/release/jframe-pay/lib/
-jframe-pay/release/jframe-pay/plugin/
-jframe-pay/release/jframe-pay/temp/
-jframe-pay/release/jframe-pay/log/
-jframe-pay/release/jframe-pay/conf/cache/
-
-
-jframe-demo/demo-release/lib/
-jframe-demo/demo-release/plugin/
-jframe-demo/demo-release/temp/
-jframe-demo/demo-release/log/
-jframe-demo/demo-release/conf/cache/
+jframe-pay/jframe-pay-release/tmp/
+jframe-pay/jframe-pay-release/log/
+jframe-pay/jframe-pay-release/conf/
+jframe-pay/jframe-pay-release/filter.properties
 
 # idea
 *.iml

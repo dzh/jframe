@@ -1,45 +1,45 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>cn</groupId>
-		<artifactId>jframe-pay</artifactId>
-		<version>1.0.0</version>
-	</parent>
-	<artifactId>jframe-pay-plugin</artifactId>
-	<packaging>pom</packaging>
-	<modules>
-		<module>jframe-pay-alipay</module>
-		<module>jframe-pay-wx</module>
-		<module>jframe-pay-http</module>
-		<module>jframe-pay-dao</module>
-		<module>jframe-pay-task</module>
-		<module>jframe-pay-upmp</module>
-	</modules>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.dzh</groupId>
+        <artifactId>jframe-pay</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>jframe-pay-plugin</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>jframe-pay-alipay</module>
+        <module>jframe-pay-wx</module>
+        <module>jframe-pay-http</module>
+        <module>jframe-pay-dao</module>
+        <module>jframe-pay-task</module>
+        <module>jframe-pay-upmp</module>
+        <module>jframe-pay-client</module>
+    </modules>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<classifier>plugin</classifier>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <classifier>plugin</classifier>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<dependencies>
-		<dependency>
-			<artifactId>jframe-pay-domain</artifactId>
-			<groupId>cn</groupId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>cn</groupId>
-			<artifactId>jframe-memcached-client</artifactId>
-			<version>1.0.0</version>
-			<classifier>plugin</classifier>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.dzh</groupId>
+            <artifactId>jframe-pay-domain</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.dzh</groupId>
+            <artifactId>jframe-memcached-client</artifactId>
+            <classifier>plugin</classifier>
+        </dependency>
+    </dependencies>
 </project>

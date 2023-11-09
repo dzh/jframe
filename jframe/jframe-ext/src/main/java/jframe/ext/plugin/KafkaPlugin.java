@@ -1,23 +1,22 @@
 package jframe.ext.plugin;
 
 import jframe.core.msg.Msg;
-import jframe.core.plugin.PluginSender;
-import jframe.ext.dispatch.kafka.KafkaDispatcher;
+import jframe.ext.dispatch.kafka.KafkaConst;
 
 /**
  * @author dzh
- * @date Dec 27, 2018 3:05:36 PM
  * @version 0.0.1
+ * @date Dec 27, 2018 3:05:36 PM
  */
-public abstract class KafkaPlugin extends PluginSender {
+public class KafkaPlugin extends MqPlugin {
 
     public void send(Msg<?> msg, String topic, Integer partition, Long timestamp, String key) {
         if (msg == null) return;
 
-        msg.setMeta(KafkaDispatcher.D_KAFKA_R_TOPIC, topic);
-        msg.setMeta(KafkaDispatcher.D_KAFKA_R_PARTITION, partition);
-        msg.setMeta(KafkaDispatcher.D_KAFKA_R_TIMESTAMP, timestamp);
-        msg.setMeta(KafkaDispatcher.D_KAFKA_R_KEY, key);
+        msg.setMeta(KafkaConst.M_KAFKA_TOPIC, topic);
+        msg.setMeta(KafkaConst.M_KAFKA_PARTITION, partition);
+        msg.setMeta(KafkaConst.M_KAFKA_TIMESTAMP, timestamp);
+        msg.setMeta(KafkaConst.M_KAFKA_KEY, key);
 
         send(msg);
     }

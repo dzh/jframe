@@ -1,12 +1,11 @@
 /**
- * 
+ *
  */
 package jframe.pay.wx.domain;
 
+import jframe.core.util.PropsConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jframe.ext.util.PropertiesConfig;
 
 /**
  * @author dzh
@@ -39,7 +38,7 @@ public class WxConfig {
 
     static Logger LOG = LoggerFactory.getLogger(WxConfig.class);
 
-    public static PropertiesConfig config = new PropertiesConfig();
+    public static PropsConf config = new PropsConf();
 
     public static void init(String file) throws Exception {
         config.init(file);

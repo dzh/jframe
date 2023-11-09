@@ -26,8 +26,6 @@ public class Main {
      * 
      * @param lclazz
      *            launcher class
-     * @param deflclazz
-     *            default launcher class
      * @return
      */
     public static Launcher createLauncher(String lclazz) throws LauncherException {

@@ -1,17 +1,7 @@
 /**
- * 
+ *
  */
 package jframe.aliyun.service.sts;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.exceptions.ServerException;
@@ -21,7 +11,6 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleRequest;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
-
 import jframe.aliyun.AliyunField;
 import jframe.aliyun.AliyunPlugin;
 import jframe.aliyun.service.STSService;
@@ -30,10 +19,19 @@ import jframe.core.plugin.annotation.InjectPlugin;
 import jframe.core.plugin.annotation.Injector;
 import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * https://help.aliyun.com/document_detail/28788.html?spm=a2c4g.11186623.6.695.uQYP1L
- * 
+ *
  * @author dzh
  * @date Feb 29, 2016 12:44:39 PM
  * @since 1.0
@@ -58,7 +56,9 @@ public class STSServiceImpl implements STSService, AliyunField {
 
         try {
             String file = plugin.getConfig(FILE_ALISTS, plugin.getConfig(Config.APP_CONF) + "/alists.properties");
-            if (!new File(file).exists()) { throw new FileNotFoundException("not found " + file); }
+            if (!new File(file).exists()) {
+                throw new FileNotFoundException("not found " + file);
+            }
             _config.init(file);
             for (String id : _config.getGroupIds()) {
                 // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
@@ -67,11 +67,11 @@ public class STSServiceImpl implements STSService, AliyunField {
                 DefaultAcsClient client = new DefaultAcsClient(profile);
                 clients.put(id, client);
             }
+            LOG.info("Start STSService Successfully!");
         } catch (Exception e) {
-            LOG.error("Start STSService Failure!" + e.getMessage(), e);
-            return;
+            LOG.error("Start STSService Failed!" + e.getMessage(), e);
         }
-        LOG.info("Start STSService Successfully!");
+
     }
 
     @Stop
@@ -111,6 +111,8 @@ public class STSServiceImpl implements STSService, AliyunField {
 
         // 创建一个 AssumeRoleRequest 并设置请求参数
         final AssumeRoleRequest request = new AssumeRoleRequest();
+        // https://help.aliyun.com/document_detail/66053.html?spm=a2c4g.11186623.6.799.7c6d7074SK0BQS
+        request.setEndpoint(_config.getConf(id, K_endpoint, "sts.aliyuncs.com"));
         request.setVersion(_config.getConf(id, K_api_version));
         request.setMethod(MethodType.POST);
         request.setProtocol(protocolType);

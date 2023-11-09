@@ -60,7 +60,7 @@ public class MainLauncher extends DefLauncher {
     }
 
     /**
-     * @param conf
+     * @param config
      */
     private void launchNormal(Config config) {
         LOG.info("Launching normal mode!");
@@ -101,7 +101,7 @@ public class MainLauncher extends DefLauncher {
     }
 
     /**
-     * @param conf
+     * @param config
      */
     private void launchDaemon(final Config config) {
         LOG.info("Launch daemon mode! write pid: {}", config.getConfig(DefConfig.PID_DAEMON));

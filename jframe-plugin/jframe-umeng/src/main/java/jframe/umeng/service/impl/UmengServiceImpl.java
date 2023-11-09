@@ -1,26 +1,16 @@
 /**
- * 
+ *
  */
 package jframe.umeng.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.InjectService;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
+import jframe.core.plugin.annotation.*;
 import jframe.httpclient.service.HttpClientService;
 import jframe.umeng.UmengConfig;
 import jframe.umeng.UmengPlugin;
 import jframe.umeng.service.UmengService;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import push.AndroidNotification;
 import push.AndroidNotification.DisplayType;
 import push.UmengNotification;
@@ -29,8 +19,13 @@ import push.android.AndroidUnicast;
 import push.ios.IOSBroadcast;
 import push.ios.IOSUnicast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 
+ *
  * @author dzh
  * @date Mar 4, 2016 10:13:18 PM
  * @since 1.0
@@ -79,7 +74,8 @@ public class UmengServiceImpl implements UmengService {
     }
 
     @Stop
-    void stop() {}
+    void stop() {
+    }
 
     /**
      * "alert":""/{ // 当content-available=1时(静默推送)，可选; 否则必填。
@@ -147,13 +143,14 @@ public class UmengServiceImpl implements UmengService {
         String httpid = _config.getConf(null, UmengConfig.HttpId, "umeng");
         String path = "/api/send?sign=" + sign;
 
-        Map<String, String> headers = new HashMap<String, String>(1, 1);
+        Map<String, String> headers = new HashMap<>(1, 1);
         headers.put("User-Agent", "Mozilla/5.0");
         Object rsp = _http.send(httpid, path, postBody, headers, null);
+        LOG.info("m->sendUmengNotification data->{} rsp->{}", postBody, rsp);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("m->sendUmengNotification data->{} rsp->{}", n.getPostBody(), rsp);
-        }
+//        if (LOG.isDebugEnabled()) {
+//            LOG.debug("m->sendUmengNotification data->{} rsp->{}", postBody, rsp);
+//        }
     }
 
     @Override

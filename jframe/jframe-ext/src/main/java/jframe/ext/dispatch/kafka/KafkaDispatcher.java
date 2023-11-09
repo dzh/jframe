@@ -1,14 +1,8 @@
 package jframe.ext.dispatch.kafka;
 
-import java.io.FileInputStream;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
+import jframe.core.conf.Config;
+import jframe.core.dispatch.AbstractDispatcher;
+import jframe.core.msg.Msg;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -18,9 +12,13 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jframe.core.conf.Config;
-import jframe.core.dispatch.AbstractDispatcher;
-import jframe.core.msg.Msg;
+import java.io.FileInputStream;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -30,7 +28,7 @@ import jframe.core.msg.Msg;
  * <li>file.d.kafka.consumer=${app.home}/conf/d-kafka-consumer.properties</li>
  * <li>d.kafka.subscribe=topicA topicB topicC</i>
  * </p>
- * 
+ *
  * <p>
  * msg meta:
  * <li>d.kafka.r.topic 对应{@link ProducerRecord}的topic</li>
@@ -38,29 +36,14 @@ import jframe.core.msg.Msg;
  * <li>d.kafka.r.partition</li>
  * <li>d.kafka.r.timestamp</li>
  * </p>
- * 
+ *
  * @author dzh
- * @date Dec 26, 2018 5:16:26 PM
  * @version 0.0.1
+ * @date Dec 26, 2018 5:16:26 PM
  */
-public class KafkaDispatcher extends AbstractDispatcher {
+public class KafkaDispatcher extends AbstractDispatcher implements KafkaConst {
 
     static Logger LOG = LoggerFactory.getLogger(KafkaDispatcher.class);
-
-    // default
-    public static final String DEFAULT_TOPIC = "jframe";
-
-    // config
-    public static final String FILE_KAFKA_PRODUCER = "file.kafka.producer";
-    public static final String FILE_KAFKA_CONSUMER = "file.kafka.consumer";
-    public static final String D_KAFKA_SUBSCRIBE = "d.kafka.subscribe";
-    public static final String D_KAFKA_SUBSCRIBE_REGEX = "d.kafka.subscribe.regex";
-
-    // msg meta
-    public static final String D_KAFKA_R_TOPIC = "d.kafka.r.topic";
-    public static final String D_KAFKA_R_KEY = "d.kafka.r.key";
-    public static final String D_KAFKA_R_PARTITION = "d.kafka.r.partition";
-    public static final String D_KAFKA_R_TIMESTAMP = "d.kafka.r.timestamp";
 
     private Producer<String, Msg<?>> producer;
     private Consumer<String, Msg<?>> consumer;
@@ -118,10 +101,10 @@ public class KafkaDispatcher extends AbstractDispatcher {
 
     /**
      * http://kafka.apache.org/21/javadoc/index.html?org/apache/kafka/clients/producer/KafkaProducer.html
-     * 
+     *
      * @param props
      */
-    private void loadDefaultProducer(Properties props) {
+    protected void loadDefaultProducer(Properties props) {
         props.put("bootstrap.servers", "localhost:9092");
         props.put("acks", "all");
         props.put("delivery.timeout.ms", 30000);
@@ -153,27 +136,26 @@ public class KafkaDispatcher extends AbstractDispatcher {
             consumer.seekToEnd(Collections.emptyList());
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            close();
+//            close();
+//            return;
         }
-        final boolean autoCommit = "true".equals(props.get("enable.auto.commit")) ? true : false;
+        final boolean autoCommit = "true".equals(props.get("enable.auto.commit"));
         this.dispatchT = new Thread(() -> {
             LOG.info("{} start", Thread.currentThread().getName());
             ConsumerRecords<String, Msg<?>> records = null;
-            while (true) {
-                if (closed) break;
+            while (!closed) {
                 try {
-                    records = consumer.poll(Duration.ofMillis(1000L));
+                    records = consumer.poll(Duration.ofMillis(1000L));//
+                    if (records == null) continue;
+
+                    records.forEach(record -> {
+                        dispatch(record.value());
+                    });
+                    // commit if autoCommit is false
+                    if (!autoCommit) consumer.commitAsync();
                 } catch (Exception e) {
                     LOG.warn(e.getMessage(), e);
-                    continue;
                 }
-                if (records == null) continue;
-
-                records.forEach(record -> {
-                    dispatch(record.value());
-                });
-                // commit if autoCommit is false
-                if (!autoCommit) consumer.commitAsync();
             }
             consumer.close(Duration.ofSeconds(WAIT_CLOSED_SECOND)); // consumer close
             LOG.info("{} closed", Thread.currentThread().getName());
@@ -185,10 +167,10 @@ public class KafkaDispatcher extends AbstractDispatcher {
         Consumer<String, Msg<?>> consumer = new KafkaConsumer<>(props);
         String topics = DEFAULT_TOPIC;
         if (getConfig().contain(D_KAFKA_SUBSCRIBE)) {
-            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE);
+            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE); //todo  put into props
             consumer.subscribe(Arrays.asList(topics.split("\\s+")));
         } else if (getConfig().contain(D_KAFKA_SUBSCRIBE_REGEX)) {
-            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE_REGEX);
+            topics = getConfig().getConfig(D_KAFKA_SUBSCRIBE_REGEX);  //todo  put into props
             consumer.subscribe(Pattern.compile(topics));
         } else {
             consumer.subscribe(Arrays.asList(topics));
@@ -199,10 +181,10 @@ public class KafkaDispatcher extends AbstractDispatcher {
 
     /**
      * http://kafka.apache.org/21/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
-     * 
+     *
      * @param props
      */
-    private void loadDefaultConsumer(Properties props) {
+    protected void loadDefaultConsumer(Properties props) {
         props.put("bootstrap.servers", "localhost:9092");
         props.put("group.id", "jframe");
         props.put("enable.auto.commit", "true");
@@ -216,20 +198,20 @@ public class KafkaDispatcher extends AbstractDispatcher {
     @Override
     public void receive(Msg<?> msg) {
         if (producer != null) {
-            String topic = (String) msg.getMeta(D_KAFKA_R_TOPIC);
+            String topic = (String) msg.getMeta(M_KAFKA_TOPIC);
             if (Objects.isNull(topic)) {
                 topic = DEFAULT_TOPIC;
             }
             Integer partition = partition(msg);
             Long timestamp = timestamp(msg);
-            String key = (String) msg.getMeta(D_KAFKA_R_KEY);
+            String key = (String) msg.getMeta(M_KAFKA_KEY);
             ProducerRecord<String, Msg<?>> record = new ProducerRecord<>(topic, partition, timestamp, key, msg, null);
             producer.send(record);
         }
     }
 
     private Long timestamp(Msg<?> msg) {
-        Object ts = msg.getMeta(D_KAFKA_R_TIMESTAMP);
+        Object ts = msg.getMeta(M_KAFKA_TIMESTAMP);
         if (ts == null) return null;
         if (ts instanceof Long) return (Long) ts;
         if (ts instanceof String) return Long.parseLong((String) ts);
@@ -237,7 +219,7 @@ public class KafkaDispatcher extends AbstractDispatcher {
     }
 
     private Integer partition(Msg<?> msg) {
-        Object p = msg.getMeta(D_KAFKA_R_PARTITION);
+        Object p = msg.getMeta(M_KAFKA_PARTITION);
         if (p == null) return null;
         if (p instanceof Integer) return (Integer) p;
         if (p instanceof String) return Integer.parseInt((String) p);
@@ -254,18 +236,22 @@ public class KafkaDispatcher extends AbstractDispatcher {
 
     @Override
     public void close() {
+        if (closed) return;
         // close producer
-        if (enableProducer()) producer.close(WAIT_CLOSED_SECOND, TimeUnit.SECONDS);
+        if (enableProducer())
+//            producer.close(WAIT_CLOSED_SECOND, TimeUnit.SECONDS);
+            producer.close(Duration.ofSeconds(WAIT_CLOSED_SECOND));
 
         // close dispatcher and consumer
         if (enableConsumer()) {
-            closed = true;
             if (dispatchT != null) {
                 try {
                     dispatchT.join(WAIT_CLOSED_SECOND * 1000L);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                }
             }
         }
+        closed = true;
         super.close();
     }
 
