@@ -1,4 +1,4 @@
-package jframe.wxpay.service;
+package jframe.wxpay.service.impl;
 
 import com.github.wxpay.sdk.JframeWxpayConfig;
 import com.github.wxpay.sdk.WXPay;
@@ -11,27 +11,27 @@ import jframe.core.plugin.annotation.Start;
 import jframe.core.plugin.annotation.Stop;
 import jframe.wxpay.WxpayConf;
 import jframe.wxpay.WxpayPlugin;
+import jframe.wxpay.service.WxpayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * https://pay.weixin.qq.com/wiki/doc/api/index.html
- * https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_1
+ * <a href="https://pay.weixin.qq.com/wiki/doc/api/index.html">开发文档首页</a>
  *
  * @author dzh
  * @date 2020/8/18 17:40
  */
 @Injector
-public class WxpayServiceV2 implements WxpayService {
+public class WxpayServiceV2Impl implements WxpayService {
 
-    static Logger LOG = LoggerFactory.getLogger(WxpayServiceV2.class);
+    static Logger LOG = LoggerFactory.getLogger(WxpayServiceV2Impl.class);
 
     @InjectPlugin
     static WxpayPlugin plugin;
@@ -39,7 +39,7 @@ public class WxpayServiceV2 implements WxpayService {
     static String FILE_WXPAY = "file.wxpay";
 
     //group id -> AlipayClient
-    private Map<String, WXPay> clients = new HashMap<>();
+    private final Map<String, WXPay> clients = new HashMap<>();
 
     private WxpayConf wxpayConf;
 
@@ -69,16 +69,35 @@ public class WxpayServiceV2 implements WxpayService {
         LOG.info("Stop WxpayServiceV2");
     }
 
-    private WXPay createWxpay(WxpayConf props, String id) throws Exception {
-        byte[] bytes = props.loadCert(id);
-        JframeWxpayConfig conf = JframeWxpayConfig.create(props.getConf(id, WxpayConf.P_appId),
-                props.getConf(id, WxpayConf.P_mchId), props.getConf(id, WxpayConf.P_apiKey), new ByteArrayInputStream(bytes));
-        return new WXPay(conf, props.getConf(id, WxpayConf.P_notifyUrl),
-                Boolean.parseBoolean(props.getConf(id, WxpayConf.P_autoReport, "true")),
-                Boolean.parseBoolean(props.getConf(id, WxpayConf.P_useSandbox, "false")),
-                WXPayConstants.SignType.of(props.getConf(id, WxpayConf.P_signType)));
+    /**
+     * @param id groupid
+     * @return cert bytes
+     */
+    byte[] loadCert(WxpayConf props, String id) throws IOException {
+        String certPath = props.getConf(id, WxpayConf.P_certPath);
+        File file = new File(certPath);
+        if (!file.exists()) {
+            file = Paths.get(plugin.getConfig(Config.APP_CONF), WxpayConf.CERTNAME).toFile();
+        }
+        if (!file.exists()) {
+            throw new FileNotFoundException(WxpayConf.CERTNAME);
+        }
+        try (InputStream certStream = Files.newInputStream(file.toPath())) {
+            byte[] certData = new byte[(int) file.length()];
+            long size = certStream.read(certData);
+            LOG.info("read {} {}", size, WxpayConf.CERTNAME);
+            return certData;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new IOException(e.getMessage(), e.getCause());
+        }
     }
 
+    private WXPay createWxpay(WxpayConf props, String id) throws Exception {
+        byte[] bytes = loadCert(props, id);
+        JframeWxpayConfig conf = JframeWxpayConfig.create(props.getConf(id, WxpayConf.P_appId), props.getConf(id, WxpayConf.P_mchId), props.getConf(id, WxpayConf.P_apiKey), new ByteArrayInputStream(bytes));
+        return new WXPay(conf, props.getConf(id, WxpayConf.P_notifyUrl), Boolean.parseBoolean(props.getConf(id, WxpayConf.P_autoReport, "true")), Boolean.parseBoolean(props.getConf(id, WxpayConf.P_useSandbox, "false")), WXPayConstants.SignType.of(props.getConf(id, WxpayConf.P_signType)));
+    }
 
     @Override
     public String conf(String id, String key) {
@@ -113,6 +132,11 @@ public class WxpayServiceV2 implements WxpayService {
     }
 
     @Override
+    public Map<String, String> orderPrepayAndSign(String id, Map<String, String> req) throws Exception {
+        return signPrepay(id, orderPrepay(id, req));
+    }
+
+    @Override
     public Map<String, String> orderClose(String id, Map<String, String> req) throws Exception {
         return clients.get(id).closeOrder(req);
     }
@@ -140,6 +164,11 @@ public class WxpayServiceV2 implements WxpayService {
     @Override
     public Map<String, String> refund(String id, Map<String, String> req) throws Exception {
         return clients.get(id).refund(req);
+    }
+
+    @Override
+    public Map<String, String> refundNotify(String id, String reqBody, Map<String, String> headers) throws Exception {
+        return Map.of();//todo
     }
 
     @Override
