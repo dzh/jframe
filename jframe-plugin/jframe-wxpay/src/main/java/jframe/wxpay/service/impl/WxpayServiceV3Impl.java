@@ -91,7 +91,7 @@ public class WxpayServiceV3Impl implements WxpayServiceV3 {
             if (payConf.containsKey(mid)) continue;
             String privateKeyPath = wxpayConf.getConf(id, WxpayConf.P_privateKeyPath);
             if (privateKeyPath == null || privateKeyPath.trim().isEmpty()) {
-                privateKeyPath = plugin.getConfig(jframe.core.conf.Config.APP_CONF) + "/appclient_key.pem";
+                privateKeyPath = plugin.getConfig(jframe.core.conf.Config.APP_CONF) + "/" + WxpayConf.V3_PRIVATE_KEY;
             }
             RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder().merchantId(mid).privateKeyFromPath(privateKeyPath).merchantSerialNumber(wxpayConf.getConf(id, WxpayConf.P_certSN)).apiV3Key(wxpayConf.getConf(id, WxpayConf.P_apiKeyV3)).build();
             payConf.put(mid, config);

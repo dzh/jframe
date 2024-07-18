@@ -11,6 +11,7 @@ import java.io.InputStream;
 public class WxpayConf extends PropsConf {
 
     public static final String CERTNAME = "apiclient_cert.p12";
+    public static final String V3_PRIVATE_KEY = "apiclient_key.pem";
 
     public static final String P_appId = "appId";
     public static final String P_mchId = "mchId";
