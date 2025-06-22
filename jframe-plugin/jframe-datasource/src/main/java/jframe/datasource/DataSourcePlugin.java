@@ -13,4 +13,5 @@ import jframe.core.plugin.annotation.Plugin;
  */
 @Plugin(startOrder = 1, stopOrder = 1000)
 public class DataSourcePlugin extends DefPlugin {
+
 }

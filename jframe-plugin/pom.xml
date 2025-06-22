@@ -45,6 +45,7 @@
         <module>jframe-google</module>
         <module>jframe-alipay</module>
         <module>jframe-wxpay</module>
+        <module>jframe-id</module>
     </modules>
     <dependencyManagement>
         <dependencies>

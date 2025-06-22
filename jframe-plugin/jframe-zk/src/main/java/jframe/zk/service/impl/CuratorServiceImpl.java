@@ -64,8 +64,7 @@ public class CuratorServiceImpl implements CuratorService {
                 int retryInterval = _config.getConfInt(id, ZkField.RetryInterval, "5000");
                 int retryTimes = _config.getConfInt(id, ZkField.RetryTimes, "3");
                 RetryPolicy retryPolicy = new ExponentialBackoffRetry(retryInterval, retryTimes);
-                CuratorFramework zkCli = CuratorFrameworkFactory.builder().connectString(connectString).retryPolicy(retryPolicy)
-                        .connectionTimeoutMs(connectTimeout).sessionTimeoutMs(sessionTimeout).namespace(ns).build();
+                CuratorFramework zkCli = CuratorFrameworkFactory.builder().connectString(connectString).retryPolicy(retryPolicy).connectionTimeoutMs(connectTimeout).sessionTimeoutMs(sessionTimeout).namespace(ns).build();
                 try {
                     zkCli.start();
                     zkCli.blockUntilConnected(10, TimeUnit.SECONDS);
@@ -76,7 +75,7 @@ public class CuratorServiceImpl implements CuratorService {
                 if (zkCli.getState() == CuratorFrameworkState.STARTED) clients.put(id, zkCli);
             }
         } catch (Exception e) {
-            LOG.error("Start CuratorService Failure!" + e.getMessage(), e);
+            LOG.error("Start CuratorService Failure!", e);
             return;
         }
         LOG.info("Start CuratorService Successfully!");
