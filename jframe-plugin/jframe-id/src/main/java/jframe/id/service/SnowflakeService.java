@@ -83,11 +83,11 @@ public class SnowflakeService implements IdService {
     }
 
     protected long workerId() {
-        String workerGeneration = _config.getConf(null, IdField.SNOWFLAKE_WORKER_GENERATION, "");
-        switch (workerGeneration) {
-            case IdField.GENERATION_IP:
+        String workerGenerator = _config.getConf(null, IdField.SNOWFLAKE_WORKER_GENERATOR, "");
+        switch (workerGenerator) {
+            case IdField.WORK_GENERATOR_IP:
                 return generateWorkerIdFromIP();
-            case IdField.GENERATION_ZK:
+            case IdField.WORK_GENERATOR_ZK:
                 return generateWorkerIdFromZK();
             default:
                 return _config.getConfLong(null, IdField.SNOWFLAKE_WORKER_ID, "0");
@@ -95,10 +95,11 @@ public class SnowflakeService implements IdService {
     }
 
     private boolean isZK() {
-        String workerGeneration = _config.getConf(null, IdField.SNOWFLAKE_WORKER_GENERATION, "");
-        return IdField.GENERATION_ZK.equals(workerGeneration);
+        String workerGenerator = _config.getConf(null, IdField.SNOWFLAKE_WORKER_GENERATOR, "");
+        return IdField.WORK_GENERATOR_ZK.equals(workerGenerator);
     }
 
+    // jframe-zk curator group id
     protected String zkId() {
         return _config.getConf(null, IdField.SNOWFLAKE_ZK_ID, IdField.ZK_ID);
     }

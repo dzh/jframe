@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.core.conf;
 
@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
+ *
  * @author dzh
  * @date Oct 11, 2013 1:12:37 PM
  * @since 1.0
@@ -16,7 +16,7 @@ public class VarHandler {
 
     public static final Pattern P_VAR = Pattern.compile(Config.REGEX_VAR, Pattern.CASE_INSENSITIVE);
 
-    private Config _config;
+    private final Config _config;
 
     public VarHandler(Config config) {
         this._config = config;
@@ -24,20 +24,19 @@ public class VarHandler {
 
     /**
      * 利用config中的变量值，替换value里的变量
-     * 
-     * @param v
-     * @return
+     *
+     * @param input 待替换的字符串
+     * @return 替换后的字符串
      */
     public String replace(String input) {
         return replace(_config, input);
     }
 
     /**
-     * 
-     * @param system
-     *            jvm系统变量，一般是System.getProperty
-     * @param input
-     * @return
+     *
+     * @param config system jvm系统变量，一般是System.getProperty
+     * @param input  待替换的字符串
+     * @return 替换后的字符串
      */
     public String replace(Config config, String input) {
         Matcher m = P_VAR.matcher(input);
@@ -51,7 +50,7 @@ public class VarHandler {
                 continue;
             }
 
-            input = input.replaceAll("\\$\\{" + var + "\\}", val);
+            input = input.replaceAll("\\$\\{" + var + "}", val);
         }
         return input;
     }
