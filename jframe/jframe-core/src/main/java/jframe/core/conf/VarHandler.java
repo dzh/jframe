@@ -39,6 +39,7 @@ public class VarHandler {
      * @return 替换后的字符串
      */
     public String replace(Config config, String input) {
+        if (input == null || input.isEmpty()) return input;
         Matcher m = P_VAR.matcher(input);
         String var = null;
         String val = null;
@@ -50,7 +51,7 @@ public class VarHandler {
                 continue;
             }
 
-            input = input.replaceAll("\\$\\{" + var + "}", val);
+            input = input.replaceAll("\\$\\{" + var + "\\}", val);
         }
         return input;
     }
