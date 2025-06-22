@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.core.unit;
 
@@ -19,7 +19,7 @@ import jframe.core.util.PropsConf;
  * <p>
  * UnitManager
  * </p>
- * 
+ *
  * @author dzh
  * @date Sep 24, 2013 11:07:49 AM
  * @since 1.0
@@ -43,9 +43,9 @@ public class UnitManager {
 
     /**
      * register unit, to be unregistered if u exist
-     * 
-     * @param u
-     * @return
+     *
+     * @param u Unit
+     * @return Unit
      * @throws UnitException
      */
     public Unit regUnit(Unit u) throws UnitException {
@@ -81,7 +81,7 @@ public class UnitManager {
 
     /**
      * unregister unit
-     * 
+     *
      * @param u
      * @return
      * @throws UnitException
@@ -123,7 +123,7 @@ public class UnitManager {
      * <p>
      * Initialize Manager and Register Units
      * </p>
-     * 
+     *
      * @throws UnitException
      */
     public void start() throws UnitException {
@@ -137,9 +137,8 @@ public class UnitManager {
 
     /**
      * load unit from unit.properties
-     * 
-     * @param file
-     * @throws UnitException
+     *
+     * @param file unit.properties file
      */
     private void loadUnit(String file) throws UnitException {
         if (file == null) {

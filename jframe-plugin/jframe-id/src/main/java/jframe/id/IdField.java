@@ -16,7 +16,7 @@ public interface IdField {
     String SNOWFLAKE_WORKER_BITS = "snowflake.worker.bits";
     String SNOWFLAKE_SEQUENCE_BITS = "snowflake.sequence.bits";
     // worker id generation method
-    String SNOWFLAKE_WORKER_GENERATOR = "SNOWFLAKE.WORKER.generator";
+    String SNOWFLAKE_WORKER_GENERATOR = "snowflake.worker.generator";
     String SNOWFLAKE_WORKER_ENV_IP = "snowflake.worker.env.ip";//worker's ip environment variable name
     // zk
     String SNOWFLAKE_ZK_ID = "snowflake.zk.id"; // jframe-zk curator group id

@@ -110,7 +110,7 @@ public class SnowflakeIdGenerator {
         this.dataCenterIdOffset = dataCenterId << dataCenterIdShift;
         this.workerIdOffset = workerId << workerIdShift;
 
-        LOG.info("new SnowflakeIdGenerator(epoch={}, dataCenterId={}, workerId={}, timestampBits={}, dataCenterIdBits={}, workerIdBits={}, sequenceBits={})", epoch, dataCenterId, workerId, timestampBits, dataCenterIdBits, workerIdBits, sequenceBits);
+        LOG.info("SnowflakeIdGenerator(epoch={}, dataCenterId={}, workerId={}, timestampBits={}, dataCenterIdBits={}, workerIdBits={}, sequenceBits={})", epoch, dataCenterId, workerId, timestampBits, dataCenterIdBits, workerIdBits, sequenceBits);
 //        LOG.info("SnowflakeIdGenerator initialized with DataCenterID: {}, workerId: {}", dataCenterId, workerId);
     }
 

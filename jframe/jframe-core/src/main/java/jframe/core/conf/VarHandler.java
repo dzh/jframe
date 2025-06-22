@@ -49,6 +49,9 @@ public class VarHandler {
             if (val == null) {
                 // LOG.warn("Not found variable's value: " + var);
                 continue;
+            } else if (val.equals(input)) {
+                // LOG.warn("Variable's value is same as input: " + var);
+                continue;
             }
 
             input = input.replaceAll("\\$\\{" + var + "\\}", val);
