@@ -6,6 +6,7 @@ package jframe.id;
  */
 public interface IdField {
     /******snowflake******/
+    String SNOWFLAKE_DISABLED = "snowflake.disabled";//default false
     String SNOWFLAKE_EPOCH = "snowflake.epoch";
     String SNOWFLAKE_WORKER_ID = "snowflake.worker.id";
     String SNOWFLAKE_DATACENTER_ID = "snowflake.datacenter.id";

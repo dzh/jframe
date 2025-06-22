@@ -57,6 +57,10 @@ public class SnowflakeService implements IdService {
             _config.init(file);
             LOG.info("load snowflake config {}", _config);
 
+            if (disabled()) {
+                LOG.info("SnowflakeService is disabled");
+                return;
+            }
             this.workerId = workerId();
             _generator = new SnowflakeIdGenerator(epoch(), dataCenterId(), this.workerId, timestampBits(), dataCenterBits(), workerBits(), sequenceBits());
         } catch (Exception e) {
@@ -66,6 +70,9 @@ public class SnowflakeService implements IdService {
         LOG.info("SnowflakeService startup success!");
     }
 
+    protected boolean disabled() {
+        return _config.getConfBool(null, IdField.SNOWFLAKE_DISABLED, "false");
+    }
 
     protected String epoch() {
         return _config.getConf(null, IdField.SNOWFLAKE_EPOCH, "2025-06-01T00:00:00Z");
@@ -191,6 +198,7 @@ public class SnowflakeService implements IdService {
 
     @Override
     public long nextId() {
+        if (_generator == null || disabled()) return 0L;
         return _generator.nextId();
     }
 
