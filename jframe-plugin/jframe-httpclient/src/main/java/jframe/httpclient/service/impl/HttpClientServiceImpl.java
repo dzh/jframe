@@ -1,18 +1,18 @@
 /**
- * 
+ *
  */
 package jframe.httpclient.service.impl;
 
-import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.http.HeaderElement;
-import org.apache.http.HeaderElementIterator;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import jframe.core.plugin.annotation.InjectPlugin;
+import jframe.core.plugin.annotation.Injector;
+import jframe.core.plugin.annotation.Start;
+import jframe.core.plugin.annotation.Stop;
+import jframe.httpclient.HttpClientConfig;
+import jframe.httpclient.HttpClientPlugin;
+import jframe.httpclient.service.HttpClientService;
+import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -34,19 +34,13 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
-import jframe.httpclient.HttpClientConfig;
-import jframe.httpclient.HttpClientPlugin;
-import jframe.httpclient.service.HttpClientService;
+import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 
+ *
  * @author dzh
  * @date Dec 2, 2014 12:11:23 PM
  * @since 1.0
@@ -106,7 +100,8 @@ public class HttpClientServiceImpl implements HttpClientService {
                         if (value != null && param.equalsIgnoreCase("timeout")) {
                             try {
                                 return Long.parseLong(value) * 1000;
-                            } catch (NumberFormatException ignore) {}
+                            } catch (NumberFormatException ignore) {
+                            }
                         }
                     }
 
@@ -200,31 +195,28 @@ public class HttpClientServiceImpl implements HttpClientService {
         //
         String ip = paras.containsKey("ip") ? paras.get("ip") : HttpClientConfig.getConf(id, HttpClientConfig.IP);
         String port = paras.containsKey("port") ? paras.get("port") : HttpClientConfig.getConf(id, HttpClientConfig.PORT, "80");
-        String scheme = HttpClientConfig.getConf(id, HttpClientConfig.SCHEME, HttpHost.DEFAULT_SCHEME_NAME);
-
+        String scheme = paras.containsKey(HttpClientConfig.SCHEME) ? paras.get(HttpClientConfig.SCHEME)
+                : HttpClientConfig.getConf(id, HttpClientConfig.SCHEME, HttpHost.DEFAULT_SCHEME_NAME);
         HttpHost target = new HttpHost(ip, Integer.parseInt(port), scheme);
+        String method = paras.containsKey(HttpClientConfig.HTTP_METHOD) ? paras.get(HttpClientConfig.HTTP_METHOD)
+                : HttpClientConfig.getConf(id, HttpClientConfig.HTTP_METHOD, HttpClientConfig.M_POST);
 
         HttpRequestBase request;
-        String mehtod = HttpClientConfig.getConf(id, HttpClientConfig.HTTP_METHOD, HttpClientConfig.M_POST);
-        if (HttpClientConfig.M_GET.equals(mehtod)) {
+        if (HttpClientConfig.M_GET.equals(method)) {
             request = new HttpGet(target.toURI() + path + "?" + data);
         } else {
             request = new HttpPost(target.toURI() + path);
-            String mimeType = paras.isEmpty() ? "text/plain" : paras.get(P_MIMETYPE);
+            String mimeType = paras.getOrDefault(P_MIMETYPE, "text/plain");
             ((HttpPost) request).setEntity(
                     new StringEntity(data, ContentType.create(mimeType, HttpClientConfig.getConf(id, HttpClientConfig.HTTP_CHARSET))));
         }
         request.setConfig(requestConfig);
 
-        if (headers != null) {
-            for (String key : headers.keySet()) {
-                request.addHeader(key, headers.get(key));
-            }
+        for (String key : headers.keySet()) {
+            request.addHeader(key, headers.get(key));
         }
 
-        CloseableHttpResponse rsp = null;
-        try {
-            rsp = httpClient.execute(request);
+        try (CloseableHttpResponse rsp = httpClient.execute(request)) {
             // ResponseHandler<String> responseHandler = new
             // ResponseHandler<String>() {
             //
@@ -260,10 +252,6 @@ public class HttpClientServiceImpl implements HttpClientService {
             // return (T) EntityUtils.toString(entity, charset);
             // }
             return EntityUtils.toString(entity, charset);
-        } finally {
-            if (rsp != null) {
-                rsp.close();
-            }
         }
     }
 
@@ -349,7 +337,8 @@ public class HttpClientServiceImpl implements HttpClientService {
                         if (value != null && param.equalsIgnoreCase("timeout")) {
                             try {
                                 return Long.parseLong(value) * 1000;
-                            } catch (NumberFormatException ignore) {}
+                            } catch (NumberFormatException ignore) {
+                            }
                         }
                     }
 

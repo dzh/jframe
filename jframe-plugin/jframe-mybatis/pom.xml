@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
-			<version>3.4.6</version>
+			<version>3.5.16</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -30,12 +30,12 @@
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<version>3.2.9</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ognl</groupId>
 			<artifactId>ognl</artifactId>
-			<version>3.2.8</version>
+			<version>3.3.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javassist</groupId>
@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.24.0-GA</version>
+			<version>3.30.2-GA</version>
 		</dependency>
 	</dependencies>
 </project>

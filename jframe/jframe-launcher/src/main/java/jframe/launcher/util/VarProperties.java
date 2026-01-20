@@ -1,13 +1,14 @@
 /**
- * 
+ *
  */
 package jframe.launcher.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -15,12 +16,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * support variable feature
- * 
+ *
  * @author dzh
  * @date Feb 16, 2016 10:14:22 AM
  * @since 1.2.1
@@ -30,7 +28,7 @@ public class VarProperties extends Properties {
     static Logger LOG = LoggerFactory.getLogger(VarProperties.class);
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -6146614559017054452L;
 
@@ -59,21 +57,19 @@ public class VarProperties extends Properties {
     }
 
     public synchronized void load(File file) throws IOException {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
+        if (file == null) return;
+        try (InputStreamReader fis = new InputStreamReader(Files.newInputStream(file.toPath()), StandardCharsets.UTF_8)) {
             load(fis);
         } catch (Exception e) {
             LOG.warn(e.getMessage());
-        } finally {
-            if (file != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    LOG.error(e.getMessage());
-                }
-            }
         }
+//        finally {
+//            try {
+//                fis.close();
+//            } catch (IOException e) {
+//                LOG.error(e.getMessage());
+//            }
+//        }
     }
 
     @Override
@@ -89,26 +85,23 @@ public class VarProperties extends Properties {
 
     /**
      * TODO handle circle key
-     * 
-     * @param key
-     * @param value
-     * @keys avoid circle key
-     * @return
+     *
+     * @param key   key
+     * @param value value
+     * @param keys  set to avoid circle key
+     * @return value replaced var
      */
     private String replaceVar(String key, String value, Set<String> keys) {
         if (value == null) return null;
-        Matcher m = P_VAR.matcher(value);
-        if (keys.contains(key)) throw new RuntimeException("circle key->" + key);
+        if (keys.contains(key)) throw new RuntimeException("circle key:" + key);
 
         String newVal = value;
         String var = null;
         String val = null;
         try {
+            keys.add(key);
+            Matcher m = P_VAR.matcher(value);
             while (m.find()) {
-                if (!keys.contains(key)) {
-                    keys.add(key);
-                }
-
                 var = m.group(1);
                 val = replaceVar(var, getProperty(var), keys);
                 if (val == null) {
@@ -117,14 +110,14 @@ public class VarProperties extends Properties {
 
                 newVal = newVal.replaceAll("\\$\\{" + var + "\\}", val);
             }
-            keys.remove(key);
-
             if (containsKey(key)) put(key, newVal);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("key={}, value={}->{}", key, value, newVal);
             }
         } catch (Exception e) {
             LOG.error("k->{}, v->{}, e->{}", key, value, e.getMessage());
+        } finally {
+            keys.remove(key);
         }
         return newVal;
     }

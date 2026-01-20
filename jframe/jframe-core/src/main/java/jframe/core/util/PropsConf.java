@@ -1,20 +1,20 @@
 /**
- * 
+ *
  */
 package jframe.core.util;
 
-import java.io.FileInputStream;
+import jframe.core.conf.VarHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jframe.core.conf.VarHandler;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ import jframe.core.conf.VarHandler;
  * <li>属性值支持jframe配置变量${conf.key}</li>
  * <li>属性查询优先级,自定义ID->默认组</li>
  * </p>
- * 
+ *
  * @author dzh
  * @date Nov 17, 2014 4:52:33 PM
  * @since 1.0
@@ -37,11 +37,7 @@ public class PropsConf {
     public synchronized void init(String file) throws Exception {
         if (init) return;
 
-        try {
-            init(new FileInputStream(file));
-        } catch (Exception e) {
-            throw e;
-        }
+        init(Files.newInputStream(Paths.get(file)));
         init = true;
     }
 
@@ -50,7 +46,7 @@ public class PropsConf {
     public synchronized void init(InputStream is) throws Exception {
         if (is == null || init) return;
 
-        conf = new HashMap<String, String>();
+        conf = new HashMap<>();
         try {
             Properties p = new Properties();
             p.load(is);
@@ -58,8 +54,6 @@ public class PropsConf {
             for (Entry<Object, Object> e : p.entrySet()) {
                 conf.put((String) e.getKey(), String.valueOf(e.getValue()).trim());
             }
-        } catch (Exception e) {
-            throw e;
         } finally {
             is.close();
         }
@@ -67,9 +61,7 @@ public class PropsConf {
 
     public synchronized void replace(VarHandler vh) {
         if (conf.isEmpty()) return;
-        for (Entry<String, String> e : conf.entrySet()) {
-            conf.put(e.getKey(), vh.replace(e.getValue()));
-        }
+        conf.replaceAll((k, v) -> vh.replace(v));
     }
 
     public synchronized String[] getGroupIds() {
@@ -79,29 +71,20 @@ public class PropsConf {
     }
 
     /**
-     * 
-     * @param group
-     * @param key
+     *
+     * @param group group id
+     * @param key   key
      * @return "" if not matched value or value
      */
     public synchronized String getConf(String group, String key) {
-        if (conf.isEmpty()) return "";
-        String val = null;
-        if (group != null) {
-            val = conf.get("@" + group + "." + key);
-        }
-
-        if (val == null) {
-            val = conf.get(key);
-        }
-        return val == null ? "" : val;
+        return getConf(group, key, "");
     }
 
     /**
-     * 
-     * @param group
-     * @param key
-     * @param defVal
+     *
+     * @param group  group id
+     * @param key    key
+     * @param defVal default value
      * @return defVal if not matched value or value
      */
     public synchronized String getConf(String group, String key, String defVal) {
@@ -114,25 +97,25 @@ public class PropsConf {
         if (val == null) {
             val = conf.get(key);
         }
-        return val == null ? defVal : val;
+        return val == null || val.isEmpty() ? defVal : val;
     }
 
     public synchronized int getConfInt(String group, String key, String defVal) {
         String val = getConf(group, key, defVal);
-        if (val == null) return -1;
-        return Integer.parseInt(val);
+        if (val == null || val.isEmpty()) return -1;
+        return Integer.parseInt(val.trim());
     }
 
     public synchronized boolean getConfBool(String group, String key, String defVal) {
         String val = getConf(group, key, defVal);
-        if (val == null) return false;
-        return Boolean.parseBoolean(val);
+        if (val == null || val.isEmpty()) return false;
+        return Boolean.parseBoolean(val.trim());
     }
 
     public synchronized long getConfLong(String group, String key, String defVal) {
         String val = getConf(group, key, defVal);
-        if (val == null) return -1;
-        return Long.parseLong(val);
+        if (val == null || val.isEmpty()) return -1;
+        return Long.parseLong(val.trim());
     }
 
     public synchronized Properties clone2Properties() {

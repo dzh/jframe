@@ -21,7 +21,7 @@ public interface Launcher {
 
     /**
      * 
-     * @param conf
+     * @param config
      * @throws Exception
      */
     void launch(Config config) throws LauncherException;

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.aliyun;
 
@@ -16,6 +16,7 @@ public interface AliyunField {
     String K_client_conn_timetout = "client.conn.timetout";
     String K_client_max_retry = "client.max.retry";
     String K_client_socket_timetout = "client.socket.timetout";
+    String K_client_protocol = "client.protocol";
 
     String K_roleArn = "roleArn";
     String K_policy = "policy";

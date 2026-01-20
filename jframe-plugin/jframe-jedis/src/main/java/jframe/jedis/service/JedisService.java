@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.jedis.service;
 
@@ -12,11 +12,12 @@ import redis.clients.jedis.JedisCluster;
  * @date Dec 2, 2014 10:37:37 AM
  * @since 1.0
  */
-@Service(clazz = "jframe.jedis.service.JedisServiceImpl", id = "jframe.service.jedis")
+@Service(clazz = "jframe.jedis.service.JedisServiceImpl", id = JedisService.ID)
 public interface JedisService {
+    String ID = "jframe.service.jedis";
 
     /**
-     * 
+     *
      * @return jedis.host.default's jedis
      */
     Jedis getJedis();
@@ -25,7 +26,7 @@ public interface JedisService {
 
     /**
      * use {@link redis.clients.jedis.Jedis#close()}
-     * 
+     *
      * @param jedis
      */
     @Deprecated
@@ -33,7 +34,7 @@ public interface JedisService {
 
     /**
      * use {@link redis.clients.jedis.Jedis#close()}
-     * 
+     *
      * @param jedis
      */
     @Deprecated
@@ -41,7 +42,7 @@ public interface JedisService {
 
     /**
      * unsupported
-     * 
+     *
      * @param name
      * @return
      */
@@ -50,8 +51,22 @@ public interface JedisService {
     /************************** simple method ***************************/
     String get(String id, String key);
 
+//    String getdel(String id, String key);
+
     void setex(String id, String key, String value, Integer expiredSeconds);
 
     void del(String id, String key);
+
+    long incr(String id, String key);
+
+    long incrBy(String id, String key, long val);
+
+    long decr(String id, String key);
+
+    long decrBy(String id, String key, long val);
+
+    void expire(String id, String key, int seconds);
+
+    void expireAt(String id, String key, int ts);
 
 }

@@ -1,12 +1,11 @@
 /**
- * 
+ *
  */
 package jframe.qiniu.service;
 
 import com.qiniu.storage.BucketManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
-
 import jframe.core.plugin.annotation.Service;
 
 /**
@@ -14,8 +13,10 @@ import jframe.core.plugin.annotation.Service;
  * @date Jul 28, 2015 10:09:03 AM
  * @since 1.0
  */
-@Service(clazz = "jframe.qiniu.service.QiniuServiceImpl", id = "jframe.service.qiniu")
+@Service(clazz = "jframe.qiniu.service.QiniuServiceImpl", id = QiniuService.ID)
 public interface QiniuService {
+
+    String ID = "jframe.service.qiniu";
 
     String uploadToken(String id, String key);
 

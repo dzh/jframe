@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.pay.domain.util;
 
@@ -27,7 +27,7 @@ public class IDUtil {
 
     /**
      * 生成短信验证码 4位数字
-     * 
+     *
      * @return
      */
     public static String genVCode() {
@@ -220,7 +220,7 @@ public class IDUtil {
 
     /**
      * 线路ID
-     * 
+     *
      * @return
      */
     public static String genPathId() {
@@ -289,7 +289,7 @@ public class IDUtil {
 
     /**
      * 消息头的key
-     * 
+     *
      * @return
      */
     public static String genSignKey() {
@@ -298,15 +298,15 @@ public class IDUtil {
             int category = new Random().nextInt() % 3;
             char ch = '0';
             switch (category) {
-            case 0:
-                ch = (char) ((new Random().nextInt(10) % 10 + 48) & 0xffff);
-                break;
-            case 1:
-                ch = (char) ((new Random().nextInt(26) % 26 + 65) & 0xffff);
-                break;
-            case 2:
-                ch = (char) ((new Random().nextInt(26) % 26 + 97) & 0xffff);
-                break;
+                case 0:
+                    ch = (char) ((new Random().nextInt(10) % 10 + 48) & 0xffff);
+                    break;
+                case 1:
+                    ch = (char) ((new Random().nextInt(26) % 26 + 65) & 0xffff);
+                    break;
+                case 2:
+                    ch = (char) ((new Random().nextInt(26) % 26 + 97) & 0xffff);
+                    break;
             }
             buf.append(ch);
         }
@@ -315,7 +315,7 @@ public class IDUtil {
 
     /**
      * 生成邀请码
-     * 
+     *
      * @return
      */
     public static String genInviteCode() {

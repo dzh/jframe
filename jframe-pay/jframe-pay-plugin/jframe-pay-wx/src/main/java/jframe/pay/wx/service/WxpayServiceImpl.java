@@ -1,20 +1,6 @@
 package jframe.pay.wx.service;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.InjectService;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
+import jframe.core.plugin.annotation.*;
 import jframe.httpclient.service.HttpClientService;
 import jframe.memcached.client.MemcachedService;
 import jframe.pay.dao.service.PayDaoService;
@@ -30,6 +16,15 @@ import jframe.pay.wx.WxpayPlugin;
 import jframe.pay.wx.domain.WxConfig;
 import jframe.pay.wx.domain.WxFields;
 import jframe.pay.wx.http.client.WxServiceNew;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Injector
 public class WxpayServiceImpl implements WxpayService, WxFields {
@@ -178,7 +173,7 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
 
     /**
      * TODO BitSet
-     * 
+     *
      * @param req
      * @return
      */
@@ -324,10 +319,8 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
 
     /**
      * 通知租车后台
-     * 
-     * @param conn
+     *
      * @param od
-     * @param orderStatus
      */
     public void postBack(OrderWx od) {
         Map<String, String> map = new HashMap<String, String>(2, 1);
@@ -339,26 +332,23 @@ public class WxpayServiceImpl implements WxpayService, WxFields {
             URL url = new URL(od.backUrl);
             int port = url.getPort() == -1 ? 80 : url.getPort();
 
-            if (LOG.isDebugEnabled())
-                LOG.debug("postBack -> {}, {},{}", url.toString(), new Date(), map);
-            Long packtime = System.currentTimeMillis();
+            LOG.info("postBack -> {},{},{}", url, new Date(), map);
+            Long backtime = System.currentTimeMillis();
 
             Map<String, String> paras = new HashMap<>(HTTP_PARAS);
             paras.put("ip", url.getHost());
             paras.put("port", String.valueOf(port));
-            Map<String, String> rsp = HttpClient.<HashMap<String, String>> send("payback", url.getPath(),
+            String rsp = HttpClient.send("payback", url.getPath(),
                     HttpUtil.format(map, "utf-8"), null, paras);
             Long packTime = System.currentTimeMillis();
-            if (LOG.isDebugEnabled())
-                LOG.debug("orderNo=" + od.orderNo + " postBack" + new Date() + " use time=" + (packTime - packtime)
-                        + " rsp=" + rsp);
-            if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
-                succ = true;
-            } else {
-                LOG.error("payNo=" + od.payNo + "rsp=" + rsp);
-            }
+            LOG.info("postback orderNo={}, postBack->{}, use time->{}, rsp->{}", od.orderNo, url.getPath(),
+                    (System.currentTimeMillis() - backtime), rsp);
+//            if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
+//                succ = true;
+//            } else {
+//                LOG.error("payNo=" + od.payNo + "rsp=" + rsp);
+//            }
         } catch (Exception e) {
-            succ = false;
             LOG.error(e.getMessage());
         }
 

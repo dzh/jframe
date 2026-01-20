@@ -1,11 +1,9 @@
 package jframe.pay.alipay;
 
-import jframe.ext.util.PropertiesConfig;
-
 import com.alipay.sdk.pay.demo.SignUtils;
+import jframe.core.util.PropsConf;
 
 /**
- * 
  * @author dzh
  * @date Nov 27, 2014 4:49:43 PM
  * @since 1.0
@@ -32,7 +30,7 @@ public class AlipayConfig {
     public static final String SIGN_TYPE_QUERY = "sign.type.query";
     public static final String SERVICE = "service";
 
-    private static PropertiesConfig config = new PropertiesConfig();
+    private static PropsConf config = new PropsConf();
 
     public static void init(String file) throws Exception {
         config.init(file);

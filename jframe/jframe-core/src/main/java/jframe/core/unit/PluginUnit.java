@@ -1,17 +1,7 @@
 /**
- * 
+ *
  */
 package jframe.core.unit;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jframe.core.Frame;
 import jframe.core.conf.Config;
@@ -27,13 +17,22 @@ import jframe.core.plugin.loader.ext.PluginServiceClassLoader;
 import jframe.core.plugin.loader.ext.PluginServiceCreator;
 import jframe.core.signal.Signal;
 import jframe.core.util.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
  * Feature:
  * <li>load plug-in</li>
  * </p>
- * 
+ *
  * @author dzh
  * @date Sep 23, 2013 2:47:41 PM
  * @since 1.0
@@ -75,7 +74,7 @@ public class PluginUnit extends AbstractUnit {
     }
 
     /**
-     * 
+     *
      */
     private void cleanCache() {
         Config config = getFrame().getConfig();
@@ -89,8 +88,7 @@ public class PluginUnit extends AbstractUnit {
     }
 
     /**
-     * 
-     * @param path_plugin
+     *
      */
     private List<Plugin> loadPlugin() {
         // create plugin

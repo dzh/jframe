@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.core;
 
@@ -15,8 +15,8 @@ import jframe.core.unit.UnitException;
 import jframe.core.unit.UnitManager;
 
 /**
- * @ThreadSafe
  * @author dzh
+ * @ThreadSafe
  * @date Sep 23, 2013 2:44:01 PM
  * @since 1.0
  */
@@ -46,7 +46,7 @@ public class DefFrame implements Frame {
             _status = FRAME_STATUS.INIT;
         }
 
-        LOG.debug("DefFrame is initing");
+        LOG.debug("DefFrame init");
         conf.setFrame(this);
 
         this._cnf = conf;
@@ -94,7 +94,9 @@ public class DefFrame implements Frame {
      */
     public void stop() {
         synchronized (_lock) {
-            if (_status == FRAME_STATUS.STOP) { return; }
+            if (_status == FRAME_STATUS.STOP) {
+                return;
+            }
             _status = FRAME_STATUS.STOP;
         }
         LOG.debug("DefFrame is stopping");
@@ -116,15 +118,15 @@ public class DefFrame implements Frame {
 
         FrameEvent event = null;
         switch (_status) {
-        case INIT:
-            event = new FrameEvent(FrameEvent.Init, this);
-            break;
-        case START:
-            event = new FrameEvent(FrameEvent.Start, this);
-            break;
-        default:
-            event = new FrameEvent(FrameEvent.Stop, this);
-            break;
+            case INIT:
+                event = new FrameEvent(FrameEvent.Init, this);
+                break;
+            case START:
+                event = new FrameEvent(FrameEvent.Start, this);
+                break;
+            default:
+                event = new FrameEvent(FrameEvent.Stop, this);
+                break;
         }
         return event;
     }

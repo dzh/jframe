@@ -1,15 +1,14 @@
 /**
- * 
+ *
  */
 package jframe.pay.http.handler;
 
-import java.util.Map;
-
 import jframe.pay.domain.Fields;
 import jframe.pay.domain.http.RspCode;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * @author dzh
@@ -42,10 +41,8 @@ public abstract class PayHandler extends SafeHandler {
                 rsp.put(Fields.F_error, e.getMessage());
             }
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("remoteIp->{} reqOp->{} invokeTime->{}ms req->{} rsp->{}", getRemoteIp(), getReqOp(),
-                    System.currentTimeMillis() - start, req, rsp);
-        }
+        LOG.info("remoteIp->{} reqOp->{} invokeTime->{}ms req->{} rsp->{}", getRemoteIp(), getReqOp(),
+                System.currentTimeMillis() - start, req, rsp);
     }
 
     protected abstract void doService(Map<String, String> req, Map<String, Object> rsp) throws Exception;

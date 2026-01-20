@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jframe.core.plugin.loader.ext;
 
@@ -52,9 +52,8 @@ public class PluginServiceClassLoader extends PluginClassLoader {
 
     /**
      * register export-service
-     * 
+     *
      * @param pc
-     * @param p
      */
     public void loadService(PluginCase pc) {
         ServiceContext sc = plc.getServiceContext();

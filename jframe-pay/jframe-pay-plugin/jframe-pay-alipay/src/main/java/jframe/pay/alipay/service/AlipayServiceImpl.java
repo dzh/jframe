@@ -1,24 +1,10 @@
 /**
- * 
+ *
  */
 package jframe.pay.alipay.service;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alipay.util.OrderUtil;
-
-import jframe.core.plugin.annotation.InjectPlugin;
-import jframe.core.plugin.annotation.InjectService;
-import jframe.core.plugin.annotation.Injector;
-import jframe.core.plugin.annotation.Start;
-import jframe.core.plugin.annotation.Stop;
+import jframe.core.plugin.annotation.*;
 import jframe.httpclient.service.HttpClientService;
 import jframe.pay.alipay.AlipayConfig;
 import jframe.pay.alipay.AlipayPlugin;
@@ -33,6 +19,14 @@ import jframe.pay.domain.http.RspCode;
 import jframe.pay.domain.util.HttpUtil;
 import jframe.pay.domain.util.IDUtil;
 import jframe.pay.domain.util.ObjectUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author dzh
@@ -291,7 +285,7 @@ class AlipayServiceImpl implements AlipayService, Fields {
 
     /**
      * TODO
-     * 
+     *
      * @param usrid
      * @param accountid
      * @return
@@ -333,7 +327,7 @@ class AlipayServiceImpl implements AlipayService, Fields {
     }
 
     public void postBack(OrderAlipay order) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put(F_payNo, order.payNo);
         map.put(F_payStatus, order.payStatus);
 
@@ -342,39 +336,37 @@ class AlipayServiceImpl implements AlipayService, Fields {
             URL url = new URL(order.backUrl);
             int port = url.getPort() == -1 ? 80 : url.getPort();
 
-            if (LOG.isDebugEnabled())
-                LOG.debug("postBack start time->{},req->{}", new Date(), map);
+            LOG.info("postBack -> {},{},{}", url, new Date(), map);
             Long backtime = System.currentTimeMillis();
             Map<String, String> paras = new HashMap<>(HTTP_PARAS);
             paras.put("ip", url.getHost());
             paras.put("port", String.valueOf(port));
-            Map<String, String> rsp = HttpClient.<HashMap<String, String>> send("payback", url.getPath(),
+            String rsp = HttpClient.send("payback", url.getPath(),
                     HttpUtil.format(map, "utf-8"), null, paras);
-            if (LOG.isDebugEnabled())
-                LOG.debug("postback orderNo={}, postBack->{}, use time->{}, rsp->{}", order.orderNo, url.getPath(),
-                        (System.currentTimeMillis() - backtime), rsp);
-            if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
-                succ = true;
-            } else {
-                LOG.error("payNo=" + order.payNo + "rsp=" + rsp);
-            }
+            LOG.info("postback orderNo={}, postBack->{}, use time->{}, rsp->{}", order.orderNo, url.getPath(),
+                    (System.currentTimeMillis() - backtime), rsp);
+
+//            if (RspCode.SUCCESS.code.equals(rsp.get(F_rspCode))) {
+//                succ = true;
+//            } else {
+//                LOG.error("payNo=" + order.payNo + "rsp=" + rsp);
+//            }
         } catch (Exception e) {
-            succ = false;
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
 
-        if (!succ) {
-            // TODO
-            // map.put(UsrFields.F_backUrl, order.getBackUrl());
-            // Task t = createTask(TaskType.PAY_BACK.type,
-            // TaskType.PAY_BACK.desc,
-            // JsonUtil.encode(map), new Date().getTime());
-            // try {
-            // AlipayDao.insertTask_Order(conn, t);
-            // } catch (Exception e1) {
-            // LOG.error(e1.getMessage());
-            // }
-        }
+//        if (!succ) {
+        // TODO
+        // map.put(UsrFields.F_backUrl, order.getBackUrl());
+        // Task t = createTask(TaskType.PAY_BACK.type,
+        // TaskType.PAY_BACK.desc,
+        // JsonUtil.encode(map), new Date().getTime());
+        // try {
+        // AlipayDao.insertTask_Order(conn, t);
+        // } catch (Exception e1) {
+        // LOG.error(e1.getMessage());
+        // }
+//        }
 
     }
 

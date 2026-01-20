@@ -1,17 +1,16 @@
 /**
- * 
+ *
  */
 package jframe.pay.upmp.domain;
 
+import jframe.core.util.PropsConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jframe.ext.util.PropertiesConfig;
 
 /**
  * <p>
  * </p>
- * 
+ *
  * @author dzh
  * @date Nov 25, 2015 3:05:10 PM
  * @since 1.0
@@ -37,7 +36,7 @@ public class UpmpConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(UpmpConfig.class);
 
-    public static PropertiesConfig config = new PropertiesConfig();
+    public static PropsConf config = new PropsConf();
 
     public static void init(String file) throws Exception {
         config.init(file);

@@ -1,18 +1,18 @@
 /**
- * 
+ *
  */
 package jframe.httpclient;
+
+import jframe.core.util.PropsConf;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import jframe.core.util.PropsConf;
-
 /**
  * TODO 配置文件验证
- * 
+ *
  * @author dzh
  * @date Dec 3, 2014 11:07:29 AM
  * @since 1.0
@@ -59,12 +59,12 @@ public class HttpClientConfig {
     }
 
     /**
-     * 
+     *
      * @param gid
      * @return
      */
     public static List<String> getHostByGroup(String gid) {
-        List<String> hosts = new LinkedList<String>();
+        List<String> hosts = new LinkedList<>();
         for (String host : getHosts()) {
             if (gid.equals(CONFIG.getConf(host, GROUP))) {
                 hosts.add(host);

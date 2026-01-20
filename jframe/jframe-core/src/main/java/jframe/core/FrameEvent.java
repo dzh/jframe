@@ -17,9 +17,9 @@ public class FrameEvent extends EventObject {
      */
     private static final long serialVersionUID = 1L;
 
-    private int type;
+    private final int type;
 
-    public static final int Init = 1 << 0;
+    public static final int Init = 1;
     public static final int Start = 1 << 1;
     public static final int Stop = 1 << 2;
 

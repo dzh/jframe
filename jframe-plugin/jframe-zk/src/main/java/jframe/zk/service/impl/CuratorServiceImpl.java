@@ -1,21 +1,7 @@
 /**
- * 
+ *
  */
 package jframe.zk.service.impl;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.curator.RetryPolicy;
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.imps.CuratorFrameworkState;
-import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jframe.core.conf.Config;
 import jframe.core.plugin.annotation.InjectPlugin;
@@ -26,6 +12,19 @@ import jframe.core.util.PropsConf;
 import jframe.zk.ZkField;
 import jframe.zk.ZkPlugin;
 import jframe.zk.service.CuratorService;
+import org.apache.curator.RetryPolicy;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author dzh
@@ -52,7 +51,9 @@ public class CuratorServiceImpl implements CuratorService {
 
         try {
             String file = Plugin.getConfig(FILE_CURATOR, Plugin.getConfig(Config.APP_CONF) + "/curator.properties");
-            if (!new File(file).exists()) { throw new FileNotFoundException("not found " + file); }
+            if (!new File(file).exists()) {
+                throw new FileNotFoundException("not found " + file);
+            }
             _config.init(file);
             for (String id : _config.getGroupIds()) {
                 String connectString = _config.getConf(id, ZkField.ConnectString);
@@ -63,8 +64,7 @@ public class CuratorServiceImpl implements CuratorService {
                 int retryInterval = _config.getConfInt(id, ZkField.RetryInterval, "5000");
                 int retryTimes = _config.getConfInt(id, ZkField.RetryTimes, "3");
                 RetryPolicy retryPolicy = new ExponentialBackoffRetry(retryInterval, retryTimes);
-                CuratorFramework zkCli = CuratorFrameworkFactory.builder().connectString(connectString).retryPolicy(retryPolicy)
-                        .connectionTimeoutMs(connectTimeout).sessionTimeoutMs(sessionTimeout).namespace(ns).build();
+                CuratorFramework zkCli = CuratorFrameworkFactory.builder().connectString(connectString).retryPolicy(retryPolicy).connectionTimeoutMs(connectTimeout).sessionTimeoutMs(sessionTimeout).namespace(ns).build();
                 try {
                     zkCli.start();
                     zkCli.blockUntilConnected(10, TimeUnit.SECONDS);
@@ -75,7 +75,7 @@ public class CuratorServiceImpl implements CuratorService {
                 if (zkCli.getState() == CuratorFrameworkState.STARTED) clients.put(id, zkCli);
             }
         } catch (Exception e) {
-            LOG.error("Start CuratorService Failure!" + e.getMessage(), e);
+            LOG.error("Start CuratorService Failure!", e);
             return;
         }
         LOG.info("Start CuratorService Successfully!");
